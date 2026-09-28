@@ -1,790 +1,780 @@
-<title>Metric Card Lab</title>
+<title>Stēle Card Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@200;300;400;500&display=swap">
 <style>
-/* Layout: one long dark sheet. Variant sections stack; each holds a grid of 350x120 metric cards. Tap a card for its full-width detail. */
+/* Layout: warm page; ten phone home screens in a grid, each a different card concept in the Stēle glass system. One sticky control bar drives chart type, range, day and accent. */
 :root{
-  color-scheme: dark;
-  --bg:#0c0d11; --surface:#15161c; --surface-2:#1b1c24; --well:#101116;
-  --line:#262833; --grid:#20222b; --axis:#34374a; --track:#23252f;
-  --ink:#eceef4; --ink-2:#a4a7b6; --ink-3:#6d7081;
-  --sleep:#8b8ff0; --sleep-dim:#3b3e72;
-  --heart:#e5696b; --heart-dim:#6b3035;
-  --train:#5cc08c; --train-dim:#285640;
-  --nutri:#e0b84e; --nutri-dim:#5f4f27;
-  --st-deep:#5a5fe0; --st-rem:#9a93f5; --st-light:#c9cbfa; --st-awake:#e0906e;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, "Segoe UI", sans-serif;
-  --ring: var(--surface);
+  color-scheme: light;
+  --bg:#f4ede6; --ink:#11110f; --ink-2:rgba(17,17,15,.6); --ink-3:rgba(17,17,15,.36); --line:rgba(17,17,15,.1);
+  --glass:rgba(255,255,255,.4); --glass-edge:rgba(255,255,255,.65);
+  --pill:rgba(255,255,255,.5); --pill-on:rgba(49,109,247,.2); --blue:#316df7; --blue-ink:#0038b8; --chip:rgba(213,219,230,.45);
+  --warm:#b3977d;
+  --st-deep:#26318f; --st-rem:#5b6cf0; --st-light:#a9b6f6; --st-awake:#ef8a5e;
+  --a-sleep:#316df7; --a-heart:#316df7; --a-train:#316df7; --a-nutri:#316df7;
+  --mono:"Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --sans:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  --acc:var(--blue);
 }
+.acc-family{--a-sleep:#5a4fd6;--a-heart:#d2464b;--a-train:#1f8a5c;--a-nutri:#b07f00}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
-h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
-h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0;text-wrap:balance}
-h3{font-size:15px;font-weight:600;margin:0}
-p{margin:0;color:var(--ink-2);max-width:68ch}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.page{max-width:1320px;margin:0 auto;padding-inline:16px;padding-block:32px 72px}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+h1{font-family:var(--sans);font-weight:300;font-size:40px;letter-spacing:-.01em;margin:4px 0 8px;line-height:1.1;text-wrap:balance}
+h2{font-weight:400;font-size:18px;margin:0;text-wrap:balance}
+p{margin:0;color:var(--ink-2);max-width:70ch}
 .lede{font-size:15px}
-.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-a{color:var(--sleep)}
-button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--sleep);outline-offset:2px}
 
-/* toolbar */
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin-inline:-16px;padding:10px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
-.seg{display:inline-flex;background:var(--surface);border-radius:10px;padding:3px;gap:2px}
-.seg button{border:0;background:transparent;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.04) inset}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12px;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.chip[aria-pressed="true"]{border-color:var(--ink-3);color:var(--ink);background:var(--surface)}
-.chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
-.jump{display:flex;flex-wrap:wrap;gap:4px}
-.jump a{font-size:12px;color:var(--ink-2);text-decoration:none;padding:4px 7px;border-radius:6px;font-weight:600;font-variant-numeric:tabular-nums}
-.jump a:hover{background:var(--surface);color:var(--ink)}
+/* control bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;margin:22px -16px 0;padding:10px 16px;background:rgba(244,237,230,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl>span{font-size:11px;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
+.seg{display:inline-flex;background:var(--pill);border:.5px solid #fff;border-radius:999px;padding:2px;gap:2px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.seg button{border:0;background:transparent;border-radius:999px;padding:5px 12px;font-size:12px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--pill-on);color:var(--blue-ink)}
+.seg button svg{width:14px;height:14px}
+.step{display:inline-flex;align-items:center;gap:2px;background:var(--pill);border:.5px solid #fff;border-radius:999px;padding:2px}
+.step button{border:0;background:transparent;width:28px;height:26px;border-radius:999px;font-size:15px;color:var(--ink)}
+.step button:disabled{color:var(--ink-3);cursor:default}
+.step b{font-weight:400;font-family:var(--mono);font-size:12px;min-width:92px;text-align:center}
+.reset{border:0;background:transparent;font-size:12px;color:var(--blue-ink);text-decoration:underline;text-underline-offset:2px}
+.jump{display:flex;flex-wrap:wrap;gap:2px}
+.jump a{font-family:var(--mono);font-size:12px;color:var(--ink-2);text-decoration:none;padding:4px 6px;border-radius:6px}
+.jump a:hover{background:var(--pill);color:var(--ink)}
 
-/* sections */
-section{padding-block:36px 8px;scroll-margin-top:64px}
-.vhead{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;margin-bottom:14px}
-.vtag{font-size:13px;font-weight:700;color:var(--bg);background:var(--ink);border-radius:7px;padding:2px 8px;font-variant-numeric:tabular-nums;align-self:center}
-.vhead p{grid-column:2;font-size:13.5px}
-.specs{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--ink-3)}
-.specs b{color:var(--ink-2);font-weight:500}
+/* phones grid */
+.phones{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:48px 28px;margin-top:32px;align-items:start}
+.pwrap{min-width:0;display:flex;flex-direction:column;gap:14px;scroll-margin-top:80px}
+.phd{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline;max-width:402px;margin:0 auto;width:100%}
+.vtag{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--bg);border-radius:6px;padding:2px 7px;align-self:center}
+.phd p{grid-column:2;font-size:13px}
+.phd .tags{grid-column:2;display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.phd .tags span{font-size:10.5px;background:var(--chip);border-radius:999px;padding:2px 8px;color:var(--ink)}
+.phone{width:100%;max-width:402px;margin:0 auto;border-radius:44px;padding:7px;background:#e8ddd2;box-shadow:0 30px 60px -30px rgba(80,50,25,.45),0 0 0 1px rgba(17,17,15,.06)}
+.screen{position:relative;border-radius:38px;overflow:hidden;padding-bottom:28px;min-height:760px;isolation:isolate;
+  background:
+   radial-gradient(ellipse 34% 20% at 50% 24%,rgba(38,30,26,.55),transparent 72%),
+   radial-gradient(ellipse 42% 26% at 54% 48%,rgba(84,52,32,.42),transparent 72%),
+   radial-gradient(ellipse 70% 30% at 36% 78%,rgba(236,126,62,.5),transparent 70%),
+   radial-gradient(ellipse 60% 26% at 80% 92%,rgba(242,170,120,.55),transparent 70%),
+   linear-gradient(180deg,#b3bdbc 0%,#c8c6be 26%,#cfae95 52%,#e3a57c 74%,#f0cdb2 100%)}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:14px 28px 0;font-size:13px;font-weight:600;letter-spacing:.01em}
+.sb svg{height:11px}
+.brand{display:flex;justify-content:space-between;align-items:center;padding:30px 20px 22px}
+.wm{font-weight:300;font-size:32px;line-height:1}
+.brand svg{width:30px;height:30px}
+.body{padding:0 20px;display:flex;flex-direction:column;gap:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),350px));gap:12px;justify-content:start}
-.grid.g-flush{gap:0 24px}
-.grid.g-grouped{gap:1px;background:var(--line);border-radius:18px;overflow:hidden;width:fit-content;max-width:100%;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),350px))}
+/* glass card */
+.card{position:relative;background:var(--glass);border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.05),inset 0 0 0 .5px var(--glass-edge);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);padding:15px 11px 13px;min-width:0;cursor:pointer;overflow:hidden}
+.card.wide{grid-column:1/-1}
+.fam-sleep{--acc:var(--a-sleep)} .fam-heart{--acc:var(--a-heart)} .fam-train{--acc:var(--a-train)} .fam-nutri{--acc:var(--a-nutri)}
+.ch{display:flex;align-items:center;gap:5px;height:20px;position:relative;z-index:2}
+.ic{width:20px;height:20px;flex:none;display:inline-flex}
+.ic svg{width:20px;height:20px}
+.ct{font-size:12px;line-height:18px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.more{border:0;background:transparent;width:26px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-2);margin-right:-4px;position:relative}
+.more svg{width:12px;height:3px}
+.more.on::after{content:"";position:absolute;top:1px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.more:hover{background:rgba(255,255,255,.5)}
+.val{font-family:var(--mono);color:var(--ink);white-space:nowrap;position:relative;z-index:2}
+.val .u{font-weight:400;margin-left:4px}
+.v52{font-size:52px;line-height:52px;font-weight:200}.v52 .u{font-size:20px}
+.v36{font-size:36px;line-height:36px;font-weight:300}.v36 .u{font-size:12px}
+.v28{font-size:28px;line-height:30px;font-weight:300}.v28 .u{font-size:11px}
+.v22{font-size:22px;line-height:24px;font-weight:300}.v22 .u{font-size:10px}
+.v17{font-size:17px;line-height:20px;font-weight:300}.v17 .u{font-size:10px}
+.dl{font-size:11px;color:var(--ink-2);display:flex;align-items:center;gap:5px;white-space:nowrap;position:relative;z-index:2;min-width:0}
+.dl svg{width:7px;height:10px;flex:none}
+.dl .dash{width:6px;height:1px;background:var(--ink-2);flex:none}
+.dwm{display:inline-flex;background:var(--pill);border:.5px solid #fff;border-radius:999px;padding:1px;height:22px;position:relative;z-index:3}
+.dwm button{border:0;background:transparent;border-radius:999px;font-size:10px;color:var(--ink-2);width:37px;padding:0}
+.dwm button[aria-pressed="true"]{background:var(--pill-on);color:var(--blue-ink)}
+.slot{position:relative;min-width:0;touch-action:pan-y}
+.slot svg{display:block;overflow:visible}
+.slot.pick{cursor:crosshair}
 
-/* card */
-.card{position:relative;height:120px;min-width:0;cursor:pointer;display:flex;flex-direction:column;padding:12px 14px;text-align:left;border:0;width:100%;color:var(--ink)}
-.card:hover .h-title{color:var(--ink)}
-.h-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0}
-.h-left{display:flex;align-items:baseline;gap:8px;min-width:0}
-.h-title{font-size:12.5px;font-weight:500;color:var(--ink-2);white-space:nowrap}
-.h-val{font-weight:600;letter-spacing:-.01em;white-space:nowrap;color:var(--ink)}
-.h-val small{font-size:.62em;font-weight:500;color:var(--ink-2);margin-left:2px;letter-spacing:0}
-.h-delta{font-size:11.5px;color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
-.h-delta em{font-style:normal;color:var(--ink-2)}
-.plot{position:relative;flex:1;min-height:0;min-width:0}
-.plot svg{display:block;overflow:visible}
-.lg{display:inline-flex;gap:7px;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
-.lg span{display:inline-flex;align-items:center;gap:3px}
-.lg i{width:7px;height:7px;border-radius:2px;display:inline-block}
+/* V1 hero */
+.hero{display:grid;grid-template-columns:1fr 156px;gap:0 12px;margin-top:10px}
+.hero .dwm{justify-self:start}
+.hero .l{display:flex;flex-direction:column;justify-content:flex-end;gap:14px;padding-left:1px}
+.hero .r{display:flex;flex-direction:column;gap:10px}
+.t1 .val{margin-top:26px}
+.t1 .dl{margin-top:10px}
+.t1 .slot{margin:10px -11px -13px}
+/* V2 */
+.t2{min-height:150px;display:flex;flex-direction:column}
+.t2 .val{margin-top:24px}
+.t2 .dl{margin-top:8px}
+.t2 .bgs{position:absolute;left:0;right:0;bottom:0;height:62%;z-index:1}
+/* V3 */
+.r3{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-top:10px;align-items:end}
+.r3 .l{display:flex;flex-direction:column;gap:10px;padding-bottom:1px}
+.r3 .r{display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:0}
+.r3 .r .slot{width:100%}
+/* V4 */
+.t4{display:flex;flex-direction:column;align-items:center}
+.t4 .ch{align-self:stretch}
+.rad{position:relative;width:128px;height:128px;margin-top:6px}
+.rad .slot{position:absolute;inset:0}
+.rad .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;line-height:1}
+.rad .val .u{margin:3px 0 0;font-size:9px;color:var(--ink-2)}
+.t4 .dl{margin-top:6px}
+/* V5 */
+.tl-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tl-h b{font-family:var(--mono);font-weight:400;font-size:13px}
+.tl-row{display:grid;grid-template-columns:118px 1fr;gap:8px;align-items:center;padding:7px 0;border-top:.5px solid rgba(17,17,15,.08)}
+.tl-row:first-of-type{border-top:0}
+.tl-l{display:grid;grid-template-columns:16px 1fr;gap:0 5px;align-items:center;min-width:0}
+.tl-l .ic,.tl-l .ic svg{width:16px;height:16px}
+.tl-l .n{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-l .val{grid-column:2}
+.tl-rows{margin-top:10px}
+.tl-ax{display:grid;grid-template-columns:118px 1fr;gap:8px}
+/* V6 */
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:var(--glass);border-radius:16px;padding:6px;box-shadow:inset 0 0 0 .5px var(--glass-edge);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.wk button{border:0;background:transparent;border-radius:12px;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.wk button span{font-size:10px;color:var(--ink-2)}
+.wk button b{font-family:var(--mono);font-weight:300;font-size:16px}
+.wk button[aria-pressed="true"]{background:var(--pill-on)}
+.wk button[aria-pressed="true"] b,.wk button[aria-pressed="true"] span{color:var(--blue-ink)}
+.t6 .val{margin-top:20px}
+.t6 .blt{margin-top:12px}
+.t6 .dl{margin-top:8px}
+/* V7 */
+.t7 .val{margin-top:22px}
+.t7 .sub{font-size:11px;color:var(--ink-2);margin-top:6px;white-space:nowrap}
+.t7 .sub b{font-family:var(--mono);font-weight:400;color:var(--ink)}
+.t7 .slot{margin-top:10px}
+/* V8 */
+.t8 .val{margin-top:16px}
+.t8 .dl{margin-top:6px}
+.t8 .slot{margin-top:12px}
+/* V9 */
+.mchips{display:flex;gap:6px;overflow-x:auto;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
+.mchips::-webkit-scrollbar{display:none}
+.mchips button{flex:none;border:0;background:var(--glass);box-shadow:inset 0 0 0 .5px var(--glass-edge);border-radius:999px;padding:6px 11px 6px 8px;display:inline-flex;align-items:center;gap:5px;font-size:12px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.mchips button svg{width:15px;height:15px}
+.mchips button[aria-pressed="true"]{background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1px #fff,0 1px 4px rgba(0,0,0,.06)}
+.focus .val{margin-top:22px}
+.focus .dl{margin-top:10px}
+.fctl{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:8px;position:relative;z-index:3}
+.tseg{display:inline-flex;background:var(--pill);border:.5px solid #fff;border-radius:999px;padding:1px;height:22px}
+.tseg button{border:0;background:transparent;border-radius:999px;width:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-2)}
+.tseg button svg{width:13px;height:13px}
+.tseg button[aria-pressed="true"]{background:var(--pill-on);color:var(--blue-ink)}
+.focus .slot{margin-top:12px}
+.lrow{display:grid;grid-template-columns:20px 1fr auto 64px;gap:8px;align-items:center;width:100%;border:0;background:transparent;text-align:left;padding:9px 12px;border-top:.5px solid rgba(17,17,15,.08)}
+.lrow:first-child{border-top:0}
+.lrow .n{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .val{justify-self:end}
+/* V10 */
+.t10 .val{margin-top:20px}
+.t10 .ins{font-size:11px;line-height:14px;color:var(--ink-2);margin-top:8px;min-height:42px;position:relative;z-index:2}
+.t10 .slot{margin-top:8px}
 
-/* head layouts */
-.l-inline .h-val{font-size:17px}
-.l-inline .plot{margin-top:6px}
-.l-stack .h-val{font-size:24px;line-height:1.1;margin-top:2px}
-.l-stack .plot{margin-top:4px}
-.l-side{flex-direction:row;gap:12px}
-.l-side .side-txt{width:112px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
-.l-side .h-val{font-size:26px;line-height:1.1}
-.l-side .lg{display:grid;grid-template-columns:auto auto;gap:2px 8px}
-.l-gauge{flex-direction:row;gap:14px;align-items:center}
-.l-gauge .ringslot{width:88px;height:88px;flex:none;position:relative}
-.l-gauge .gtxt{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
-.l-gauge .plot{margin-top:6px}
-.l-overlay{padding:0}
-.l-overlay .ov{position:absolute;left:14px;top:12px;right:14px;z-index:1;pointer-events:none}
-.l-overlay .h-val{font-size:22px;line-height:1.15}
-.l-overlay .plot{position:absolute;inset:0}
-
-/* framings */
-.f-filled{background:var(--surface);border-radius:16px;--ring:var(--surface)}
-.f-soft{background:linear-gradient(180deg,var(--surface-2),var(--surface));border-radius:22px;--ring:var(--surface)}
-.f-outline{background:transparent;border:1px solid var(--line);border-radius:14px;--ring:var(--bg)}
-.f-flush{background:transparent;border-top:1px solid var(--line);border-radius:0;padding-inline:2px;--ring:var(--bg)}
-.f-tinted{border-radius:22px}
-.f-tinted.fam-sleep{background:color-mix(in oklab,var(--sleep) 9%,var(--surface));--ring:color-mix(in oklab,var(--sleep) 9%,var(--surface))}
-.f-tinted.fam-heart{background:color-mix(in oklab,var(--heart) 9%,var(--surface));--ring:color-mix(in oklab,var(--heart) 9%,var(--surface))}
-.f-tinted.fam-train{background:color-mix(in oklab,var(--train) 9%,var(--surface));--ring:color-mix(in oklab,var(--train) 9%,var(--surface))}
-.f-tinted.fam-nutri{background:color-mix(in oklab,var(--nutri) 9%,var(--surface));--ring:color-mix(in oklab,var(--nutri) 9%,var(--surface))}
-.f-inset{background:var(--surface);border-radius:16px;--ring:var(--well)}
-.f-inset .plot{background:var(--well);border-radius:8px}
-.f-elevated{background:var(--surface-2);border-radius:14px;box-shadow:0 8px 24px -12px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.035) inset;--ring:var(--surface-2)}
-.f-square{background:var(--surface);border-radius:6px;--ring:var(--surface)}
-.f-grouped{background:var(--surface);border-radius:0;--ring:var(--surface)}
-.f-bleed{background:var(--surface);border-radius:18px;overflow:hidden;--ring:var(--surface)}
-
-/* by-metric view */
-.mv .cell{display:flex;flex-direction:column;gap:6px;min-width:0}
-.mv .cell>.lbl{font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:baseline}
-.mv .cell>.lbl b{color:var(--ink);font-weight:700}
-.mv .grid{gap:22px 16px}
-
-/* tooltip & crosshair */
-.tip{position:fixed;z-index:30;pointer-events:none;background:#23252f;border:1px solid #33364a;border-radius:10px;padding:7px 10px;font-size:12px;color:var(--ink);box-shadow:0 10px 30px -10px rgba(0,0,0,.8);max-width:260px;font-variant-numeric:tabular-nums}
-.tip .d{color:var(--ink-3);font-size:11px;margin-bottom:2px}
-.tip .r{display:flex;align-items:center;gap:6px;justify-content:space-between}
+/* popover, tooltip, sheet */
+.pop{position:fixed;z-index:40;width:236px;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:16px;padding:12px;box-shadow:0 12px 40px -12px rgba(60,40,20,.4),inset 0 0 0 .5px #fff;display:flex;flex-direction:column;gap:8px}
+.pop .pl{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.pop .seg{align-self:flex-start}
+.pop .seg button{padding:5px 9px}
+.pop .pa{display:flex;justify-content:space-between;gap:8px;margin-top:4px;border-top:.5px solid var(--line);padding-top:10px}
+.pop .pa button{border:0;background:transparent;font-size:12px;padding:0}
+.pop .pa .go{color:var(--blue-ink)}
+.tip{position:fixed;z-index:50;pointer-events:none;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:10px;padding:7px 10px;font-size:11.5px;box-shadow:0 8px 24px -8px rgba(60,40,20,.35),inset 0 0 0 .5px #fff;max-width:240px}
+.tip .d{color:var(--ink-2);font-size:10.5px}
+.tip .r{display:flex;justify-content:space-between;gap:12px;align-items:center}
 .tip .r span{display:inline-flex;align-items:center;gap:5px;color:var(--ink-2)}
+.tip b{font-family:var(--mono);font-weight:400}
 .tip i{width:7px;height:7px;border-radius:2px;display:inline-block}
-.xh{position:absolute;top:0;bottom:0;width:1px;background:var(--ink-3);opacity:.45;pointer-events:none}
-
-/* detail sheet */
-.sheet{position:fixed;inset:0;z-index:20;background:rgba(5,6,9,.72);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
-.sheet[hidden]{display:none!important}
-.panel{background:var(--surface);width:100%;max-width:760px;border-radius:22px 22px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom,0px));max-height:92%;overflow:auto;--ring:var(--surface)}
-@media (min-width:720px){.sheet{align-items:center}.panel{border-radius:22px;padding:22px 24px 26px}}
-.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.pclose{border:0;background:var(--surface-2);border-radius:999px;width:32px;height:32px;cursor:pointer;color:var(--ink-2);font-size:16px;flex:none}
-.pval{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:4px}
-.pval small{font-size:15px;color:var(--ink-2);font-weight:500;margin-left:3px}
-.pchart{position:relative;margin-top:16px}
-.pchart.gd{display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:center}
-@media (max-width:560px){.pchart.gd{grid-template-columns:1fr}.pchart.gd .ringslot{margin:0 auto}}
-.pchart .ringslot{width:180px;height:180px;position:relative}
-.plg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12px;color:var(--ink-2)}
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(40,28,18,.35);display:flex;align-items:flex-end;justify-content:center}
+.panel{width:100%;max-width:720px;max-height:92%;overflow:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(250,244,238,.96));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+@media (min-width:720px){.sheet{align-items:center}.panel{border-radius:24px;padding:24px 26px}}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ph .x{border:0;background:rgba(17,17,15,.06);width:32px;height:32px;border-radius:999px;font-size:15px;flex:none}
+.pctl{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:16px;align-items:center}
+.plg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:10px;font-size:11.5px;color:var(--ink-2)}
 .plg span{display:inline-flex;align-items:center;gap:6px}
 .plg i{width:9px;height:9px;border-radius:3px;display:inline-block}
-
-/* tables */
-.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-top:14px}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl{overflow-x:auto;margin-top:16px;border-radius:12px;box-shadow:inset 0 0 0 .5px var(--line)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:8px 12px;text-align:left;border-bottom:.5px solid var(--line);white-space:nowrap}
 tr:last-child td{border-bottom:0}
-th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface);white-space:nowrap}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-td .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:1px}
-.today-col{color:var(--ink);font-weight:600}
-.dtable td{color:var(--ink-2)}
-.dtable td:first-child{color:var(--ink);white-space:nowrap}
-.rank td{color:var(--ink-2)}
-.rank td:first-child{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-.rank td.v{white-space:nowrap;color:var(--ink)}
-.rank td.v b{font-weight:700}
-.meter{display:inline-flex;gap:2px;vertical-align:middle}
-.meter i{width:6px;height:10px;border-radius:2px;background:var(--track);display:inline-block}
-.meter i.on{background:var(--ink-2)}
-.rec{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
-.rec div{background:var(--surface);border-radius:14px;padding:14px 16px}
-.rec h3{margin-bottom:4px}
-.rec p{font-size:13px}
-.foot{margin-top:28px;font-size:12px;color:var(--ink-3)}
-@media (prefers-reduced-motion:no-preference){.card{transition:transform .12s ease}.card:active{transform:scale(.985)}}
+th{font-size:10.5px;font-weight:400;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+td.n{font-family:var(--mono);text-align:right}
+tr.on td{background:rgba(49,109,247,.08)}
+
+/* ranking */
+.rank{margin-top:72px;scroll-margin-top:80px}
+.rank table{background:rgba(255,255,255,.45)}
+.rank td{white-space:normal;vertical-align:top;color:var(--ink-2);font-size:13px}
+.rank td:first-child{font-family:var(--mono);color:var(--ink)}
+.rank td.v{color:var(--ink);white-space:nowrap}
+.meter{display:inline-flex;gap:2px}
+.meter i{width:6px;height:10px;border-radius:2px;background:rgba(17,17,15,.12)}
+.meter i.on{background:var(--blue)}
+.recs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin-top:16px}
+.recs div{background:rgba(255,255,255,.5);border-radius:16px;padding:14px 16px;box-shadow:inset 0 0 0 .5px #fff}
+.recs h3{font-size:14px;font-weight:500;margin:0 0 4px}
+.recs p{font-size:13px}
+.note{font-size:12px;color:var(--ink-2);margin-top:18px}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s ease}.card:active{transform:scale(.985)}}
 </style>
 
-<div class="wrap">
+<div class="page">
   <header>
-    <div class="eyebrow">Design system study · metric cards</div>
-    <h1>Metric Card Lab</h1>
-    <p class="lede">One 7-day dataset (Mon Sep 22 to Sun Sep 28, today is Sunday) drawn ten ways. Every variant plots the same nine metrics with the same numbers, so any difference you notice comes from the treatment. Cards are 350 × 120. Tap one to open its full-width detail view, or hover for daily values.</p>
+    <div class="eyebrow">Stēle design system · metric cards</div>
+    <h1>Stēle Card Lab</h1>
+    <p class="lede">Ten home-screen concepts built in the Stēle glass style, all showing the same 30 days of data. Use the bar below to switch chart type, range (D / W / M) and day. Tap a day in any chart to jump every card to it. Each card's ··· menu overrides chart type and range for that card alone. Tap a card for the full view.</p>
   </header>
 
-  <div class="bar" role="toolbar" aria-label="View controls">
-    <div class="seg" role="group" aria-label="Layout">
-      <button id="vb-variant" aria-pressed="true">By variant</button>
-      <button id="vb-metric" aria-pressed="false">By metric</button>
-    </div>
+  <div class="bar" role="toolbar" aria-label="Chart controls">
+    <div class="ctl"><span>Chart</span><div class="seg" id="g-type"></div></div>
+    <div class="ctl"><span>Range</span><div class="seg" id="g-range"></div></div>
+    <div class="ctl"><span>Day</span><div class="step"><button id="d-prev" aria-label="Previous day">‹</button><b id="d-lbl"></b><button id="d-next" aria-label="Next day">›</button></div></div>
+    <div class="ctl"><span>Accent</span><div class="seg" id="g-acc"></div></div>
+    <button class="reset" id="g-reset" hidden>Reset card overrides</button>
     <nav class="jump" id="jump" aria-label="Jump to variant"></nav>
-    <div class="chips" id="mchips" hidden></div>
   </div>
 
-  <main id="stage"></main>
+  <main class="phones" id="phones"></main>
 
-  <section id="data" aria-labelledby="data-h">
-    <div class="eyebrow">Source data</div>
-    <h2 id="data-h">The shared dataset</h2>
-    <p>Every chart above is drawn from this table. Goals and targets used for annotations are listed in the last column.</p>
-    <div class="tscroll"><table class="dtable" id="dtable"></table></div>
-  </section>
-
-  <section id="rank" aria-labelledby="rank-h">
+  <section class="rank" id="ranking" aria-labelledby="rk">
     <div class="eyebrow">Verdict</div>
-    <h2 id="rank-h">Which variant reads fastest at a glance</h2>
-    <p>Ranked by how quickly a card answers the question people open a health app with: how am I doing today compared with normal? These rankings are design judgement from the rendered cards, not user-test results. Before you commit, run a 5-second test with the top three.</p>
-    <div class="tscroll"><table class="rank">
-      <thead><tr><th>#</th><th>Variant</th><th>Glance speed</th><th>What the eye gets first</th><th>Why it's fast (or slow)</th><th>Where it breaks</th></tr></thead>
+    <h2 id="rk" style="font-size:24px;font-weight:300;margin-top:4px">Which concept reads fastest at a glance</h2>
+    <p style="margin-top:6px">Ranked by how quickly a home screen answers "how am I doing today, and is that normal?". This is design judgement from the rendered screens, not user-test data. Run a 5-second test on the top three before committing.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>#</th><th>Concept</th><th>Glance</th><th>Why</th><th>Trade-off</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td class="v"><b>V4</b> Number + sparkline</td><td><span class="meter" aria-label="5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Today's value, then trend direction</td><td>The number sits where the eye lands (top-left), in the largest type. The sparkline gives one gesture of shape with no axes or grid to parse. Chart ink is about 30% of the card.</td><td>No goal context. The hidden y-scale exaggerates small swings: RHR moving 51 to 59 bpm looks as dramatic as recovery moving 31% to 86%.</td></tr>
-        <tr><td>2</td><td class="v"><b>V9</b> Bullet vs goal</td><td><span class="meter" aria-label="5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Am I past the goal line?</td><td>Today, the week's range, the average tick and the goal marker all share one horizontal track, so "on target?" is answered by a single left-right comparison. It works best for steps, protein and sleep duration.</td><td>No day-by-day trend. On metrics without a goal (HRV, RHR) it becomes a dot on a range and loses its main advantage.</td></tr>
-        <tr><td>3</td><td class="v"><b>V3</b> Today-accent bars</td><td><span class="meter" aria-label="4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>The one bright bar (today)</td><td>Daily metrics are discrete, so discrete bars match the data. Muting six days makes today pop through contrast, and the goal line turns each day into pass or fail. Day initials are the only axis you need.</td><td>Zero-based bars flatten narrow-range metrics: RHR and HRV look nearly constant. Use it for strain, volume, steps and nutrition.</td></tr>
-        <tr><td>4</td><td class="v"><b>V5</b> Ring gauge</td><td><span class="meter" aria-label="4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>How full the ring is</td><td>Completion toward a bounded goal is read before any number (the Apple Activity effect). The accent-tinted card identifies the metric family before you read the title.</td><td>Rings suit bounded targets only. For RHR the ring's range is arbitrary. The trend is pushed into a tiny strip, and nine rings in a feed look alike.</td></tr>
-        <tr><td>5</td><td class="v"><b>V8</b> Deviation from average</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Up or down vs my normal</td><td>Bars grow from your own 7-day average, and bright means "better", which handles lower-is-better metrics like RHR correctly. It answers "is today unusual?" quickly.</td><td>People have to learn the convention once. The absolute value lives only in the header, and rest days show up as large negative volume.</td></tr>
-        <tr><td>6</td><td class="v"><b>V2</b> Soft area</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Overall trend shape</td><td>The large stacked value plus a calm filled shape give a quick sense of direction, and the average line adds context with one hairline.</td><td>The filled area on a non-zero baseline implies magnitude it doesn't have. The stacked header leaves the plot only 46px tall.</td></tr>
-        <tr><td>7</td><td class="v"><b>V10</b> Full-bleed annotated</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>The shape, then the labeled peak</td><td>It has the most visual presence. Labeled high and low points save a trip to the axis, which makes it a strong single hero card.</td><td>The overlaid header competes with the data. Repeated nine times it gets loud, and in-plot labels can collide on dense weeks.</td></tr>
-        <tr><td>8</td><td class="v"><b>V6</b> Dots in typical range</td><td><span class="meter" aria-label="2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>Which dots escape the band</td><td>This is the right model for HRV and RHR, where "within my normal range" matters more than the raw number.</td><td>The ±1 SD band is abstract for score, steps and volume. The 100% stacked sleep bars hide total duration. Two readings are needed.</td></tr>
-        <tr><td>9</td><td class="v"><b>V7</b> Heat strip</td><td><span class="meter" aria-label="2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>A row of numbers</td><td>Values are printed in every cell, so it is precise without axes, and weekly rhythm (Wed and Sat dips) is visible.</td><td>Color intensity is a weak magnitude channel, so you end up reading seven numbers. The stage heat grid needs a legend to decode.</td></tr>
-        <tr><td>10</td><td class="v"><b>V1</b> Full-axis line</td><td><span class="meter" aria-label="1 of 5"><i class="on"></i><i></i><i></i><i></i><i></i></span></td><td>Tick labels and gridlines</td><td>It is the most exact reading, but y ticks, gridlines, day labels and a goal label consume about 40% of a 120px card before any data appears.</td><td>Too much chrome for a card. It is the right treatment for the full-width detail view, where it has room.</td></tr>
+        <tr><td>1</td><td class="v">V1 Hero + spark tiles</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Closest to your current screen. The number still leads every tile, and a thin strip adds the trend without shrinking the type.</td><td>Only the hero gets a D/W/M control. Tiles need the ··· menu to change range.</td></tr>
+        <tr><td>2</td><td class="v">V3 Wide rows</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Every metric gets your HRV card pattern: number left, chart and D/W/M right. It's one consistent reading line down the screen.</td><td>The longest scroll: nine full-width cards. Nothing is prioritised.</td></tr>
+        <tr><td>3</td><td class="v">V6 Week strip + bullets</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>The best "switch the day" model: a calendar strip anyone understands. Each bullet answers "did I hit the goal?"</td><td>The bullet needs a goal. HRV and resting HR fall back to a range bar.</td></tr>
+        <tr><td>4</td><td class="v">V9 Focus pager</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>One large chart with real axes plus a compact list. It's the fastest way to explore one metric.</td><td>The overview is secondary: everything except the focused metric becomes a list row.</td></tr>
+        <tr><td>5</td><td class="v">V5 Synced timeline</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>All metrics share one time axis, so cause and effect is visible: short sleep, then low HRV, then high resting HR. Drag to scrub.</td><td>Dense. Small row charts give up precision.</td></tr>
+        <tr><td>6</td><td class="v">V2 Chart in the glass</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Calm and the most on-brand. The chart becomes texture behind the number, so the number stays dominant.</td><td>The chart is ambient. You feel the trend but can't read it.</td></tr>
+        <tr><td>7</td><td class="v">V10 Insight sentences</td><td><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Tells people what the number means ("9% above your baseline"). Good for new users and matches your "Wear Stēle tonight" voice.</td><td>Only as good as the copy engine. Slower for people who want the numbers.</td></tr>
+        <tr><td>8</td><td class="v">V7 Baseline deviation</td><td><span class="meter"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>Leads with "is today normal for me?", which is the right question for HRV and resting HR.</td><td>Leading with a percentage hides the actual value. Odd for steps and calories.</td></tr>
+        <tr><td>9</td><td class="v">V4 Radial tiles</td><td><span class="meter"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>The most distinctive and brandable. The sleep clock in D range is a strong moment.</td><td>Radial lengths are hard to compare, and 30 spokes in M range get crowded.</td></tr>
+        <tr><td>10</td><td class="v">V8 Calendar heat</td><td><span class="meter"><i class="on"></i><i></i><i></i><i></i><i></i></span></td><td>Unbeatable for monthly rhythm in M range (rest days, weekend sleep).</td><td>Weak at "today". Colour intensity is a coarse way to read a value.</td></tr>
       </tbody>
     </table></div>
-    <div class="rec">
-      <div><h3>Card default</h3><p>Use the V4 frame, with the big number left and chart right, as the base card for every metric. It won because the number is read before the chart.</p></div>
-      <div><h3>Swap the chart by metric type</h3><p>Use V3 today-accent bars for discrete daily totals (strain, volume, steps, calories + protein). Use a V4 sparkline for continuous physiology (HRV, RHR, sleep score). Use V9 bullets where a goal is the question (sleep duration, steps).</p></div>
-      <div><h3>Detail view</h3><p>Use the V1 full-axis treatment, with a V6 typical-range band added for HRV and RHR. Precision belongs where there's room for it.</p></div>
+    <div class="recs">
+      <div><h3>Home screen</h3><p>Ship V1: it's your existing layout with a trend strip on every tile. Promote any tile to the hero slot when it's the day's story (e.g. low recovery).</p></div>
+      <div><h3>Day switching</h3><p>Adopt V6's week strip at the top of the home screen. It makes "switch the day" one tap and works with every concept above it.</p></div>
+      <div><h3>Full view</h3><p>Use V9's focus card, with axes and D/W/M plus chart-type toggles, as the screen behind every tile tap.</p></div>
     </div>
-    <p class="foot">Sleep-stage colors were checked with a color-vision-deficiency simulator against the dark card surface. Adjacent stages stay distinguishable (worst pair ΔE 15.3), and every stacked chart also uses 2px gaps and a legend.</p>
+    <p class="note">The chart type you pick applies to every variant, so compare concepts with the same setting. Bar suits daily totals (steps, volume, calories). Line and area suit continuous signals (HRV, resting HR, sleep score). Breakdowns in D range (score contributors, meals, exercises) always draw as bars or lollipops because they aren't time series.</p>
   </section>
 </div>
 
+<div class="pop" id="pop" hidden role="dialog" aria-label="Card chart options"></div>
 <div class="tip" id="tip" hidden></div>
 <div class="sheet" id="sheet" hidden>
-  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="p-title">
-    <div class="phead">
-      <div>
-        <div class="eyebrow" id="p-eyebrow"></div>
-        <h2 id="p-title"></h2>
-        <div class="pval" id="p-val"></div>
-        <div class="h-delta" id="p-delta" style="margin-top:4px"></div>
-      </div>
-      <button class="pclose" id="p-close" aria-label="Close detail view">✕</button>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="s-title">
+    <div class="ph">
+      <div><div class="eyebrow" id="s-eb"></div><h2 id="s-title" style="font-size:22px;font-weight:300;margin-top:2px"></h2></div>
+      <button class="x" id="s-x" aria-label="Close full view">✕</button>
     </div>
-    <div class="pchart" id="p-chart"></div>
-    <div class="plg" id="p-lg"></div>
-    <div class="tscroll"><table class="dtable" id="p-table"></table></div>
+    <div id="s-body"></div>
   </div>
 </div>
 
 <script>
 (() => {
-/* ---------- data ---------- */
-const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], DI='MTWTFSS';
-const DATES=['Sep 22','Sep 23','Sep 24','Sep 25','Sep 26','Sep 27','Sep 28'];
-const TD=6;
+/* ================= data ================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const N=30;
+const DATE=[...Array(N)].map((_,i)=>new Date(2026,8,28-(N-1-i)));
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dShort=i=>`${DOW[DATE[i].getDay()]}, ${MON[DATE[i].getMonth()]} ${DATE[i].getDate()}`;
+const dLetter=i=>DOW[DATE[i].getDay()][0];
+const SESS={1:'Full body',2:'Push',3:'Pull',4:'Rest',5:'Legs',6:'Upper',0:'Rest'};
+const rng=mulberry32(42);const J=(b,j)=>b+(rng()-.5)*2*j;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const HD=23;
+const hist=f=>[...Array(HD)].map((_,i)=>f(i));
+const isRest=i=>SESS[DATE[i].getDay()]==='Rest';
+const deep=hist(()=>Math.round(J(72,14))).concat([72,85,58,92,80,48,88]);
+const rem=hist(()=>Math.round(J(96,14))).concat([98,105,82,112,100,74,110]);
+const light=hist(()=>Math.round(J(226,22))).concat([232,240,214,248,236,198,252]);
+const awake=hist(()=>Math.round(clamp(J(20,8),6,40))).concat([18,14,26,12,16,34,15]);
+const asleep=deep.map((d,i)=>d+rem[i]+light[i]);
+const inbed=asleep.map((a,i)=>a+awake[i]);
+const score=hist(i=>Math.round(clamp(52+asleep[i]/480*30+deep[i]/90*6+J(0,3),55,95))).concat([78,84,71,88,82,65,86]);
+const hrv=hist(()=>Math.round(J(60,9))).concat([62,68,51,74,66,44,71]);
+const rhr=hist(()=>Math.round(J(54.5,2.6))).concat([54,52,57,51,53,59,52]);
+const recovery=hist(i=>Math.round(clamp(20+hrv[i]*.9-(rhr[i]-54)*4+J(0,6),18,96))).concat([64,78,42,86,72,31,81]);
+const volBase={Push:8400,Pull:9100,Legs:12400,Upper:8800,'Full body':7600};
+const volume=hist(i=>isRest(i)?0:Math.round(J(volBase[SESS[DATE[i].getDay()]],650)/10)*10).concat([8420,9150,0,12600,8900,0,7300]);
+const strain=hist(i=>+(isRest(i)?J(8,1.4):J(13.2,2.2)).toFixed(1)).concat([12.4,14.8,9.6,16.2,13.1,7.8,11.5]);
+const kcal=hist(()=>Math.round(J(2450,190)/10)*10).concat([2480,2610,2150,2790,2540,2320,2460]);
+const protein=hist(()=>Math.round(J(164,24))).concat([168,182,124,191,176,132,172]);
+const steps=hist(i=>Math.round((isRest(i)?J(5600,1500):J(9400,2200))/10)*10).concat([9840,11230,6420,8910,12450,4870,10120]);
+const STG=[{k:'deep',n:'Deep',c:'var(--st-deep)',v:deep},{k:'rem',n:'REM',c:'var(--st-rem)',v:rem},{k:'light',n:'Light',c:'var(--st-light)',v:light},{k:'awake',n:'Awake',c:'var(--st-awake)',v:awake}];
 const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
-const sdev=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
 const int=v=>Math.round(v).toLocaleString('en-US');
 const kf=v=>Math.abs(v)>=1000?(v/1000).toFixed(1).replace(/\.0$/,'')+'k':String(Math.round(v));
-const hm=min=>{min=Math.round(min);const h=Math.floor(min/60),m=min%60;return h?`${h}h ${String(m).padStart(2,'0')}m`:`${m}m`};
-const hs=v=>{const h=v/60;return (Math.abs(h-Math.round(h))<.01?Math.round(h):h.toFixed(1))+'h'};
-
-function ser(o){
-  o.avg=mean(o.vals);o.sd=sdev(o.vals);
-  o.band=o.band||[o.avg-o.sd,o.avg+o.sd];
-  if(o.higher===undefined)o.higher=true;
-  o.fmt=o.fmt||int;o.short=o.short||kf;
-  o.gauge=o.gauge||o.domBar;
-  return o;
-}
-const STG=[
-  {k:'deep',n:'Deep',c:'var(--st-deep)',v:[72,85,58,92,80,48,88]},
-  {k:'rem',n:'REM',c:'var(--st-rem)',v:[98,105,82,112,100,74,110]},
-  {k:'light',n:'Light',c:'var(--st-light)',v:[232,240,214,248,236,198,252]},
-  {k:'awake',n:'Awake',c:'var(--st-awake)',v:[18,14,26,12,16,34,15]},
-];
-const asleep=DAYS.map((_,i)=>STG[0].v[i]+STG[1].v[i]+STG[2].v[i]);
-const inbed=DAYS.map((_,i)=>asleep[i]+STG[3].v[i]);
+const hm=m=>{m=Math.round(m);const h=Math.floor(m/60),r=m%60;return h?`${h}h ${String(r).padStart(2,'0')}m`:`${r}m`};
+const hs=v=>{const h=v/60;return(Math.abs(h-Math.round(h))<.05?Math.round(h):h.toFixed(1))+'h'};
 
 const M={
-  score:{name:'Sleep score',fam:'sleep',s:ser({vals:[78,84,71,88,82,65,86],domLine:[60,100],domBar:[0,100],goal:85,unit:''})},
-  stages:{name:'Sleep stages',fam:'sleep',s:ser({vals:asleep,domLine:[0,540],domBar:[0,540],goal:450,unit:'',fmt:hm,short:hs})},
-  recovery:{name:'Recovery',fam:'heart',s:ser({vals:[64,78,42,86,72,31,81],domLine:[0,100],domBar:[0,100],goal:67,unit:'%'})},
-  hrv:{name:'HRV',fam:'heart',s:ser({vals:[62,68,51,74,66,44,71],domLine:[40,80],domBar:[0,80],goal:null,band:[55,70],unit:'ms',gauge:[0,100]})},
-  rhr:{name:'Resting HR',fam:'heart',s:ser({vals:[54,52,57,51,53,59,52],domLine:[48,62],domBar:[0,70],goal:null,band:[50,55],higher:false,unit:'bpm',gauge:[40,70]})},
-  strain:{name:'Daily strain',fam:'train',s:ser({vals:[12.4,14.8,9.6,16.2,13.1,7.8,11.5],domLine:[0,21],domBar:[0,21],goal:14,unit:'',fmt:v=>v.toFixed(1),short:v=>(+v.toFixed(1)).toString()})},
-  volume:{name:'Workout volume',fam:'train',s:ser({vals:[8420,9150,0,12600,8900,0,7300],domLine:[0,14000],domBar:[0,14000],goal:null,unit:'kg',gauge:[0,50000]}),
-    sessions:['Push','Pull','Rest','Legs','Upper','Rest','Full body']},
-  nutrition:{name:'Calories + protein',fam:'nutri',split:[
-    ser({label:'kcal',vals:[2480,2610,2150,2790,2540,2320,2460],domLine:[2000,2900],domBar:[0,3000],goal:2500,higher:null,unit:'kcal'}),
-    ser({label:'protein',vals:[168,182,124,191,176,132,172],domLine:[110,200],domBar:[0,200],goal:170,unit:'g'})]},
-  steps:{name:'Steps',fam:'train',s:ser({vals:[9840,11230,6420,8910,12450,4870,10120],domLine:[4000,13000],domBar:[0,13000],goal:10000,unit:''})},
+  score:{name:'Sleep score',fam:'sleep',icon:'moon',unit:'',arr:score,fmt:v=>String(Math.round(v)),short:v=>String(Math.round(v)),goal:85,higher:true},
+  stages:{name:'Sleep duration',fam:'sleep',icon:'moon',unit:'',arr:asleep,fmt:hm,short:hs,goal:450,higher:true},
+  recovery:{name:'Recovery',fam:'heart',icon:'heart',unit:'%',arr:recovery,fmt:v=>String(Math.round(v)),short:v=>Math.round(v)+'%',goal:67,higher:true},
+  hrv:{name:'HRV',fam:'heart',icon:'heart',unit:'ms',arr:hrv,fmt:v=>String(Math.round(v)),short:v=>String(Math.round(v)),goal:null,higher:true},
+  rhr:{name:'Resting HR',fam:'heart',icon:'heart',unit:'bpm',arr:rhr,fmt:v=>String(Math.round(v)),short:v=>String(Math.round(v)),goal:null,higher:false},
+  strain:{name:'Strain',fam:'train',icon:'bolt',unit:'',arr:strain,fmt:v=>(+v).toFixed(1),short:v=>(+v).toFixed(1).replace(/\.0$/,''),goal:14,higher:true},
+  volume:{name:'Workout volume',fam:'train',icon:'dumbbell',unit:'kg',arr:volume,fmt:int,short:kf,goal:null,higher:true,zero:true},
+  nutrition:{name:'Calories',fam:'nutri',icon:'fork',unit:'kcal',arr:kcal,fmt:int,short:kf,goal:2500,higher:null},
+  steps:{name:'Steps',fam:'train',icon:'steps',unit:'',arr:steps,fmt:int,short:kf,goal:10000,higher:true,zero:true},
 };
-const ORDER=['score','stages','recovery','hrv','rhr','strain','volume','nutrition','steps'];
-M.volume.s.week=M.volume.s.vals.reduce((a,b)=>a+b,0);
-M.volume.s.weekGoal=50000;
+const ORDER=['hrv','stages','score','recovery','rhr','strain','volume','nutrition','steps'];
+Object.values(M).forEach(m=>m.base=mean(m.arr));
+const val=(m,i)=>M[m].arr[i];
 
-/* ---------- variants ---------- */
+/* ---- intraday (D range) ---- */
+const rngFor=(d,s)=>mulberry32(d*7919+s*104729+13);
+const hourLbl=h=>h===0?'12a':h===12?'12p':h<12?h+'a':(h-12)+'p';
+const EX={Push:[['Bench press','Bench',.38],['Overhead press','OHP',.22],['Incline DB press','Incline',.24],['Dips','Dips',.16]],
+  Pull:[['Deadlift','Deadlift',.42],['Barbell row','Row',.28],['Pull-up','Pull-up',.14],['Curl','Curl',.16]],
+  Legs:[['Back squat','Squat',.4],['Romanian deadlift','RDL',.28],['Leg press','Press',.22],['Lunge','Lunge',.1]],
+  Upper:[['Bench press','Bench',.3],['Cable row','Row',.3],['Overhead press','OHP',.2],['Pull-up','Pull-up',.2]],
+  'Full body':[['Back squat','Squat',.34],['Bench press','Bench',.26],['Barbell row','Row',.24],['Overhead press','OHP',.16]]};
+function hypSegs(d){
+  const wD=[.38,.3,.2,.12,0],wR=[.1,.16,.22,.24,.28],wA=[.15,0,.35,0,.5];const segs=[];
+  for(let c=0;c<5;c++){const lc=light[d]/5;
+    [['light',lc*.55],['deep',deep[d]*wD[c]],['light',lc*.45],['rem',rem[d]*wR[c]],['awake',awake[d]*wA[c]]].forEach(([s,m])=>{if(m<.5)return;const l=segs[segs.length-1];if(l&&l.s===s)l.m+=m;else segs.push({s,m});});}
+  let t=0;segs.forEach(g=>{g.t0=t;t+=g.m;g.t1=t;});return segs;
+}
+const clock=min=>{const t=(23*60+min)%(24*60);const h=Math.floor(t/60),mm=Math.round(t%60)%60;return `${h%12||12}:${String(mm).padStart(2,'0')}${h<12?'a':'p'}`};
+function intraday(m,d){
+  const R=rngFor(d,m.length);
+  if(m==='stages')return{kind:'hyp',segs:hypSegs(d),total:inbed[d],caption:'Last night, by stage'};
+  if(m==='score'){const v=[Math.min(100,Math.round(asleep[d]/480*100)),Math.round(asleep[d]/inbed[d]*100),Math.min(100,Math.round(deep[d]/90*100)),Math.min(100,Math.round(rem[d]/110*100)),Math.max(0,Math.round(100-awake[d]*1.6))];
+    return{kind:'cat',vals:v,labels:['Duration','Efficiency','Deep','REM','Restful'],sl:['Dur','Eff','Deep','REM','Rest'],dom:[0,100],fmtv:v=>String(v),caption:'Score contributors (0–100)'};}
+  if(m==='recovery'){const b=M.hrv.base,br=M.rhr.base;const v=[clamp(Math.round(50+(hrv[d]-b)/b*160),5,100),clamp(Math.round(50+(br-rhr[d])/br*400),5,100),score[d]];
+    return{kind:'cat',vals:v,labels:['HRV','Resting HR','Sleep'],sl:['HRV','RHR','Sleep'],dom:[0,100],fmtv:v=>String(v),caption:'Recovery contributors (0–100)'};}
+  if(m==='hrv'){const v=hrv[d];let pts=[...Array(17)].map((_,k)=>{const t=k/16;return v*(.8+.36*Math.sin(Math.PI*Math.min(1,t*1.35)))+(R()-.5)*v*.16});const sh=v-mean(pts);pts=pts.map(p=>Math.round(p+sh));
+    return{kind:'time',vals:pts,labels:pts.map((_,k)=>k%4===0?['11p','1a','3a','5a','7a'][k/4]:''),full:pts.map((_,k)=>clock(k*30)),caption:'Overnight, every 30 min',unit:'ms'};}
+  if(m==='rhr'){const tr=volume[d]>0;const pts=[...Array(24)].map((_,h)=>{let b;
+      if(h<6)b=rhr[d]+R()*4;else if(h<7)b=rhr[d]+9;else if(h<9)b=72+R()*8;else if(h<17)b=68+R()*14;else if(h===17)b=80;else if(h===18)b=tr?128+R()*16:76+R()*8;else if(h===19)b=tr?98:74;else if(h<22)b=70+R()*6;else b=rhr[d]+6+R()*4;return Math.round(b)});
+    pts[3]=rhr[d];for(let h=0;h<24;h++)if(pts[h]<rhr[d])pts[h]=rhr[d];
+    return{kind:'time',vals:pts,labels:pts.map((_,h)=>h%6===0?hourLbl(h):''),full:pts.map((_,h)=>hourLbl(h)),caption:'Heart rate today, hourly. The lowest reading is your resting HR.',unit:'bpm'};}
+  if(m==='strain'){const tr=volume[d]>0;const S0=strain[d];const base=tr?S0*.45:S0;const per=base/16;let c=0;const pts=[...Array(24)].map((_,h)=>{if(h>=7&&h<=22)c+=per;if(h===18&&tr)c+=S0*.55;return +Math.min(S0,c).toFixed(1)});pts[23]=S0;
+    return{kind:'time',vals:pts,labels:pts.map((_,h)=>h%6===0?hourLbl(h):''),full:pts.map((_,h)=>hourLbl(h)),caption:'Strain building through the day',goal:14,dom:[0,21]};}
+  if(m==='steps'){const w=[0,0,0,0,0,0,.3,1.2,2.4,1,.8,1,1.6,1.2,.8,.9,1.3,2.6,1.8,1.2,.9,.5,.2,0].map(x=>x*(1+(R()-.5)*.6));const s=w.reduce((a,b)=>a+b,0);const pts=w.map(x=>Math.round(x/s*steps[d]));
+    return{kind:'time',vals:pts,labels:pts.map((_,h)=>h%6===0?hourLbl(h):''),full:pts.map((_,h)=>hourLbl(h)),caption:`Hourly steps · ${int(steps[d])} total`,zero:true};}
+  if(m==='nutrition'){const f=[.24,.33,.1,.33].map(x=>x+(R()-.5)*.05);const s=f.reduce((a,b)=>a+b,0);const pf=[.26,.31,.1,.33];
+    return{kind:'cat',vals:f.map(x=>Math.round(x/s*kcal[d]/10)*10),second:pf.map(x=>Math.round(x*protein[d])),labels:['Breakfast','Lunch','Snack','Dinner'],sl:['Bfast','Lunch','Snack','Dinner'],fmtv:v=>int(v)+' kcal',caption:`By meal · ${protein[d]} g protein`};}
+  if(m==='volume'){const s=SESS[DATE[d].getDay()];if(volume[d]===0)return{kind:'empty',title:'Rest day',sub:'No session logged. Recovery counts too.'};
+    const ex=EX[s];return{kind:'cat',vals:ex.map(e=>Math.round(e[2]*volume[d]/10)*10),labels:ex.map(e=>e[0]),sl:ex.map(e=>e[1]),fmtv:v=>int(v)+' kg',caption:`${s} session · sets × reps × weight`};}
+}
+
+/* ---- window series ---- */
+const wStart=sel=>Math.min(N-7,Math.max(0,sel-3));
+function series(m,range,sel){
+  if(range==='D'){const sp=intraday(m,sel);sp.m=m;sp.range='D';sp.selPos=-1;return sp;}
+  const idx=range==='W'?[...Array(7)].map((_,k)=>wStart(sel)+k):[...Array(N)].map((_,k)=>k);
+  const sp={m,range,kind:'time',days:idx,selPos:idx.indexOf(sel),vals:idx.map(i=>val(m,i)),
+    labels:idx.map(i=>range==='W'?dLetter(i):((N-1-i)%7===0?String(DATE[i].getDate()):'')),
+    full:idx.map(dShort),goal:M[m].goal,zero:!!M[m].zero};
+  if(m==='stages')sp.stack=idx.map(i=>STG.map(s=>s.v[i]));
+  if(m==='recovery')sp.dom=[0,100];
+  if(m==='strain')sp.dom=[0,21];
+  return sp;
+}
+
+/* ================= state ================= */
+const S={type:'area',range:'W',sel:N-1,acc:'stele',over:{},focus:'hrv'};
+try{const j=JSON.parse(localStorage.getItem('stele-lab-2')||'null');if(j){Object.assign(S,j);S.sel=clamp(+S.sel||0,0,N-1);if(!M[S.focus])S.focus='hrv';}}catch(e){}
+const save=()=>{try{localStorage.setItem('stele-lab-2',JSON.stringify(S))}catch(e){}};
+const cfg=(vid,m)=>{const o=S.over[`${vid}|${m}`]||{},g=S.over[`${vid}|_`]||{};return{type:o.type||g.type||S.type,range:o.range||g.range||S.range}};
+
+/* ================= icons ================= */
+const sv=p=>`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const ICON={
+  moon:sv('<path d="M15.9 12.6A6.6 6.6 0 0 1 7.4 4.1a6.6 6.6 0 1 0 8.5 8.5Z"/>'),
+  heart:sv('<path d="M10 16.3s-6.2-3.6-6.2-8.1A3.4 3.4 0 0 1 10 6.3a3.4 3.4 0 0 1 6.2 1.9c0 4.5-6.2 8.1-6.2 8.1Z"/>'),
+  bolt:sv('<path d="M11 2.8 4.8 11h4.6L8.8 17.2 15.2 9h-4.7L11 2.8Z"/>'),
+  dumbbell:sv('<path d="M3 10h14M5.3 6.6v6.8M3.3 8v4M14.7 6.6v6.8M16.7 8v4"/>'),
+  fork:sv('<path d="M6.5 3v5.2a1.8 1.8 0 0 0 3.6 0V3M8.3 3v14M13.8 17V3c-1.7.6-2.4 2.6-2.4 5.2 0 1.6.9 2.5 2.4 2.5"/>'),
+  steps:sv('<path d="M6.2 11.6c-1.4-.2-2.3-1.9-2-3.8.3-2 1.5-3.4 2.9-3.2 1.3.2 1.8 1.9 1.5 3.9l-.4 3.1H6.2ZM6 12.9l2.1.3-.3 1.9a1.1 1.1 0 1 1-2.1-.3l.3-1.9ZM13.8 8.2c1.4-.2 2.3-1.9 2-3.8-.3-2-1.5-3.4-2.9-3.2-1.3.2-1.8 1.9-1.5 3.9l.4 3.1h2ZM14 9.5l-2.1.3.3 1.9a1.1 1.1 0 1 0 2.1-.3l-.3-1.9Z"/>'),
+  line:sv('<path d="M2 14l4.5-5 3.5 3 6-7"/>'),
+  bar:sv('<path d="M4 16V9M8.7 16V4M13.3 16v-5M18 16V7"/>'),
+  area:`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 16V12l4.5-5 3.5 3 6-6V16Z" fill="currentColor" opacity=".35"/><path d="M2 12l4.5-5 3.5 3 6-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  more:`<svg viewBox="0 0 12 3" aria-hidden="true"><circle cx="1.5" cy="1.5" r="1.1" fill="currentColor"/><circle cx="6" cy="1.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="1.5" r="1.1" fill="currentColor"/></svg>`,
+  up:`<svg viewBox="0 0 7 10" aria-hidden="true"><path d="M3.5 9.3V1M.9 3.6 3.5 1l2.6 2.6" fill="none" stroke="#316df7" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  down:`<svg viewBox="0 0 7 10" aria-hidden="true"><path d="M3.5.7V9M.9 6.4 3.5 9l2.6-2.6" fill="none" stroke="#316df7" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  avatar:`<svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13.6" fill="none" stroke="#11110f" stroke-width="1.6"/><circle cx="15" cy="11.6" r="4.6" fill="#11110f"/><path d="M6.6 23.6c1.8-3.3 4.9-5 8.4-5s6.6 1.7 8.4 5A12 12 0 0 1 15 27a12 12 0 0 1-8.4-3.4Z" fill="#11110f"/></svg>`,
+  status:`<svg viewBox="0 0 66 11" aria-hidden="true"><g fill="#11110f"><rect x="0" y="7" width="3" height="4" rx=".7"/><rect x="4.5" y="5" width="3" height="6" rx=".7"/><rect x="9" y="2.5" width="3" height="8.5" rx=".7"/><rect x="13.5" y="0" width="3" height="11" rx=".7"/><path d="M29 2.6a9 9 0 0 1 6.2 2.5l1-1a10.4 10.4 0 0 0-14.4 0l1 1A9 9 0 0 1 29 2.6Zm0 3.2a5.7 5.7 0 0 1 3.9 1.5l1-1a7.1 7.1 0 0 0-9.8 0l1 1A5.7 5.7 0 0 1 29 5.8Zm0 3.2c.6 0 1.2.2 1.6.6L29 11.2l-1.6-1.6c.4-.4 1-.6 1.6-.6Z"/><rect x="42.5" y=".5" width="20" height="10" rx="3" fill="none" stroke="#11110f" stroke-opacity=".4"/><rect x="44" y="2" width="15" height="7" rx="1.8"/><rect x="63.6" y="3.6" width="1.6" height="3.8" rx=".8" fill-opacity=".4"/></g></svg>`,
+};
+
+/* ================= text helpers ================= */
+function valHTML(m,i,cls){
+  if(m==='stages'){const h=Math.floor(asleep[i]/60),mm=asleep[i]%60;return `<div class="val ${cls}">${h}h ${String(mm).padStart(2,'0')}m</div>`;}
+  const u=M[m].unit;return `<div class="val ${cls}">${M[m].fmt(val(m,i))}${u?`<span class="u">${u}</span>`:''}</div>`;
+}
+function deltaHTML(m,i){
+  if(m==='nutrition')return `<div class="dl">${protein[i]} g protein · ${Math.round(kcal[i]/2500*100)}% of kcal goal</div>`;
+  if(i<13)return `<div class="dl"><span class="dash"></span>Building baseline</div>`;
+  const a=mean(M[m].arr.slice(i-6,i+1)),b=mean(M[m].arr.slice(i-13,i-6));const d=a-b;
+  const txt=m==='stages'?`${d>=0?'+':'−'}${Math.round(Math.abs(d))}m`:`${d>=0?'+':'−'}${Math.abs(Math.round(d/b*100))}%`;
+  if(txt==='+0%'||txt==='−0%'||txt==='+0m'||txt==='−0m')return `<div class="dl"><span class="dash"></span>Same as last week</div>`;
+  return `<div class="dl">${d>=0?ICON.up:ICON.down}${txt} from last week</div>`;
+}
+function head(vid,m){const k=`${vid}|${m}`;const ov=!!S.over[k];
+  return `<div class="ch"><span class="ic">${ICON[M[m].icon]}</span><span class="ct">${M[m].name}</span><button class="more${ov?' on':''}" data-menu="${k}" aria-label="${M[m].name} chart options">${ICON.more}</button></div>`;}
+function dwm(vid,m){const r=cfg(vid,m).range;return `<div class="dwm" role="group" aria-label="Range">${['D','W','M'].map(x=>`<button data-dwm="${vid}|${m}|${x}" aria-pressed="${r===x}">${x}</button>`).join('')}</div>`;}
+function tseg(vid,m){const t=cfg(vid,m).type;return `<div class="tseg" role="group" aria-label="Chart type">${['line','bar','area'].map(x=>`<button data-tseg="${vid}|${m}|${x}" aria-pressed="${t===x}" aria-label="${x} chart">${ICON[x]}</button>`).join('')}</div>`;}
+const SL={};
+function slot(vid,m,kind,h,opts={}){const id=`${vid}-${m}-${kind}${opts.tag||''}`;SL[id]={vid,m,kind,opts};return `<div class="slot${opts.cls?' '+opts.cls:''}" data-slot="${id}"${h?` style="height:${h}px"`:''}></div>`;}
+function insight(m,i){const v=val(m,i),b=M[m].base,p=Math.round((v-b)/b*100);const ab=p>=0?'above':'below';
+  const wk=M[m].arr.slice(Math.max(0,i-6),i+1);
+  switch(m){
+    case 'score':{const c=intraday('score',i);const w=c.labels[c.vals.indexOf(Math.min(...c.vals))];return v>=85?`Above your 85 goal. ${w==='Restful'?'Restfulness':w} was your weakest contributor.`:`Below your 85 goal. ${w==='Restful'?'Restfulness':w} held it back.`;}
+    case 'stages':return `${hm(v)} asleep, ${hm(Math.abs(v-b))} ${v>=b?'more':'less'} than your 30-day norm.`;
+    case 'recovery':return v>=67?'Green. Your body is ready for a hard session.':v>=34?'Yellow. Keep today moderate.':'Red. Make today a rest day.';
+    case 'hrv':return `${Math.abs(p)}% ${ab} your 30-day baseline of ${Math.round(b)} ms.`;
+    case 'rhr':return `${Math.abs(Math.round(v-b))} bpm ${v<=b?'below':'above'} your usual ${Math.round(b)}. ${v<=b?'A good sign.':'Watch for fatigue or illness.'}`;
+    case 'strain':return `${v<10?'Light':v<14?'Moderate':v<18?'High':'All-out'} day. Aim for 12–15 on training days.`;
+    case 'volume':return v===0?`Rest day. ${wk.filter(x=>x>0).length} sessions in the last 7 days.`:`${SESS[DATE[i].getDay()]} day, ${Math.abs(p)}% ${ab} your average day.`;
+    case 'nutrition':return `${protein[i]} g protein, ${protein[i]>=170?'goal hit':'short of 170 g'}. Hit on ${protein.slice(Math.max(0,i-6),i+1).filter(x=>x>=170).length} of the last 7 days.`;
+    case 'steps':return `Goal hit on ${wk.filter(x=>x>=10000).length} of the last 7 days.`;
+  }}
+
+/* ================= svg helpers ================= */
+const r1=v=>Math.round(v*10)/10;
+const tx=(x,y,s,{a='start',fs=9,c='rgba(17,17,15,.55)',w=400,mono=false}={})=>`<text x="${r1(x)}" y="${r1(y)}" text-anchor="${a}" font-size="${fs}" font-weight="${w}" style="fill:${c}${mono?';font-family:var(--mono)':''}">${s}</text>`;
+const hl=(x1,x2,y,c,dash)=>`<line x1="${r1(x1)}" x2="${r1(x2)}" y1="${r1(y)}" y2="${r1(y)}" style="stroke:${c}" stroke-width="1"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+function mono(P){const n=P.length;if(n<2)return '';if(n===2)return `M${P[0].map(r1)}L${P[1].map(r1)}`;
+  const dx=[],m=[],t=[];for(let i=0;i<n-1;i++){dx[i]=P[i+1][0]-P[i][0];m[i]=(P[i+1][1]-P[i][1])/dx[i];}
+  t[0]=m[0];t[n-1]=m[n-2];for(let i=1;i<n-1;i++)t[i]=m[i-1]*m[i]<=0?0:(m[i-1]+m[i])/2;
+  for(let i=0;i<n-1;i++){if(m[i]===0){t[i]=t[i+1]=0;continue;}const a=t[i]/m[i],b=t[i+1]/m[i],s=a*a+b*b;if(s>9){const k=3/Math.sqrt(s);t[i]=k*a*m[i];t[i+1]=k*b*m[i];}}
+  let d=`M${r1(P[0][0])},${r1(P[0][1])}`;for(let i=0;i<n-1;i++){const h=dx[i]/3;d+=`C${r1(P[i][0]+h)},${r1(P[i][1]+t[i]*h)} ${r1(P[i+1][0]-h)},${r1(P[i+1][1]-t[i+1]*h)} ${r1(P[i+1][0])},${r1(P[i+1][1])}`;}return d;}
+function barP(x,yd,w,yb,rad){const h=Math.abs(yb-yd);rad=Math.max(0,Math.min(rad,h,w/2));
+  if(yd<=yb)return `M${r1(x)},${r1(yb)}V${r1(yd+rad)}Q${r1(x)},${r1(yd)} ${r1(x+rad)},${r1(yd)}H${r1(x+w-rad)}Q${r1(x+w)},${r1(yd)} ${r1(x+w)},${r1(yd+rad)}V${r1(yb)}Z`;
+  return `M${r1(x)},${r1(yb)}V${r1(yd-rad)}Q${r1(x)},${r1(yd)} ${r1(x+rad)},${r1(yd)}H${r1(x+w-rad)}Q${r1(x+w)},${r1(yd)} ${r1(x+w)},${r1(yd-rad)}V${r1(yb)}Z`;}
+const dot=(x,y,r,fill='var(--acc)')=>`<circle cx="${r1(x)}" cy="${r1(y)}" r="${r}" style="fill:${fill};stroke:#fff" stroke-width="1.5"/>`;
+function autoDom(sp,type,incGoal){if(sp.dom)return sp.dom;const vs=sp.vals.concat(incGoal&&sp.goal!=null?[sp.goal]:[]);let lo=Math.min(...vs),hi=Math.max(...vs);
+  if(type==='bar'||type==='lollipop'||sp.zero||sp.kind==='cat')return[0,hi*1.1||1];const p=(hi-lo)*.2||Math.abs(hi)*.05||1;return[lo-p,hi+p];}
+const shortOf=(sp,v)=>sp.kind==='cat'?String(Math.round(v)):M[sp.m].short(v);
+
+/* ================= renderers ================= */
+function emptyS(sp,W,H){return tx(W/2,H/2+(H>40?-4:3),sp.title,{a:'middle',fs:H>40?14:11,c:'var(--ink)'})+(H>40?tx(W/2,H/2+12,sp.sub,{a:'middle',fs:10}):'');}
+function chart(sp,W,H,o){
+  if(sp.kind==='empty')return{svg:emptyS(sp,W,H),hits:null};
+  if(sp.kind==='hyp')return hypno(sp,W,H,o);
+  if(sp.stack)return stackC(sp,W,H,o);
+  let type=o.type;if(sp.kind==='cat'&&type!=='bar')type='lollipop';
+  const n=sp.vals.length,fs=o.fs||9,showX=o.axis!=='none'&&o.axis!=null,showY=o.axis==='full';
+  const L=showY?34:(o.bleed?0:1),R=showY?10:(o.bleed?0:1),T=o.T??(showY?10:5),B=showX?fs+7:(o.B??2);
+  const x0=L,x1=W-R,y0=T,y1=H-B;const edge=(type==='line'||type==='area')&&(o.bleed||n>12);const inset=edge&&!o.bleed?4:0;
+  const bw=(x1-x0)/n;const cx=i=>edge?(n===1?(x0+x1)/2:x0+inset+i*((x1-x0)-2*inset)/(n-1)):x0+bw*(i+.5);
+  const dom=autoDom(sp,type,o.goal!==false);const y=v=>y1-(Math.max(dom[0],Math.min(dom[1],v))-dom[0])/(dom[1]-dom[0])*(y1-y0);
+  const g=[],hits=[];const soft=o.soft;const sel=sp.selPos??-1;
+  if(showY)[dom[0],(dom[0]+dom[1])/2,dom[1]].forEach(t=>{g.push(hl(x0,x1,y(t),'rgba(17,17,15,.08)'));g.push(tx(x0-6,y(t)+3,shortOf(sp,t),{a:'end',fs,mono:true}));});
+  if(sp.goal!=null&&o.goal!==false&&sp.goal>=dom[0]&&sp.goal<=dom[1]&&sp.kind!=='cat'){g.push(hl(x0,x1,y(sp.goal),'rgba(17,17,15,.38)','2 3'));
+    if(showY)g.push(tx(x1,y(sp.goal)-4,`goal ${shortOf(sp,sp.goal)}`,{a:'end',fs:fs-.5}));}
+  const P=sp.vals.map((v,i)=>[cx(i),y(v)]);
+  if(type==='bar'){const w=Math.min(o.barMax||(showY?22:14),bw*.62);
+    sp.vals.forEach((v,i)=>{const op=sel>=0?(i===sel?1:.32):.85;
+      if(v<=0&&sp.zero){g.push(`<circle cx="${r1(cx(i))}" cy="${r1(y1-1.5)}" r="1.4" style="fill:var(--acc)" opacity="${soft?.3:.45}"/>`);return;}
+      g.push(`<path d="${barP(cx(i)-w/2,y(v),w,y1,o.thin?w/2:Math.min(4,w/2))}" style="fill:var(--acc)" opacity="${soft?op*.4:op}"/>`);});}
+  else if(type==='lollipop'){const bl=y(dom[0]);
+    sp.vals.forEach((v,i)=>{g.push(`<line x1="${r1(cx(i))}" x2="${r1(cx(i))}" y1="${r1(bl)}" y2="${r1(y(v))}" style="stroke:var(--acc)" stroke-width="1.6" opacity=".35"/>`);g.push(dot(cx(i),y(v),showY?5:3.4));});}
+  else{const d=mono(P);
+    if(type==='area'){const gid='gr'+o.id.replace(/[^a-z0-9]/gi,'');const yb=o.bleed?H:y1;
+      g.unshift(`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--acc)" stop-opacity="${soft?.26:.42}"/><stop offset="1" style="stop-color:var(--acc)" stop-opacity="0"/></linearGradient></defs>`);
+      g.push(`<path d="${d}L${r1(P[n-1][0])},${r1(yb)}L${r1(P[0][0])},${r1(yb)}Z" fill="url(#${gid})"/>`);}
+    g.push(`<path d="${d}" fill="none" style="stroke:var(--acc)" stroke-width="${o.thin?1.3:(soft?1.4:1.6)}" stroke-linecap="round" stroke-linejoin="round"${soft?' opacity=".55"':''}/>`);
+    if(o.thin)P.forEach(p=>g.push(`<circle cx="${r1(p[0])}" cy="${r1(p[1])}" r="1.8" style="fill:var(--acc)"/>`));
+    if(sel>=0){if(!soft&&H>30)g.push(`<line x1="${r1(P[sel][0])}" x2="${r1(P[sel][0])}" y1="${y0}" y2="${y1}" style="stroke:rgba(17,17,15,.18)" stroke-width="1"/>`);g.push(dot(P[sel][0],P[sel][1],soft?2.6:3.2));}
+    else if(sp.kind==='time'){const k=sp.m==='rhr'?sp.vals.indexOf(Math.min(...sp.vals)):n-1;g.push(dot(P[k][0],P[k][1],3.2));if(sp.m==='rhr'&&showY)g.push(tx(P[k][0],P[k][1]+14,`resting ${sp.vals[k]}`,{a:'middle',fs:fs-.5}));}}
+  if(showX)sp.vals.forEach((_,i)=>{const lb=sp.kind==='cat'?((bw<72?sp.sl:sp.labels)[i]):sp.labels[i];if(!lb)return;
+    const a=edge&&i===0?'start':edge&&i===n-1?'end':'middle';g.push(tx(cx(i),H-2,lb,{a,fs,c:i===sel?'var(--ink)':'rgba(17,17,15,.5)',w:i===sel?600:400}));});
+  if(showY&&sp.kind==='cat')sp.vals.forEach((v,i)=>g.push(tx(cx(i),y(v)-9,sp.fmtv(v).replace(/ (kg|kcal)$/,''),{a:'middle',fs:fs-.5,mono:true,c:'var(--ink)'})));
+  P.forEach((p,i)=>hits.push({x:p[0],y:p[1],k:i}));
+  return{svg:g.join(''),hits};
+}
+function stackC(sp,W,H,o){
+  const n=sp.stack.length,fs=o.fs||9,showX=o.axis!=='none'&&o.axis!=null,showY=o.axis==='full';
+  const L=showY?34:(o.bleed?0:1),R=showY?10:(o.bleed?0:1),T=o.T??(showY?10:5),B=showX?fs+7:(o.B??2);
+  const x0=L,x1=W-R,y0=T,y1=H-B,bw=(x1-x0)/n,cx=i=>x0+bw*(i+.5);const y=v=>y1-Math.min(v,540)/540*(y1-y0);
+  const g=[],hits=[];const sel=sp.selPos??-1;const type=o.type;const soft=o.soft;
+  if(showY)[0,270,540].forEach(t=>{g.push(hl(x0,x1,y(t),'rgba(17,17,15,.08)'));g.push(tx(x0-6,y(t)+3,hs(t),{a:'end',fs,mono:true}));});
+  if(o.goal!==false){g.push(hl(x0,x1,y(450),'rgba(17,17,15,.38)','2 3'));if(showY)g.push(tx(x1,y(450)-4,'goal 7.5h',{a:'end',fs:fs-.5}));}
+  if(type==='bar'){const w=Math.min(o.barMax||(showY?22:14),bw*.62),gap=n>12?.8:1.2;
+    sp.stack.forEach((st,i)=>{let acc=0;const op=sel>=0?(i===sel?1:.4):.9;
+      st.forEach((v,j)=>{const a=acc,b=acc+v;acc=b;const ya=y(a)-(j?gap:0),yb=y(b);if(ya-yb<=0)return;const f=soft?op*.45:op;
+        g.push(j===3?`<path d="${barP(cx(i)-w/2,yb,w,ya,Math.min(3,w/2))}" style="fill:${STG[j].c}" opacity="${f}"/>`:`<rect x="${r1(cx(i)-w/2)}" y="${r1(yb)}" width="${r1(w)}" height="${r1(ya-yb)}" style="fill:${STG[j].c}" opacity="${f}"/>`);});
+      hits.push({x:cx(i),y:y(acc),k:i});});}
+  else{const cum=[0,1,2,3].map(j=>sp.stack.map(st=>st.slice(0,j+1).reduce((a,b)=>a+b,0)));const edge=n>12||o.bleed;const xs=i=>edge?x0+(o.bleed?0:4)+i*(x1-x0-(o.bleed?0:8))/(n-1):cx(i);
+    if(type==='area')for(let j=3;j>=0;j--){const P=cum[j].map((v,i)=>[xs(i),y(v)]);g.push(`<path d="${mono(P)}L${r1(P[n-1][0])},${r1(o.bleed?H:y1)}L${r1(P[0][0])},${r1(o.bleed?H:y1)}Z" style="fill:${STG[j].c}" opacity="${soft?.35:.88}"/>`);}
+    else STG.forEach((s,j)=>{const P=sp.stack.map((st,i)=>[xs(i),y(st[j])]);g.push(`<path d="${mono(P)}" fill="none" style="stroke:${s.c}" stroke-width="1.6" stroke-linecap="round"${soft?' opacity=".5"':''}/>`);});
+    if(sel>=0){const x=xs(sel);if(H>30&&!soft)g.push(`<line x1="${r1(x)}" x2="${r1(x)}" y1="${y0}" y2="${y1}" style="stroke:rgba(17,17,15,.25)"/>`);g.push(dot(x,y(type==='area'?cum[3][sel]:sp.stack[sel][2]),3,type==='area'?'var(--st-awake)':'var(--st-light)'));}
+    for(let i=0;i<n;i++)hits.push({x:xs(i),y:y(cum[3][i]),k:i});}
+  if(showX)sp.labels.forEach((lb,i)=>{if(lb)g.push(tx(hits[i].x,H-2,lb,{a:'middle',fs,c:i===sel?'var(--ink)':'rgba(17,17,15,.5)',w:i===sel?600:400}));});
+  return{svg:g.join(''),hits};
+}
+function hypno(sp,W,H,o){
+  const fs=o.fs||9,showX=o.axis!=='none'&&o.axis!=null,showY=o.axis==='full';const L=showY?40:0,R=showY?6:0,B=showX?fs+7:1,T=o.T??3;
+  const x0=L,x1=W-R,y1=H-B;const lv={awake:0,rem:1,light:2,deep:3};const rh=(y1-T)/4;const x=m=>x0+m/sp.total*(x1-x0);
+  const g=[],hits=[];
+  if(showY)['Awake','REM','Light','Deep'].forEach((s,j)=>{g.push(tx(0,T+rh*j+rh/2+3,s,{fs}));g.push(hl(x0,x1,T+rh*(j+1),'rgba(17,17,15,.06)'));});
+  if(o.type==='line'){let d='';sp.segs.forEach((s,k)=>{const yy=T+rh*lv[s.s]+rh/2;d+=(k?`V${r1(yy)}`:`M${r1(x(s.t0))},${r1(yy)}`)+`H${r1(x(s.t1))}`;});
+    g.push(`<path d="${d}" fill="none" style="stroke:var(--acc)" stroke-width="1.6" stroke-linejoin="round"${o.soft?' opacity=".55"':''}/>`);}
+  else sp.segs.forEach(s=>{const yy=T+rh*lv[s.s]+rh*.12;const h=o.type==='area'?y1-yy:rh*.76;g.push(`<rect x="${r1(x(s.t0))}" y="${r1(yy)}" width="${r1(Math.max(1,x(s.t1)-x(s.t0)-.6))}" height="${r1(h)}" rx="${r1(Math.min(2,rh*.3))}" style="fill:${STG.find(t=>t.k===s.s).c}"${o.soft?' opacity=".45"':''}/>`);});
+  sp.segs.forEach((s,k)=>hits.push({x:(x(s.t0)+x(s.t1))/2,y:T+rh*lv[s.s]+rh/2,k}));
+  if(showX)for(let h=0;h<=8;h+=2){const m=h*60;if(m>sp.total)break;g.push(tx(x(m),H-2,['11p','1a','3a','5a','7a'][h/2],{a:h===0?'start':'middle',fs}));}
+  return{svg:g.join(''),hits};
+}
+function radial(sp,S0,o){
+  const c=S0/2,r0=S0*.3,rO=S0*.49-2;const g=[],hits=[];const type=o.type;const sel=sp.selPos??-1;
+  const ang=(i,n)=>i/n*2*Math.PI-Math.PI/2;const P=(a,r)=>[c+r*Math.cos(a),c+r*Math.sin(a)];
+  g.push(`<circle cx="${c}" cy="${c}" r="${r1(r0-3)}" fill="none" style="stroke:rgba(17,17,15,.08)" stroke-width="1"/>`);
+  if(sp.kind==='empty'){g.push(`<circle cx="${c}" cy="${c}" r="${r1((r0+rO)/2)}" fill="none" style="stroke:rgba(17,17,15,.07)" stroke-width="${r1(rO-r0)}"/>`);return{svg:g.join(''),hits:null};}
+  if(sp.kind==='hyp'){const lv={awake:0,rem:1,light:2,deep:3};
+    sp.segs.forEach((s,k)=>{const a0=s.t0/sp.total*2*Math.PI-Math.PI/2,a1=s.t1/sp.total*2*Math.PI-Math.PI/2-.012;if(a1<=a0)return;
+      const r=type==='line'?r0+(3-lv[s.s])/3*(rO-r0):(r0+rO)/2;const sw=type==='line'?3:rO-r0-2;const [ax,ay]=P(a0,r),[bx,by]=P(a1,r);
+      g.push(`<path d="M${r1(ax)},${r1(ay)}A${r1(r)},${r1(r)} 0 ${a1-a0>Math.PI?1:0} 1 ${r1(bx)},${r1(by)}" fill="none" style="stroke:${STG.find(t=>t.k===s.s).c}" stroke-width="${r1(sw)}"/>`);
+      const [hx,hy]=P((a0+a1)/2,r);hits.push({x:hx,y:hy,k});});
+    return{svg:g.join(''),hits};}
+  if(sp.stack){const n=sp.stack.length;const sc=v=>r0+Math.min(v,540)/540*(rO-r0);const sw=Math.max(1.6,Math.min(9,2*Math.PI*r0/n*.55));
+    if(type==='bar')sp.stack.forEach((st,i)=>{let acc=0;const a=ang(i,n);const op=sel>=0?(i===sel?1:.4):.9;st.forEach((v,j)=>{const [ax,ay]=P(a,sc(acc)+(j?1:0)),[bx,by]=P(a,sc(acc+v));acc+=v;g.push(`<line x1="${r1(ax)}" y1="${r1(ay)}" x2="${r1(bx)}" y2="${r1(by)}" style="stroke:${STG[j].c}" stroke-width="${r1(sw)}" opacity="${op}"/>`);});const [hx,hy]=P(a,sc(acc));hits.push({x:hx,y:hy,k:i});});
+    else{const cum=[0,1,2,3].map(j=>sp.stack.map(st=>st.slice(0,j+1).reduce((a,b)=>a+b,0)));
+      for(let j=3;j>=0;j--){const pts=cum[j].map((v,i)=>P(ang(i,n),sc(v)));const d='M'+pts.map(p=>p.map(r1).join(',')).join('L')+'Z';g.push(type==='area'?`<path d="${d}" style="fill:${STG[j].c}" opacity=".85"/>`:`<path d="${d}" fill="none" style="stroke:${STG[j].c}" stroke-width="1.5"/>`);}
+      cum[3].forEach((v,i)=>{const [hx,hy]=P(ang(i,n),sc(v));hits.push({x:hx,y:hy,k:i});});
+      if(sel>=0){const [hx,hy]=P(ang(sel,n),sc(cum[3][sel]));g.push(dot(hx,hy,3,'var(--st-awake)'));}}
+    return{svg:g.join(''),hits};}
+  const n=sp.vals.length;const dom=sp.kind==='cat'||type==='bar'||sp.zero?[0,Math.max(...sp.vals)*1.05||1]:autoDom(sp,'line',false);const sc=v=>r0+(clamp(v,dom[0],dom[1])-dom[0])/(dom[1]-dom[0])*(rO-r0);
+  if(sp.goal!=null&&sp.goal>=dom[0]&&sp.goal<=dom[1]&&sp.kind!=='cat')g.push(`<circle cx="${c}" cy="${c}" r="${r1(sc(sp.goal))}" fill="none" style="stroke:rgba(17,17,15,.35)" stroke-dasharray="2 3"/>`);
+  if(type==='bar'||sp.kind==='cat'){const sw=Math.max(1.6,Math.min(sp.kind==='cat'?7:9,2*Math.PI*r0/n*.55));
+    sp.vals.forEach((v,i)=>{const a=ang(i,n);const [ax,ay]=P(a,r0),[bx,by]=P(a,Math.max(r0+1,sc(v)));const op=sel>=0?(i===sel?1:.35):.85;
+      g.push(`<line x1="${r1(ax)}" y1="${r1(ay)}" x2="${r1(bx)}" y2="${r1(by)}" style="stroke:var(--acc)" stroke-width="${r1(sw)}" stroke-linecap="round" opacity="${op}"/>`);hits.push({x:bx,y:by,k:i});});}
+  else{const pts=sp.vals.map((v,i)=>P(ang(i,n),sc(v)));const d='M'+pts.map(p=>p.map(r1).join(',')).join('L')+'Z';
+    if(type==='area')g.push(`<path d="${d}" style="fill:var(--acc)" opacity=".22"/>`);
+    g.push(`<path d="${d}" fill="none" style="stroke:var(--acc)" stroke-width="1.6" stroke-linejoin="round"/>`);
+    pts.forEach((p,i)=>hits.push({x:p[0],y:p[1],k:i}));const k=sel>=0?sel:n-1;g.push(dot(pts[k][0],pts[k][1],3));}
+  return{svg:g.join(''),hits};
+}
+function heat(sp,W,H,o){
+  if(sp.kind==='empty')return{svg:emptyS(sp,W,H),hits:null};
+  if(sp.kind==='hyp')return hypno(sp,W,H,{...o,type:'bar',axis:'none'});
+  const vals=sp.vals;const n=vals.length;const gap=3;const fs=8.5;const g=[],hits=[];const sel=sp.selPos??-1;
+  const lo=sp.kind==='cat'||sp.zero||sp.m==='stages'?0:Math.min(...vals),hi=Math.max(...vals);const t=v=>hi===lo?1:(v-lo)/(hi-lo);
+  const cells=[];
+  if(sp.range==='M'){const off=(DATE[0].getDay()+6)%7;const rows=Math.ceil((off+n)/7);const cw=(W-gap*6)/7;const ch=Math.min(cw,(H-fs-4-gap*(rows-1))/rows);
+    'MTWTFSS'.split('').forEach((l,k)=>g.push(tx(k*(cw+gap)+cw/2,fs,l,{a:'middle',fs})));
+    vals.forEach((v,i)=>{const p=off+i;cells.push({x:(p%7)*(cw+gap),y:fs+4+Math.floor(p/7)*(ch+gap),w:cw,h:ch,i});});}
+  else{const cols=n<=12?n:Math.ceil(n/2),rows=Math.ceil(n/cols);const lab=sp.range==='W'||sp.kind==='cat';const cw=(W-gap*(cols-1))/cols;const ch=Math.min(sp.range==='W'?cw*1.15:cw*1.6,(H-(lab?fs+5:0)-gap*(rows-1))/rows);
+    vals.forEach((v,i)=>cells.push({x:(i%cols)*(cw+gap),y:Math.floor(i/cols)*(ch+gap),w:cw,h:ch,i}));
+    if(lab)cells.forEach(cc=>{const lb=sp.kind==='cat'?(cc.w<40?sp.sl:sp.labels)[cc.i]:sp.labels[cc.i];g.push(tx(cc.x+cc.w/2,H-1,lb,{a:'middle',fs,c:cc.i===sel?'var(--ink)':'rgba(17,17,15,.5)',w:cc.i===sel?600:400}));});}
+  const rx=c=>r1(Math.min(6,c.w*.22));
+  cells.forEach(cc=>{const v=vals[cc.i],tt=t(v);
+    if(o.type==='bar'){g.push(`<rect x="${r1(cc.x)}" y="${r1(cc.y)}" width="${r1(cc.w)}" height="${r1(cc.h)}" rx="${rx(cc)}" style="fill:var(--acc)" opacity=".1"/>`);const fh=Math.max(v>0?1.5:0,tt*cc.h);
+      if(fh>0)g.push(`<rect x="${r1(cc.x)}" y="${r1(cc.y+cc.h-fh)}" width="${r1(cc.w)}" height="${r1(fh)}" rx="${r1(Math.min(rx(cc),fh/2))}" style="fill:var(--acc)" opacity=".85"/>`);}
+    else g.push(`<rect x="${r1(cc.x)}" y="${r1(cc.y)}" width="${r1(cc.w)}" height="${r1(cc.h)}" rx="${rx(cc)}" style="fill:var(--acc)" opacity="${(v<=0&&sp.zero?.05:.1+.8*tt).toFixed(2)}"/>`);
+    if(cc.i===sel)g.push(`<rect x="${r1(cc.x+.6)}" y="${r1(cc.y+.6)}" width="${r1(cc.w-1.2)}" height="${r1(cc.h-1.2)}" rx="${rx(cc)}" fill="none" style="stroke:var(--ink)" stroke-width="1.2"/>`);
+    if(sp.range==='W'&&cc.w>=26&&cc.h>=22){const dark=o.type!=='bar'&&tt>.55;g.push(tx(cc.x+cc.w/2,cc.y+cc.h/2+3,v<=0&&sp.zero?'–':(sp.m==='stages'?hs(v):M[sp.m].short(v)),{a:'middle',fs:9,c:dark?'#fff':'var(--ink)',mono:true}));}
+    hits.push({x:cc.x+cc.w/2,y:cc.y+cc.h/2,k:cc.i});});
+  return{svg:g.join(''),hits};
+}
+function dev(sp,W,H,o){
+  if(sp.kind!=='time')return chart(sp,W,H,{...o,axis:'x'});
+  const vals=sp.vals,n=vals.length,fs=9,B=fs+7,T=4,y1=H-B;const base=sp.range==='D'?mean(vals):M[sp.m].base;
+  const dv=vals.map(v=>v-base);const mx=Math.max(...dv.map(Math.abs))*1.15||1;const y=d=>(T+y1)/2-d/mx*(y1-T)/2;const yb=y(0);
+  const g=[hl(0,W,yb,'rgba(17,17,15,.35)')],hits=[];const sel=sp.selPos??-1;const hig=M[sp.m].higher;const bw=W/n;const cx=i=>bw*(i+.5);
+  if(o.type==='bar'){const w=Math.min(12,bw*.6);dv.forEach((d,i)=>{const good=hig===null?true:(hig?d>=0:d<=0);const op=sel>=0?(i===sel?1:.5):.85;
+    g.push(`<path d="${barP(cx(i)-w/2,y(d),w,yb,Math.min(3,w/2))}" style="fill:${good?'var(--acc)':'var(--warm)'}" opacity="${op}"/>`);hits.push({x:cx(i),y:y(d),k:i});});}
+  else{const P=dv.map((d,i)=>[cx(i),y(d)]);const d=mono(P);g.push(`<path d="${d}L${r1(P[n-1][0])},${r1(yb)}L${r1(P[0][0])},${r1(yb)}Z" style="fill:var(--acc)" opacity="${o.type==='area'?.2:.08}"/>`);
+    g.push(`<path d="${d}" fill="none" style="stroke:var(--acc)" stroke-width="1.6"/>`);P.forEach((p,i)=>hits.push({x:p[0],y:p[1],k:i}));const k=sel>=0?sel:n-1;g.push(dot(P[k][0],P[k][1],3));}
+  g.push(tx(W-2,9,sp.range==='D'?'vs day avg':'vs 30-day avg',{a:'end',fs:8}));
+  sp.labels.forEach((lb,i)=>{if(lb)g.push(tx(cx(i),H-2,lb,{a:'middle',fs,c:i===sel?'var(--ink)':'rgba(17,17,15,.5)',w:i===sel?600:400}));});
+  return{svg:g.join(''),hits};
+}
+function bullet(m,sel,W,H){
+  const i0=wStart(sel),wk=M[m].arr.slice(i0,i0+7);const v=val(m,sel);const goal=M[m].goal;const zero=goal!=null||M[m].zero;
+  const lo=zero?0:Math.min(...M[m].arr)*.92,hi=Math.max(...wk,goal||0,v)*1.08;const x=u=>2+(clamp(u,lo,hi)-lo)/(hi-lo)*(W-4);
+  const ty=H/2-3,th=6;const g=[`<rect x="2" y="${r1(ty)}" width="${W-4}" height="${th}" rx="3" style="fill:rgba(17,17,15,.08)"/>`];
+  g.push(`<rect x="${r1(x(Math.min(...wk)))}" y="${r1(ty)}" width="${r1(Math.max(3,x(Math.max(...wk))-x(Math.min(...wk))))}" height="${th}" rx="3" style="fill:var(--acc)" opacity=".2"/>`);
+  if(zero)g.push(`<rect x="2" y="${r1(ty+1)}" width="${r1(Math.max(0,x(v)-2))}" height="${th-2}" rx="2" style="fill:var(--acc)"/>`);
+  wk.forEach(u=>g.push(`<line x1="${r1(x(u))}" x2="${r1(x(u))}" y1="${r1(ty-5)}" y2="${r1(ty-1)}" style="stroke:rgba(17,17,15,.35)" stroke-width="1"/>`));
+  if(goal!=null)g.push(`<line x1="${r1(x(goal))}" x2="${r1(x(goal))}" y1="${r1(ty-4)}" y2="${r1(ty+th+4)}" style="stroke:var(--ink)" stroke-width="1.6"/>`);
+  g.push(dot(x(v),ty+th/2,3.6));
+  return{svg:g.join(''),hits:null};
+}
+
+/* ================= variants ================= */
+const tile=(vid,m,cls,inner,wide)=>`<div class="card${wide?' wide':''} ${cls} fam-${M[m].fam}" data-open="${vid}|${m}" tabindex="0">${head(vid,m)}${inner}</div>`;
 const V=[
-  {id:'V1',name:'Full-axis line',kind:'line',stages:'stackcol',axis:'full',grid:'full',annot:'goal',frame:'filled',head:'inline',
-   desc:'The conventional chart: y ticks, day labels, full horizontal grid and a dashed goal line. Everything is labeled, so nothing needs a tooltip.',
-   spec:['Line (bars for volume)','Full axes','Full grid','Goal line','Filled card, inline header']},
-  {id:'V2',name:'Soft area',kind:'area',stages:'stackarea',axis:'minimal',grid:'baseline',annot:'avg',frame:'soft',head:'stack',
-   desc:'A large stacked value over a filled trend. The only axis labels are the domain ends and first and last day, with a 7-day average hairline.',
-   spec:['Area / stacked area','Minimal axes','Baseline only','7-day average','Gradient card, stacked header']},
-  {id:'V3',name:'Today-accent bars',kind:'bar',stages:'stackcol',axis:'days',grid:'none',annot:'goal',frame:'outline',head:'inline',emph:true,
-   desc:'Discrete daily columns with six muted days and today in full accent. Day initials are the only axis. The goal line turns each day into pass or fail.',
-   spec:['Bars / stacked bars','Day labels only','No grid','Goal line','Outline card, inline header']},
-  {id:'V4',name:'Number + sparkline',kind:'spark',stages:'minicols',axis:'none',grid:'none',annot:'none',frame:'flush',head:'side',
-   desc:'The number leads and the chart is secondary. A 96px sparkline with an endpoint dot, and no axes, grid or card, only a hairline divider.',
-   spec:['Sparkline','No axes','No grid','Endpoint only','Flush list row, side header']},
-  {id:'V5',name:'Ring gauge',kind:'gauge',stages:'donut',axis:'none',grid:'none',annot:'goal',frame:'tinted',head:'gauge',
-   desc:'Today as progress around a ring, with a goal tick on the ring. A micro bar strip keeps the week visible. The card is tinted with the family accent.',
-   spec:['Radial gauge + micro bars','No axes (strip: day initials)','No grid','Goal tick','Accent-tinted card']},
-  {id:'V6',name:'Dots in typical range',kind:'dots',stages:'pct',axis:'minimal',grid:'none',annot:'band',frame:'inset',head:'inline',
-   desc:'Each day is a dot against a shaded "typical" band: your personal baseline for HRV and RHR, or ±1 SD of the week elsewhere. Sleep stages show as a 100% share of the night.',
-   spec:['Dot plot / 100% stacked','Minimal axes','No grid','Typical-range band','Card with inset plot well']},
-  {id:'V7',name:'Heat strip',kind:'heat',stages:'heatgrid',axis:'days',grid:'none',annot:'none',frame:'elevated',head:'stack',
-   desc:'Seven tiles with the value printed in each. Intensity shows relative level. Sleep stages become a stage × day heat grid.',
-   spec:['Heat cells','Day labels only','No grid','Values in cells','Elevated card, stacked header']},
-  {id:'V8',name:'Deviation from average',kind:'delta',stages:'hbars',axis:'minimal',grid:'baseline',annot:'avg',frame:'square',head:'inline',
-   desc:'Bars grow up or down from your 7-day average. A bright bar means better than normal (lower is better for RHR). Sleep stages become horizontal nightly bars against an average tick.',
-   spec:['Diverging bars / horizontal stacks','Average label only','Average as baseline','Average','Square card, inline header']},
-  {id:'V9',name:'Bullet vs goal',kind:'bullet',stages:'hbullet',axis:'minimal',grid:'none',annot:'both',frame:'grouped',head:'stack',
-   desc:'One horizontal track shows today\'s value, the week\'s min–max range, the average tick and the goal marker. The chart answers "am I on target?" and nothing else.',
-   spec:['Bullet chart','Scale ends only','No grid','Goal + average','Grouped list, stacked header']},
-  {id:'V10',name:'Full-bleed annotated',kind:'bleed',stages:'bleedcol',axis:'inplot',grid:'none',annot:'goal',frame:'bleed',head:'overlay',
-   desc:'The chart runs edge to edge behind an overlaid header. There is no axis. The week\'s high and low are labeled in the plot, plus a goal line.',
-   spec:['Edge-to-edge area / columns','In-plot labels','No grid','Goal + high/low labels','Bleed card, overlay header']},
+ {id:'V1',name:'Hero + spark tiles',desc:'Your current screen, extended. HRV stays the hero with its D/W/M control, and every other tile gets a thin trend strip under the number.',tags:['closest to Figma','number-first'],
+  body(s){return `<div class="g2"><div class="card wide fam-heart" data-open="V1|hrv" tabindex="0">${head('V1','hrv')}<div class="hero"><div class="l">${valHTML('hrv',s,'v52')}${deltaHTML('hrv',s)}</div><div class="r">${dwm('V1','hrv')}${slot('V1','hrv','chart',71,{axis:'none'})}</div></div></div>`+
+   ORDER.filter(m=>m!=='hrv').map(m=>tile('V1',m,'t1',`${valHTML(m,s,'v36')}${deltaHTML(m,s)}${slot('V1',m,'chart',30,{axis:'none',bleed:true,goal:false})}`)).join('')+`</div>`;}},
+ {id:'V2',name:'Chart in the glass',desc:'Uniform tiles where the chart sits inside the frosted glass as a soft, edge-to-edge layer behind the number. The trend reads as texture.',tags:['ambient','full-bleed'],
+  body(s){return `<div class="g2">`+ORDER.map(m=>tile('V2',m,'t2',`${valHTML(m,s,'v36')}${deltaHTML(m,s)}${slot('V2',m,'chart',0,{axis:'none',bleed:true,soft:true,cls:'bgs',B:0,T:4,goal:false})}`)).join('')+`</div>`;}},
+ {id:'V3',name:'Wide rows',desc:'Every metric gets the HRV card treatment: number on the left, a labeled chart and its own D/W/M on the right.',tags:['one pattern','per-card range'],
+  body(s){return ORDER.map(m=>tile('V3',m,'',`<div class="r3"><div class="l">${valHTML(m,s,'v36')}${deltaHTML(m,s)}</div><div class="r">${dwm('V3',m)}${slot('V3',m,'chart',58,{axis:'x'})}</div></div>`,true)).join('');}},
+ {id:'V4',name:'Radial tiles',desc:'The chart wraps around the number. Bars become spokes, line and area become a radar, and D range turns last night into a sleep clock.',tags:['radial','brandable'],
+  body(s){return `<div class="g2">`+ORDER.map(m=>tile('V4',m,'t4',`<div class="rad">${slot('V4',m,'radial',128)}${valHTML(m,s,(m==='stages'||val(m,s)>=1000)?'v17':'v22')}</div>${deltaHTML(m,s)}`)).join('')+`</div>`;}},
+ {id:'V5',name:'Synced timeline',desc:'One card, all metrics stacked on a shared time axis. Drag across any row to scrub the day, and every number updates together.',tags:['scrub','cross-metric'],
+  body(s){const r=cfg('V5','_').range;return `<div class="card wide" data-open="V5|hrv" tabindex="0" style="padding:14px 12px 12px"><div class="tl-h"><b>${dShort(s)}</b>${dwm('V5','_')}</div><div class="tl-rows">`+
+   ORDER.map(m=>`<div class="tl-row fam-${M[m].fam}"><div class="tl-l"><span class="ic">${ICON[M[m].icon]}</span><span class="n">${M[m].name}</span>${valHTML(m,s,'v17')}</div>${slot('V5',m,'chart',30,{axis:'none',goal:false})}</div>`).join('')+
+   `</div>${r==='D'?'':`<div class="tl-ax"><span></span>${slot('V5','hrv','axis',14)}</div>`}</div>`;}},
+ {id:'V6',name:'Week strip + bullets',desc:'A calendar strip picks the day. Each tile shows that day against its goal (dark tick) and the week\'s range (tint), with a tick for each day of the week and the trend underneath.',tags:['day picker','goal-first'],
+  body(s){const w0=wStart(s);return `<div class="wk" role="group" aria-label="Pick a day">${[...Array(7)].map((_,k)=>{const i=w0+k;return `<button data-day="${i}" aria-pressed="${i===s}"><span>${DOW[DATE[i].getDay()]}</span><b>${DATE[i].getDate()}</b></button>`}).join('')}</div><div class="g2">`+
+   ORDER.map(m=>tile('V6',m,'t6',`${valHTML(m,s,'v36')}${slot('V6',m,'bullet',16,{cls:'blt'})}${deltaHTML(m,s)}${slot('V6',m,'chart',24,{axis:'none',goal:false,tag:'t'})}`)).join('')+`</div>`;}},
+ {id:'V7',name:'Baseline deviation',desc:'Each tile leads with "how different from normal". Bars and lines grow away from your 30-day average: blue means better, warm grey means worse (lower is better for resting HR).',tags:['vs baseline','delta-first'],
+  body(s){return `<div class="g2">`+ORDER.map(m=>{const v=val(m,s),b=M[m].base;const d=m==='stages'?`${v>=b?'+':'−'}${Math.round(Math.abs(v-b))}m`:`${v>=b?'+':'−'}${Math.abs(Math.round((v-b)/b*100))}%`;
+   const today=m==='stages'?hm(v):`${M[m].fmt(v)}${M[m].unit?' '+M[m].unit:''}`;
+   return tile('V7',m,'t7',`<div class="val v36">${d}</div><div class="sub"><b>${today}</b> · vs 30-day avg</div>${slot('V7',m,'dev',50)}`);}).join('')+`</div>`;}},
+ {id:'V8',name:'Calendar heat',desc:'Each day is a tile. M range becomes a month calendar, W a row of seven, D the hours of the day. Bar fills each cell like a glass; line and area shade it.',tags:['calendar','pattern-finding'],
+  body(s){return `<div class="g2">`+ORDER.map(m=>{const r=cfg('V8',m).range;const h=r==='M'?112:r==='W'?40:(m==='stages'?30:52);
+   return tile('V8',m,'t8',`${valHTML(m,s,'v28')}${deltaHTML(m,s)}${slot('V8',m,'heat',h)}`);}).join('')+`</div>`;}},
+ {id:'V9',name:'Focus pager',desc:'Pick one metric from the chip row and it gets the big chart with axes, plus range and chart-type toggles in the card. Everything else collapses to list rows with a mini trend.',tags:['explore','detail-first'],
+  body(s){const f=S.focus;return `<div class="mchips" role="group" aria-label="Focus metric">${ORDER.map(m=>`<button data-focus="${m}" aria-pressed="${m===f}">${ICON[M[m].icon]}${M[m].name}</button>`).join('')}</div>`+
+   `<div class="card wide focus fam-${M[f].fam}" data-open="V9|${f}" tabindex="0">${head('V9',f)}${valHTML(f,s,'v52')}${deltaHTML(f,s)}<div class="fctl">${dwm('V9',f)}${tseg('V9',f)}</div>${slot('V9',f,'chart',170,{axis:'full'})}</div>`+
+   `<div class="card wide" style="padding:4px 0;cursor:default">${ORDER.filter(m=>m!==f).map(m=>`<button class="lrow fam-${M[m].fam}" data-focus="${m}"><span class="ic">${ICON[M[m].icon]}</span><span class="n">${M[m].name}</span>${valHTML(m,s,'v17')}${slot('V9',m,'chart',22,{axis:'none',goal:false,tag:'mini'})}</button>`).join('')}</div>`;}},
+ {id:'V10',name:'Insight sentences',desc:'The number plus one plain-language sentence that says what it means, in the voice of your "Wear Stēle tonight" empty state. The chart shrinks to a row of dots.',tags:['narrative','new users'],
+  body(s){return `<div class="g2">`+ORDER.map(m=>tile('V10',m,'t10',`${valHTML(m,s,'v36')}<p class="ins">${insight(m,s)}</p>${slot('V10',m,'chart',22,{axis:'none',goal:false,thin:true,barMax:4})}`)).join('')+`</div>`;}},
 ];
-
-/* ---------- svg helpers ---------- */
-const r=v=>Math.round(v*10)/10;
-const A=f=>`var(--${f})`, D=f=>`var(--${f}-dim)`;
-const tx=(x,y,s,{a='start',fs=9,c='var(--ink-3)',w=400}={})=>`<text x="${r(x)}" y="${r(y)}" text-anchor="${a}" font-size="${fs}" font-weight="${w}" style="fill:${c}">${s}</text>`;
-const hl=(x1,x2,y,c,dash)=>`<line x1="${r(x1)}" x2="${r(x2)}" y1="${Math.round(y)+.5}" y2="${Math.round(y)+.5}" style="stroke:${c}" stroke-width="1"${dash?` stroke-dasharray="${dash}"`:''}/>`;
-const vl=(x,y1,y2,c,w=1)=>`<line x1="${r(x)}" x2="${r(x)}" y1="${r(y1)}" y2="${r(y2)}" style="stroke:${c}" stroke-width="${w}" stroke-linecap="round"/>`;
-const circ=(x,y,rad,fill,ring)=>`<circle cx="${r(x)}" cy="${r(y)}" r="${rad}" style="fill:${fill}${ring?';stroke:var(--ring)':''}"${ring?' stroke-width="2"':''}/>`;
-const yS=(dom,y0,y1)=>v=>y1-(Math.max(dom[0],Math.min(dom[1],v))-dom[0])/(dom[1]-dom[0])*(y1-y0);
-function barP(x,yd,w,yb,rad){
-  const h=Math.abs(yb-yd);rad=Math.max(0,Math.min(rad,h,w/2));
-  if(yd<=yb)return `M${r(x)},${r(yb)}V${r(yd+rad)}Q${r(x)},${r(yd)} ${r(x+rad)},${r(yd)}H${r(x+w-rad)}Q${r(x+w)},${r(yd)} ${r(x+w)},${r(yd+rad)}V${r(yb)}Z`;
-  return `M${r(x)},${r(yb)}V${r(yd-rad)}Q${r(x)},${r(yd)} ${r(x+rad)},${r(yd)}H${r(x+w-rad)}Q${r(x+w)},${r(yd)} ${r(x+w)},${r(yd-rad)}V${r(yb)}Z`;
-}
-function hbarP(x0,x1,y,h,rad){rad=Math.max(0,Math.min(rad,x1-x0,h/2));
-  return `M${r(x0)},${r(y)}H${r(x1-rad)}Q${r(x1)},${r(y)} ${r(x1)},${r(y+rad)}V${r(y+h-rad)}Q${r(x1)},${r(y+h)} ${r(x1-rad)},${r(y+h)}H${r(x0)}Z`;}
-function arcP(cx,cy,R,a0,a1){
-  const p=a=>[cx+R*Math.sin(a),cy-R*Math.cos(a)];const [x0,y0]=p(a0),[x1,y1]=p(a1);
-  return `M${r(x0)},${r(y0)}A${R},${R} 0 ${a1-a0>Math.PI?1:0} 1 ${r(x1)},${r(y1)}`;}
-const nice3=d=>[d[0],(d[0]+d[1])/2,d[1]];
-
-function geo(W,H,o){
-  const fs=o.detail?11:9;
-  const hasY=o.axis==='full'||o.axis==='minimal';
-  const hasX=o.axis==='full'||o.axis==='minimal'||o.axis==='days';
-  const lab=['goal','avg','both'].includes(o.annot)&&o.axis!=='none';
-  const L=o.L??(hasY?(o.detail?42:28):2), R=o.R??(lab?(o.detail?64:38):2), T=o.T??(o.detail?8:5), B=hasX?fs+7:2;
-  const x0=L,x1=W-R,y0=T,y1=H-B,bw=(x1-x0)/7;
-  return {fs,hasY,hasX,lab,x0,x1,y0,y1,bw,W,H,cx:i=>x0+bw*(i+.5)};
-}
-function axes(g,dom,s,o){
-  let out='';const y=yS(dom,g.y0,g.y1);
-  const ticks=o.axis==='full'?nice3(dom):o.axis==='minimal'?[dom[0],dom[1]]:[];
-  if(o.grid==='full')nice3(dom).forEach(t=>out+=hl(g.x0,g.x1,y(t),'var(--grid)'));
-  if(o.grid==='full'||o.grid==='baseline')out+=hl(g.x0,g.x1,g.y1,'var(--axis)');
-  ticks.forEach(t=>out+=tx(g.x0-6,y(t)+g.fs*.35,s.short(t),{a:'end',fs:g.fs}));
-  if(g.hasX)for(let i=0;i<7;i++){
-    const lbl=o.axis==='minimal'?(i===0||i===6?(o.detail?DAYS[i]:DI[i]):''):(o.detail?DAYS[i]:DI[i]);
-    if(lbl)out+=tx(g.cx(i),g.y1+g.fs+4,lbl,{a:'middle',fs:g.fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400});
-  }
-  return out;
-}
-function annot(g,dom,s,o){
-  const y=yS(dom,g.y0,g.y1);let out='';
-  if(o.annot==='band'){const b=s.band;out+=`<rect x="${r(g.x0)}" y="${r(y(b[1]))}" width="${r(g.x1-g.x0)}" height="${r(Math.max(1,y(b[0])-y(b[1])))}" rx="3" style="fill:var(--ink)" opacity=".07"/>`;
-    if(o.detail)out+=tx(g.x1-4,y(b[1])-4,s.bandLabel||'typical range',{a:'end',fs:g.fs,c:'var(--ink-3)'});return out;}
-  const L=[];
-  if((o.annot==='goal'||o.annot==='both')&&s.goal!=null)L.push(['goal',s.goal,'var(--ink-2)','3 3']);
-  if(o.annot==='avg'||o.annot==='both'||(o.annot==='goal'&&s.goal==null))L.push(['avg',s.avg,'var(--ink-3)',null]);
-  let lastY=-99;
-  L.forEach(([t,v,c,dash])=>{const yy=y(v);out+=hl(g.x0,g.x1,yy,c,dash);
-    if(g.lab){let ly=yy+g.fs*.35;if(Math.abs(ly-lastY)<g.fs+1)ly=lastY+(ly>=lastY?g.fs+1:-(g.fs+1));lastY=ly;
-      out+=tx(g.x1+5,ly,`${t} ${s.short(v)}`,{fs:g.fs-.5,c});}});
-  return out;
-}
-
-/* ---------- single-series kinds ---------- */
-function single(kind,s,fam,W,H,o){
-  const svg=[],pts=[];
-  if(kind==='heat')return heat(s,fam,W,H,o);
-  if(kind==='bullet')return bullet(s,fam,W,H,o);
-  if(kind==='delta')return delta(s,fam,W,H,o);
-  if(kind==='bleed'||kind==='bleedbar')return bleed(kind,s,fam,W,H,o);
-  const isBar=kind==='bar'||kind==='sparkbar';
-  const dom=isBar?s.domBar:s.domLine;
-  const g=geo(W,H,kind==='spark'||kind==='sparkbar'?{...o,axis:'none',annot:'none',L:4,R:8,T:6}:o);
-  const y=yS(dom,g.y0,g.y1);
-  svg.push(axes(g,dom,s,o),annot(g,dom,s,o));
-  s.vals.forEach((v,i)=>pts.push([g.cx(i),i]));
-  if(isBar){
-    const bw=Math.min(o.detail?30:(kind==='sparkbar'?10:18),g.bw*.58);
-    s.vals.forEach((v,i)=>{const x=g.cx(i)-bw/2;
-      if(v<=0){svg.push(circ(g.cx(i),g.y1-2,1.6,'var(--ink-3)'));return;}
-      const emph=o.emph||kind==='sparkbar';
-      svg.push(`<path d="${barP(x,y(v),bw,g.y1,o.detail?5:3)}" style="fill:${emph&&i!==TD?D(fam):A(fam)}"${!emph?' opacity=".9"':''}/>`);
-      if(o.detail&&v>0)svg.push(tx(g.cx(i),y(v)-6,s.short(v),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
-    });
-    return {svg:svg.join(''),pts};
-  }
-  const P=s.vals.map((v,i)=>[g.cx(i),y(v)]);
-  const d='M'+P.map(p=>p.map(r).join(',')).join('L');
-  if(kind==='area'){svg.push(`<path d="${d}L${r(P[6][0])},${g.y1}L${r(P[0][0])},${g.y1}Z" style="fill:${A(fam)}" opacity=".14"/>`);}
-  if(kind==='dots'){
-    svg.push(`<path d="${d}" fill="none" style="stroke:${A(fam)}" stroke-width="1.2" opacity=".35"/>`);
-    P.forEach((p,i)=>{const out=s.vals[i]<s.band[0]||s.vals[i]>s.band[1];
-      svg.push(i===TD?circ(p[0],p[1],o.detail?6:5,A(fam),true):circ(p[0],p[1],o.detail?4.5:3.5,out?A(fam):D(fam),true));});
-    if(o.detail)P.forEach((p,i)=>svg.push(tx(p[0],p[1]-10,s.short(s.vals[i]),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)'})));
-    return {svg:svg.join(''),pts};
-  }
-  svg.push(`<path d="${d}" fill="none" style="stroke:${A(fam)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`);
-  if(kind==='line'&&o.axis==='full')P.slice(0,6).forEach(p=>svg.push(circ(p[0],p[1],2.5,A(fam),true)));
-  if(o.detail&&kind!=='spark')P.forEach((p,i)=>i!==TD&&svg.push(tx(p[0],p[1]-9,s.short(s.vals[i]),{a:'middle',fs:g.fs-1,c:'var(--ink-3)'})));
-  svg.push(circ(P[6][0],P[6][1],o.detail?5:4,A(fam),true));
-  return {svg:svg.join(''),pts};
-}
-function heat(s,fam,W,H,o){
-  const g=geo(W,H,{...o,L:0,R:0,T:0});const gap=o.detail?6:3;const cw=(W-gap*6)/7;const ch=g.y1-g.y0;
-  const svg=[axes(g,[0,1],s,{...o,axis:'days',grid:'none'})],pts=[];
-  const [lo,hi]=s.domLine;
-  s.vals.forEach((v,i)=>{const x=i*(cw+gap);const t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));
-    const op=v<=0?.05:.14+.8*t;
-    svg.push(`<rect x="${r(x)}" y="${g.y0}" width="${r(cw)}" height="${r(ch)}" rx="${o.detail?8:6}" style="fill:${A(fam)}" opacity="${op.toFixed(2)}"/>`);
-    if(i===TD)svg.push(`<rect x="${r(x+.75)}" y="${g.y0+.75}" width="${r(cw-1.5)}" height="${r(ch-1.5)}" rx="${o.detail?7.5:5.5}" fill="none" style="stroke:var(--ink)" stroke-width="1.5" opacity=".85"/>`);
-    const lbl=v<=0?'rest':s.short(v);
-    svg.push(tx(x+cw/2,g.y0+ch/2+(o.detail?5:3.5),lbl,{a:'middle',fs:o.detail?14:(ch<22?9:10.5),c:op>.6?'#121318':'var(--ink)',w:600}));
-    pts.push([x+cw/2,i]);});
-  return {svg:svg.join(''),pts};
-}
-function bullet(s,fam,W,H,o){
-  const compact=H<36;const fs=o.detail?11:9;
-  const L=compact?(o.detail?64:44):0;
-  const x0=L+2,x1=W-4;const dom=s.domLine;const x=v=>x0+(Math.max(dom[0],Math.min(dom[1],v))-dom[0])/(dom[1]-dom[0])*(x1-x0);
-  const th=o.detail?22:(compact?9:13);const ty=compact?(H-th)/2:(o.detail?H/2-th/2:fs+6);
-  const svg=[];
-  if(compact)svg.push(tx(0,ty+th/2+fs*.35,s.label,{fs,c:'var(--ink-2)'}));
-  svg.push(`<rect x="${x0}" y="${r(ty)}" width="${r(x1-x0)}" height="${th}" rx="${th/2}" style="fill:var(--track)"/>`);
-  const mn=Math.min(...s.vals),mx=Math.max(...s.vals);
-  svg.push(`<rect x="${r(x(mn))}" y="${r(ty)}" width="${r(Math.max(2,x(mx)-x(mn)))}" height="${th}" rx="${th/2}" style="fill:${D(fam)}"/>`);
-  const v=s.vals[TD];
-  if(dom[0]===0){const bh=Math.max(4,th*.46);svg.push(`<path d="${hbarP(x0,x(v),ty+(th-bh)/2,bh,bh/2)}" style="fill:${A(fam)}"/>`);}
-  svg.push(circ(x(v),ty+th/2,o.detail?7:(compact?4:5),A(fam),true));
-  svg.push(vl(x(s.avg),ty+2,ty+th-2,'var(--ink-3)',1.5));
-  if(s.goal!=null){svg.push(vl(x(s.goal),ty-3,ty+th+3,'var(--ink)',2));
-    if(!compact){const gx=Math.min(x1,Math.max(x0+20,x(s.goal)));svg.push(tx(gx,ty-5,`goal ${s.short(s.goal)}`,{a:gx>=x1-2?'end':'middle',fs,c:'var(--ink-2)'}));}}
-  if(!compact){svg.push(tx(x0,ty+th+fs+5,s.short(dom[0]),{fs,c:'var(--ink-3)'}),tx(x1,ty+th+fs+5,s.short(dom[1]),{a:'end',fs,c:'var(--ink-3)'}));
-    svg.push(tx((x0+x1)/2,ty+th+fs+5,`avg ${s.short(s.avg)} · range ${s.short(mn)}–${s.short(mx)}`,{a:'middle',fs,c:'var(--ink-3)'}));}
-  return {svg:svg.join(''),pts:null};
-}
-function delta(s,fam,W,H,o){
-  const fs=o.detail?11:9;const L=o.detail?46:30,R=o.detail?8:4,T=o.detail?14:6,B=fs+7;
-  const x0=L,x1=W-R,y0=T,y1=H-B,bw=(x1-x0)/7,cx=i=>x0+bw*(i+.5);
-  const dv=s.vals.map(v=>v-s.avg);const m=Math.max(...dv.map(Math.abs))*1.1||1;
-  const y=v=>(y0+y1)/2-v/m*(y1-y0)/2;const y0l=y(0);
-  const svg=[hl(x0,x1,y0l,'var(--axis)')],pts=[];
-  svg.push(tx(x0-6,y0l-2,'avg',{a:'end',fs:fs-1,c:'var(--ink-3)'}),tx(x0-6,y0l+fs,s.short(s.avg),{a:'end',fs:fs-1,c:'var(--ink-2)'}));
-  const w=Math.min(o.detail?28:16,bw*.56);
-  dv.forEach((d,i)=>{const better=s.higher===null?true:(s.higher?d>=0:d<=0);
-    svg.push(`<path d="${barP(cx(i)-w/2,y(d),w,y0l,o.detail?5:3)}" style="fill:${better?A(fam):D(fam)}"/>`);
-    svg.push(tx(cx(i),H-3,o.detail?DAYS[i]:DI[i],{a:'middle',fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
-    if(i===TD||o.detail){const lbl=(d>=0?'+':'−')+s.short(Math.abs(d));svg.push(tx(cx(i),d>=0?y(d)-4:y(d)+fs+2,lbl,{a:'middle',fs:fs-.5,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));}
-    pts.push([cx(i),i]);});
-  return {svg:svg.join(''),pts};
-}
-function bleed(kind,s,fam,W,H,o){
-  const top=o.detail?40:64,bot=o.detail?20:14,fs=o.detail?11:9;
-  const pad=o.detail?20:16;const cx=i=>pad+i*(W-2*pad)/6;
-  const isBar=kind==='bleedbar';const dom=isBar?s.domBar:s.domLine;
-  const y=yS(dom,top,H-bot);const svg=[],pts=[];
-  if(s.goal!=null){const gy=y(s.goal);svg.push(hl(0,W,gy,'var(--ink-2)','3 3'),tx(8,gy-4,`goal ${s.short(s.goal)}`,{fs,c:'var(--ink-2)'}));}
-  if(isBar){const bw=Math.min(o.detail?34:22,(W-2*pad)/7*.62);
-    s.vals.forEach((v,i)=>{if(v<=0){svg.push(circ(cx(i),H-bot-2,1.6,'var(--ink-3)'));}else svg.push(`<path d="${barP(cx(i)-bw/2,y(v),bw,H,4)}" style="fill:${i===TD?A(fam):D(fam)}"/>`);pts.push([cx(i),i]);});
-  }else{
-    const P=s.vals.map((v,i)=>[cx(i),y(v)]);
-    const d='M'+P.map(p=>p.map(r).join(',')).join('L');
-    svg.push(`<path d="M0,${r(P[0][1])}L${d.slice(1)}L${W},${r(P[6][1])}L${W},${H}L0,${H}Z" style="fill:${A(fam)}" opacity=".16"/>`);
-    svg.push(`<path d="M0,${r(P[0][1])}L${d.slice(1)}L${W},${r(P[6][1])}" fill="none" style="stroke:${A(fam)}" stroke-width="2" stroke-linejoin="round"/>`);
-    svg.push(circ(P[6][0],P[6][1],o.detail?5:4,A(fam),true));
-    P.forEach((p,i)=>pts.push([p[0],i]));
-  }
-  const vals=s.vals.slice(0,6);const hi=vals.indexOf(Math.max(...vals)),lo=vals.indexOf(Math.min(...vals));
-  [[hi,'high'],[lo,'low']].forEach(([i,t])=>{if(s.vals[i]<=0)return;const yy=y(s.vals[i]);const above=t==='high'||isBar;
-    const ly=above?yy-7:yy+fs+6;svg.push(tx(cx(i),Math.min(ly,H-bot+fs),`${t} ${s.short(s.vals[i])}`,{a:'middle',fs,c:'var(--ink-2)',w:500}));});
-  for(let i=0;i<7;i++)if(o.detail||i===0||i===TD)svg.push(tx(cx(i),H-4,o.detail?DAYS[i]:(i===TD?'today':DAYS[i]),{a:i===0&&!o.detail?'start':(i===TD&&!o.detail?'end':'middle'),fs:fs-.5,c:'var(--ink-3)'}));
-  return {svg:svg.join(''),pts};
-}
-
-/* ---------- sleep-stage kinds ---------- */
-const ST={short:hs,avg:mean(asleep),goal:450,domBar:[0,540],band:[mean(asleep)-sdev(asleep),mean(asleep)+sdev(asleep)]};
-function stackcol(W,H,o){
-  const mini=o.mini;const g=geo(W,H,mini?{...o,annot:'none'}:o);const dom=[0,540];const y=yS(dom,g.y0,g.y1);
-  const svg=[axes(g,dom,ST,o),annot(g,dom,ST,o)],pts=[];const bw=Math.min(o.detail?30:(mini?10:18),g.bw*.58);const gap=o.detail?2:1.5;
-  for(let i=0;i<7;i++){let acc=0;const x=g.cx(i)-bw/2;const fade=o.emph&&i!==TD;
-    STG.forEach((st,j)=>{const a=acc,b=acc+st.v[i];acc=b;const ya=y(a),yb=y(b);
-      const top=j===3;const h=ya-yb-(j>0?gap:0);if(h<=0)return;
-      svg.push(top?`<path d="${barP(x,yb,bw,yb+h,o.detail?5:3)}" style="fill:${st.c}"${fade?' opacity=".35"':''}/>`
-        :`<rect x="${r(x)}" y="${r(yb)}" width="${r(bw)}" height="${r(h)}" style="fill:${st.c}"${fade?' opacity=".35"':''}/>`);});
-    if(o.detail)svg.push(tx(g.cx(i),y(inbed[i])-6,hs(asleep[i]).replace('h','h'),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)'}));
-    pts.push([g.cx(i),i]);}
-  return {svg:svg.join(''),pts};
-}
-function stackarea(W,H,o){
-  const g=geo(W,H,o);const dom=[0,540];const y=yS(dom,g.y0,g.y1);
-  const svg=[axes(g,dom,ST,o)],pts=[];
-  const cum=[0,1,2,3].map(j=>DAYS.map((_,i)=>STG.slice(0,j+1).reduce((s,st)=>s+st.v[i],0)));
-  for(let j=3;j>=0;j--){const top=cum[j].map((v,i)=>`${r(g.cx(i))},${r(y(v))}`).join('L');
-    svg.push(`<path d="M${top}L${r(g.cx(6))},${g.y1}L${r(g.cx(0))},${g.y1}Z" style="fill:${STG[j].c}"/>`);}
-  for(let j=0;j<3;j++)svg.push(`<path d="M${cum[j].map((v,i)=>`${r(g.cx(i))},${r(y(v))}`).join('L')}" fill="none" style="stroke:var(--ring)" stroke-width="1.5"/>`);
-  svg.push(annot(g,dom,ST,o));
-  for(let i=0;i<7;i++)pts.push([g.cx(i),i]);
-  return {svg:svg.join(''),pts};
-}
-function pct(W,H,o){
-  const g=geo(W,H,{...o,annot:'none'});const svg=[],pts=[];const y=yS([0,1],g.y0,g.y1);
-  svg.push(axes(g,[0,1],{short:v=>Math.round(v*100)+'%'},o));
-  const bw=Math.min(o.detail?30:14,g.bw*.5);const gap=o.detail?2:1.5;
-  for(let i=0;i<7;i++){let acc=0;const tot=inbed[i];
-    STG.forEach((st,j)=>{const a=acc/tot,b=(acc+st.v[i])/tot;acc+=st.v[i];const h=y(a)-y(b)-(j>0?gap:0);
-      svg.push(`<rect x="${r(g.cx(i)-bw/2)}" y="${r(y(b))}" width="${r(bw)}" height="${r(Math.max(0,h))}" rx="${j===3||j===0?2:0}" style="fill:${st.c}"${i!==TD?' opacity=".7"':''}/>`);});
-    pts.push([g.cx(i),i]);}
-  if(o.detail){const yy=y((STG[0].v[TD]+STG[1].v[TD])/inbed[TD]);svg.push(tx(g.x1+4,yy+4,`deep + REM ${Math.round((STG[0].v[TD]+STG[1].v[TD])/inbed[TD]*100)}%`,{fs:g.fs-1,c:'var(--ink-2)'}));}
-  return {svg:svg.join(''),pts};
-}
-function heatgrid(W,H,o){
-  const fs=o.detail?11:8.5;const L=o.detail?52:12;const B=fs+6;const gap=o.detail?4:2;
-  const cw=(W-L-gap*6)/7,ch=(H-B-gap*3)/4;const svg=[],pts=[];
-  STG.forEach((st,j)=>{const mx=Math.max(...st.v),mn=Math.min(...st.v);
-    svg.push(tx(0,j*(ch+gap)+ch/2+fs*.35,o.detail?st.n:st.n[0],{fs,c:'var(--ink-3)'}));
-    st.v.forEach((v,i)=>{const t=(v-mn)/(mx-mn||1);const op=j===3?.25+.75*t:.25+.75*t;
-      svg.push(`<rect x="${r(L+i*(cw+gap))}" y="${r(j*(ch+gap))}" width="${r(cw)}" height="${r(ch)}" rx="${o.detail?5:2.5}" style="fill:${st.c}" opacity="${op.toFixed(2)}"/>`);
-      if(o.detail)svg.push(tx(L+i*(cw+gap)+cw/2,j*(ch+gap)+ch/2+4,hm(v),{a:'middle',fs:fs-1,c:op>.6?'#121318':'var(--ink)',w:500}));});});
-  for(let i=0;i<7;i++){const cx=L+i*(cw+gap)+cw/2;svg.push(tx(cx,H-2,o.detail?DAYS[i]:DI[i],{a:'middle',fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));pts.push([cx,i]);}
-  return {svg:svg.join(''),pts};
-}
-function hbars(W,H,o){
-  const fs=o.detail?11:8.5;const L=o.detail?40:12,R=o.detail?70:44;const x0=L,x1=W-R;const x=v=>x0+v/540*(x1-x0);
-  const rh=H/7;const bh=Math.max(3,rh-(o.detail?8:3));const svg=[],pts=[];const gap=o.detail?2:1.5;
-  for(let i=0;i<7;i++){const yy=i*rh+(rh-bh)/2;let acc=0;
-    svg.push(tx(0,yy+bh/2+fs*.35,o.detail?DAYS[i]:DI[i],{fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
-    STG.forEach((st,j)=>{const a=x(acc)+(j?gap:0),b=x(acc+st.v[i]);acc+=st.v[i];
-      svg.push(j===3?`<path d="${hbarP(a,b,yy,bh,Math.min(2,bh/2))}" style="fill:${st.c}"/>`:`<rect x="${r(a)}" y="${r(yy)}" width="${r(Math.max(0,b-a))}" height="${r(bh)}" style="fill:${st.c}"${i!==TD?' opacity=".75"':''}/>`);});
-    if(o.detail||i===TD)svg.push(tx(W-R+6+(o.detail?0:0),yy+bh/2+fs*.35,hm(asleep[i]),{fs:fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
-    pts.push([yy+bh/2,i]);}
-  const ax=x(ST.avg);svg.push(vl(ax,-2,H+1,'var(--ink-2)',1.5));
-  svg.push(tx(W-R+6,fs,'avg',{fs:fs-.5,c:'var(--ink-3)'}),tx(W-R+6,fs*2+2,hm(ST.avg),{fs:fs-.5,c:'var(--ink-2)'}));
-  return {svg:svg.join(''),pts,orient:'y'};
-}
-function hbullet(W,H,o){
-  const fs=o.detail?11:9;const x0=2,x1=W-4;const x=v=>x0+v/540*(x1-x0);
-  const th=o.detail?24:13;const ty=o.detail?H/2-th/2:fs+6;const svg=[];let acc=0;const gap=o.detail?2:1.5;
-  svg.push(`<rect x="${x0}" y="${r(ty)}" width="${r(x1-x0)}" height="${th}" rx="${th/2}" style="fill:var(--track)"/>`);
-  STG.forEach((st,j)=>{const a=x(acc)+(j?gap:0),b=x(acc+st.v[TD]);acc+=st.v[TD];
-    svg.push(j===0?`<path d="M${r(a+th/2)},${r(ty)}H${r(b)}V${r(ty+th)}H${r(a+th/2)}A${th/2},${th/2} 0 0 1 ${r(a+th/2)},${r(ty)}Z" style="fill:${st.c}"/>`
-      :j===3?`<path d="${hbarP(a,b,ty,th,th/2)}" style="fill:${st.c}"/>`:`<rect x="${r(a)}" y="${r(ty)}" width="${r(b-a)}" height="${th}" style="fill:${st.c}"/>`);
-    if(o.detail)svg.push(tx((a+b)/2,ty+th/2+4,hm(st.v[TD]),{a:'middle',fs:fs-1,c:j>=2?'#121318':'var(--ink)',w:500}));});
-  svg.push(vl(x(ST.avg),ty+th+1,ty+th+6,'var(--ink-2)',1.5));
-  svg.push(vl(x(450),ty-3,ty+th+3,'var(--ink)',2),tx(x(450),ty-5,'goal 7.5h',{a:'middle',fs,c:'var(--ink-2)'}));
-  svg.push(tx(x0,ty+th+fs+5,'0',{fs}),tx(x1,ty+th+fs+5,'9h',{a:'end',fs}),tx(x(ST.avg),ty+th+fs+5,`avg ${hm(ST.avg)}`,{a:'middle',fs,c:'var(--ink-3)'}));
-  return {svg:svg.join(''),pts:null};
-}
-function bleedcol(W,H,o){
-  const top=o.detail?40:64,bot=o.detail?20:14,fs=o.detail?11:9,pad=o.detail?20:16;const cx=i=>pad+i*(W-2*pad)/6;
-  const y=yS([0,540],top,H-bot);const bw=Math.min(o.detail?34:22,(W-2*pad)/7*.62);const svg=[],pts=[];const gap=1.5;
-  const gy=y(450);svg.push(hl(0,W,gy,'var(--ink-2)','3 3'),tx(W-8,gy-4,'goal 7.5h',{a:'end',fs,c:'var(--ink-2)'}));
-  for(let i=0;i<7;i++){let acc=0;const x=cx(i)-bw/2;
-    STG.forEach((st,j)=>{const a=acc,b=acc+st.v[i];acc=b;const yb=y(b),ya=j===0?H:y(a)-gap;const h=ya-yb;
-      svg.push(j===3?`<path d="${barP(x,yb,bw,ya,4)}" style="fill:${st.c}"/>`:`<rect x="${r(x)}" y="${r(yb)}" width="${r(bw)}" height="${r(h)}" style="fill:${st.c}"/>`);});
-    pts.push([cx(i),i]);}
-  const hi=asleep.slice(0,6).indexOf(Math.max(...asleep.slice(0,6))),lo=asleep.indexOf(Math.min(...asleep));
-  if(o.detail)[[hi,'high'],[lo,'low']].forEach(([i,t])=>svg.push(tx(cx(i),y(inbed[i])-6,`${t} ${hm(asleep[i])}`,{a:'middle',fs,c:'var(--ink-2)',w:500})));
-  return {svg:svg.join(''),pts};
-}
-
-/* ---------- gauges ---------- */
-function ring(frac,fam,R,sw,extra=''){
-  frac=Math.max(0,Math.min(1,frac));const c=R+sw;
-  const trk=`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}" opacity=".16"/>`;
-  const arc=frac>=.999?`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}"/>`
-    :frac>0?`<path d="${arcP(c,c,R,0,frac*2*Math.PI)}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}" stroke-linecap="round"/>`:'';
-  return trk+arc+extra;
-}
-function tick(c,R,sw,frac){const a=frac*2*Math.PI;const p=rr=>[c+rr*Math.sin(a),c-rr*Math.cos(a)];const [a1,b1]=p(R-sw/2-2),[a2,b2]=p(R+sw/2+2);
-  return `<line x1="${r(a1)}" y1="${r(b1)}" x2="${r(a2)}" y2="${r(b2)}" style="stroke:var(--ink)" stroke-width="2" stroke-linecap="round"/>`;}
-function gaugeSvg(key,size){
-  const m=M[key],fam=m.fam;const big=size>120;const sw=big?14:8;const R=size/2-sw;const c=R+sw;
-  const cT=(a,b)=>`<text x="${c}" y="${c+(big?4:3)}" text-anchor="middle" font-size="${big?30:17}" font-weight="600" style="fill:var(--ink)">${a}</text>`+(b?`<text x="${c}" y="${c+(big?24:15)}" text-anchor="middle" font-size="${big?12:9}" style="fill:var(--ink-3)">${b}</text>`:'');
-  let inner='';
-  if(key==='stages'){const tot=inbed[TD];let acc=0;const gapA=.035;
-    inner+=`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:var(--track)" stroke-width="${sw}"/>`;
-    STG.forEach(st=>{const a0=acc/tot*2*Math.PI+gapA/2,a1=(acc+st.v[TD])/tot*2*Math.PI-gapA/2;acc+=st.v[TD];
-      inner+=`<path d="${arcP(c,c,R,a0,a1)}" fill="none" style="stroke:${st.c}" stroke-width="${sw}"/>`;});
-    inner+=cT(hm(asleep[TD]).replace(' ',''),'asleep').replace(`font-size="${big?30:17}"`,`font-size="${big?26:13}"`);
-  }else if(key==='nutrition'){const [cal,pro]=m.split;const sw2=big?11:6;const R2=R-sw-(big?4:3);
-    inner+=ring(cal.vals[TD]/cal.goal,fam,R,sw)+`<g transform="translate(${c-(R2+sw2)},${c-(R2+sw2)})">${ring(pro.vals[TD]/pro.goal,fam,R2,sw2)}</g>`;
-    inner=inner.replace(/(<g[^>]*>)(<circle[^>]*opacity=".16"\/>)/,'$1$2');
-    inner+=`<text x="${c}" y="${c-(big?2:1)}" text-anchor="middle" font-size="${big?20:12}" font-weight="600" style="fill:var(--ink)">${int(cal.vals[TD])}</text><text x="${c}" y="${c+(big?18:11)}" text-anchor="middle" font-size="${big?12:8.5}" style="fill:var(--ink-3)">${pro.vals[TD]} g</text>`;
-  }else{const s=m.s;const [lo,hi]=s.gauge;
-    const val=key==='volume'?s.week:s.vals[TD];const f=(val-lo)/(hi-lo);
-    const goal=key==='volume'?null:s.goal;
-    inner+=ring(f,fam,R,sw,goal!=null&&goal<hi?tick(c,R,sw,(goal-lo)/(hi-lo)):'');
-    if(key==='hrv'||key==='rhr'){inner+=tick(c,R,sw,(s.band[0]-lo)/(hi-lo))+tick(c,R,sw,(s.band[1]-lo)/(hi-lo));}
-    const lbl=key==='volume'?kf(val):s.short(val);
-    const sub=key==='volume'?`of ${kf(s.weekGoal)} wk`:key==='steps'?`${Math.round(val/s.goal*100)}% goal`:s.unit||(goal!=null?`goal ${s.short(goal)}`:'');
-    inner+=cT(lbl,sub);
-  }
-  return `<svg width="${2*c}" height="${2*c}" viewBox="0 0 ${2*c} ${2*c}">${inner}</svg>`;
-}
-
-/* ---------- dispatcher ---------- */
-const SK={stackcol,stackarea,pct,heatgrid,hbars,hbullet,bleedcol,minicols:(W,H,o)=>stackcol(W,H,{...o,mini:true,axis:'none'})};
-function drawSlot(Vr,key,slot,W,H,detail){
-  const m=M[key];const o={axis:Vr.axis,grid:Vr.grid,annot:Vr.annot,detail,emph:!!Vr.emph};
-  if(Vr.kind==='gauge'){
-    if(slot==='ring')return {svg:gaugeSvg(key,W),pts:null};
-    const so={...o,axis:'days',grid:'none',annot:'none',emph:true,T:2};
-    if(key==='stages')return stackcol(W,H,{...so,mini:!detail});
-    if(key==='nutrition')return single('bar',m.split[0],m.fam,W,H,so);
-    return single('bar',m.s,m.fam,W,H,so);
-  }
-  if(key==='stages')return SK[Vr.stages](W,H,o);
-  let kind=Vr.kind;
-  if(key==='volume'){if(kind==='line'||kind==='area')kind='bar';if(kind==='spark')kind='sparkbar';if(kind==='bleed')kind='bleedbar';}
-  if(key==='nutrition'){
-    const rows=kind==='bullet'||kind==='heat';const [a,b]=m.split;const gap=rows?(detail?14:4):(detail?28:14);
-    const parts=[];const pts=[];
-    [a,b].forEach((s,k)=>{let w=W,h=H,ox=0,oy=0;
-      if(rows){h=(H-gap)/2;oy=k*(h+gap);}else{w=(W-gap)/2;ox=k*(w+gap);}
-      const oo={...o};let res;
-      if(!rows){oo.T=kind==='bleed'?undefined:(detail?24:15);}
-      if(kind==='heat'){res=heat(s,m.fam,w,h,{...oo,axis:'none'});}
-      else if(kind==='bullet')res=bullet(s,m.fam,w,h,{...oo});
-      else res=single(kind,s,m.fam,w,h,oo);
-      let lab='';
-      if(!rows&&kind!=='bleed')lab=tx((o.axis==='full'||o.axis==='minimal')&&kind!=='delta'?(detail?42:28):(kind==='delta'?(detail?46:30):2),detail?13:9,s.label==='kcal'?'calories':'protein (g)',{fs:detail?11:8.5,c:'var(--ink-2)',w:500});
-      if(kind==='heat')lab=tx(-2,0,'',{});
-      parts.push(`<g transform="translate(${r(ox)},${r(oy)})">${lab}${res.svg}</g>`);
-      if(res.pts)res.pts.forEach(p=>pts.push([p[0]+ox,p[1]]));});
-    return {svg:parts.join(''),pts:pts.length?pts:null};
-  }
-  return single(kind,m.s,m.fam,W,H,o);
-}
-
-/* ---------- header copy ---------- */
-function headInfo(key){
-  const m=M[key];
-  if(key==='nutrition'){const [c,p]=m.split;return {val:`${int(c.vals[TD])}<small>kcal</small>`,val2:`${p.vals[TD]}<small>g</small>`,
-    delta:`<em>${Math.round(c.vals[TD]/c.goal*100)}%</em> kcal · <em>${Math.round(p.vals[TD]/p.goal*100)}%</em> protein goal`};}
-  const s=m.s,v=s.vals[TD];
-  if(key==='stages'){const d=v-s.avg;return {val:hm(v),delta:`${d>=0?'▲':'▼'} <em>${hm(Math.abs(d))}</em> vs 7-day avg`};}
-  const d=v-s.avg;const ds=key==='strain'?Math.abs(d).toFixed(1):int(Math.abs(d));
-  const unit=s.unit?`<small>${s.unit}</small>`:'';
-  return {val:`${s.fmt(v)}${unit}`,delta:`${d>=0?'▲':'▼'} <em>${ds}${s.unit==='%'?' pts':s.unit?' '+s.unit:''}</em> vs 7-day avg`};
-}
-const legend=()=>`<span class="lg" aria-label="Legend">${STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join('')}</span>`;
-const legendShort=()=>`<span class="lg" aria-label="Legend">${STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n==='Light'?'Lt':s.n==='Awake'?'Aw':s.n==='Deep'?'Dp':'REM'}</span>`).join('')}</span>`;
-
-function cardHTML(Vr,key){
-  const m=M[key],h=headInfo(key);const isSt=key==='stages',isN=key==='nutrition';
-  const cls=`card f-${Vr.frame} fam-${m.fam} l-${Vr.head}`;
-  const valInline=isN?`${h.val} · ${h.val2}`:h.val;
-  const slot=`<div class="plot" data-slot="main"></div>`;
-  let inner='';
-  switch(Vr.head){
-    case 'inline':inner=`<div class="h-row"><div class="h-left"><span class="h-title">${m.name}</span>${isSt?legendShort():''}</div><span class="h-val">${valInline}</span></div>${slot}`;break;
-    case 'stack':inner=`<div class="h-row"><span class="h-title">${m.name}</span>${isSt?legend():`<span class="h-delta">${isN?'':h.delta}</span>`}</div><div class="h-row"><span class="h-val">${valInline}</span>${isSt?`<span class="h-delta">${h.delta}</span>`:''}</div>${slot}`;break;
-    case 'side':inner=`<div class="side-txt"><span class="h-title">${m.name}</span><span class="h-val">${h.val}</span>${isN?`<span class="h-delta"><em>${h.val2.replace('<small>g</small>',' g')}</em> protein</span>`:isSt?legend():`<span class="h-delta">${h.delta}</span>`}</div>${slot}`;break;
-    case 'gauge':inner=`<div class="ringslot" data-slot="ring"></div><div class="gtxt"><div class="h-row"><span class="h-title">${m.name}</span></div><span class="h-delta">${isSt?legend():isN?'kcal outer · protein inner':key==='volume'?`<em>${kf(m.s.week)}</em> kg this week`:h.delta}</span>${slot.replace('main','strip')}</div>`;break;
-    case 'overlay':inner=`<div class="ov"><div class="h-row"><span class="h-title">${m.name}</span>${isSt?legendShort():`<span class="h-delta">${isN?'':h.delta.replace(' vs 7-day avg',' vs avg')}</span>`}</div><div class="h-val">${valInline}</div></div>${slot}`;break;
-  }
-  return `<div class="${cls}" role="button" tabindex="0" data-v="${Vr.id}" data-m="${key}" aria-label="${Vr.id} ${m.name}, open detail">${inner}</div>`;
-}
-
-/* ---------- render ---------- */
-const stage=document.getElementById('stage');
 const VM=Object.fromEntries(V.map(v=>[v.id,v]));
-let mode='variant',metric='stages';
-try{const sv=localStorage.getItem('mcl-view');if(sv){const j=JSON.parse(sv);mode=j.mode||mode;metric=M[j.metric]?j.metric:metric;}}catch(e){}
 
-function gridCls(Vr){return Vr.frame==='flush'?'grid g-flush':Vr.frame==='grouped'?'grid g-grouped':'grid';}
+/* ================= render ================= */
+const $=id=>document.getElementById(id);
+function renderBar(){
+  $('g-type').innerHTML=['line','bar','area'].map(t=>`<button data-gtype="${t}" aria-pressed="${S.type===t}">${ICON[t]}${t[0].toUpperCase()+t.slice(1)}</button>`).join('');
+  $('g-range').innerHTML=['D','W','M'].map(r=>`<button data-grange="${r}" aria-pressed="${S.range===r}" title="${{D:'Day',W:'Week',M:'Month'}[r]}">${r}</button>`).join('');
+  $('g-acc').innerHTML=[['stele','Stēle blue'],['family','Family colors']].map(([k,l])=>`<button data-gacc="${k}" aria-pressed="${S.acc===k}">${l}</button>`).join('');
+  $('d-lbl').textContent=dShort(S.sel);$('d-prev').disabled=S.sel<=0;$('d-next').disabled=S.sel>=N-1;
+  $('g-reset').hidden=!Object.keys(S.over).length;
+  document.body.classList.toggle('acc-family',S.acc==='family');
+}
 function render(){
-  document.getElementById('vb-variant').setAttribute('aria-pressed',mode==='variant');
-  document.getElementById('vb-metric').setAttribute('aria-pressed',mode==='metric');
-  document.getElementById('jump').hidden=mode!=='variant';
-  document.getElementById('mchips').hidden=mode!=='metric';
-  if(mode==='variant'){
-    stage.innerHTML=V.map(Vr=>`<section id="${Vr.id.toLowerCase()}" aria-labelledby="${Vr.id}-h">
-      <div class="vhead"><span class="vtag">${Vr.id}</span><h2 id="${Vr.id}-h">${Vr.name}</h2><p>${Vr.desc}</p>
-      <div class="specs">${['Chart','Axes','Grid','Annotation','Framing'].map((k,i)=>`<span>${k} <b>${Vr.spec[i]}</b></span>`).join('')}</div></div>
-      <div class="${gridCls(Vr)}">${ORDER.map(k=>cardHTML(Vr,k)).join('')}</div></section>`).join('');
-  }else{
-    document.querySelectorAll('#mchips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.m===metric));
-    stage.innerHTML=`<section class="mv" aria-label="${M[metric].name} across variants"><div class="vhead"><span class="vtag">${M[metric].fam}</span><h2>${M[metric].name}, ten ways</h2><p>The same metric in every variant, side by side. Framing differences stay intact.</p></div>
-      <div class="grid">${V.map(Vr=>`<div class="cell"><div class="lbl"><b>${Vr.id}</b>${Vr.name}</div>${Vr.frame==='grouped'?`<div class="g-grouped" style="border-radius:18px;overflow:hidden">${cardHTML(Vr,metric)}</div>`:cardHTML(Vr,metric)}</div>`).join('')}</div></section>`;
-  }
-  paint(stage);
+  for(const k in SL)delete SL[k];
+  renderBar();
+  $('phones').innerHTML=V.map(v=>`<article class="pwrap" id="${v.id.toLowerCase()}"><header class="phd"><span class="vtag">${v.id}</span><h2>${v.name}</h2><p>${v.desc}</p><div class="tags">${v.tags.map(t=>`<span>${t}</span>`).join('')}</div></header>
+    <div class="phone"><div class="screen"><div class="sb"><span>9:41</span>${ICON.status}</div><div class="brand"><span class="wm">Stēle</span>${ICON.avatar}</div><div class="body">${v.body(S.sel)}</div></div></div></article>`).join('');
+  if(!$('sheet').hidden)renderSheet();
+  paint(document);
 }
 function paint(root){
   root.querySelectorAll('[data-slot]').forEach(el=>{
-    const card=el.closest('[data-v]');const Vr=VM[card.dataset.v],key=card.dataset.m;
-    const W=Math.floor(el.clientWidth),H=Math.floor(el.clientHeight);if(W<10||H<10)return;
-    const det=!!card.dataset.detail;
-    const res=drawSlot(Vr,key,el.dataset.slot,W,H,det);
-    el.innerHTML=el.dataset.slot==='ring'?res.svg:`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${res.svg}</svg>`;
-    el._pts=res.pts;el._orient=res.orient||'x';
+    const id=el.dataset.slot,c=SL[id];if(!c)return;const W=Math.floor(el.clientWidth),Hh=Math.floor(el.clientHeight);if(W<8||Hh<8)return;
+    const cf=cfg(c.vid,c.m);const sp=series(c.m,cf.range,S.sel);let res;const o={...c.opts,type:cf.type,id};
+    if(c.kind==='chart')res=chart(sp,W,Hh,o);
+    else if(c.kind==='radial')res=radial(sp,Math.min(W,Hh),o);
+    else if(c.kind==='heat')res=heat(sp,W,Hh,o);
+    else if(c.kind==='dev')res=dev(sp,W,Hh,o);
+    else if(c.kind==='bullet')res=bullet(c.m,S.sel,W,Hh);
+    else if(c.kind==='axis'){const n=sp.vals.length,bw=W/n;const edge=cf.type!=='bar'&&n>12;res={svg:sp.labels.map((lb,i)=>lb?tx(edge?4+i*(W-8)/(n-1):bw*(i+.5),10,lb,{a:'middle',fs:9,c:i===sp.selPos?'var(--ink)':'rgba(17,17,15,.5)',w:i===sp.selPos?600:400}):'').join(''),hits:null};}
+    el.innerHTML=`<svg width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}" aria-hidden="true">${res.svg}</svg>`;
+    el._hits=res.hits;el._sp=sp;el.classList.toggle('pick',!!(res.hits&&sp.days));
   });
 }
-document.getElementById('mchips').innerHTML=ORDER.map(k=>`<button class="chip" data-m="${k}" aria-pressed="false"><i style="background:${A(M[k].fam)}"></i>${M[k].name}</button>`).join('');
-document.getElementById('jump').innerHTML=V.map(v=>`<a href="#${v.id.toLowerCase()}">${v.id}</a>`).join('')+`<a href="#rank">Ranking</a>`;
-const save=()=>{try{localStorage.setItem('mcl-view',JSON.stringify({mode,metric}))}catch(e){}};
-document.getElementById('vb-variant').onclick=()=>{mode='variant';save();render();};
-document.getElementById('vb-metric').onclick=()=>{mode='metric';save();render();};
-document.getElementById('mchips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;metric=b.dataset.m;save();render();});
 
-/* ---------- tooltip ---------- */
-const tip=document.getElementById('tip');let xh=null;
-function tipHTML(key,i){
-  const m=M[key];let rows='';
-  if(key==='stages'){rows=`<div class="r"><span>Asleep</span><b>${hm(asleep[i])}</b></div>`+STG.map(s=>`<div class="r"><span><i style="background:${s.c}"></i>${s.n}</span>${hm(s.v[i])}</div>`).join('');}
-  else if(key==='nutrition'){const [c,p]=m.split;rows=`<div class="r"><span>Calories</span><b>${int(c.vals[i])} kcal</b></div><div class="r"><span>Protein</span><b>${p.vals[i]} g</b></div>`;}
-  else{const s=m.s;rows=`<div class="r"><span>${m.name}</span><b>${s.fmt(s.vals[i])}${s.unit?' '+s.unit:''}</b></div>`;if(key==='volume')rows+=`<div class="r"><span>Session</span>${m.sessions[i]}</div>`;}
-  return `<div class="d">${DAYS[i]} ${DATES[i]}${i===TD?' · today':''}</div>${rows}`;
+/* ================= tooltip & scrub ================= */
+const tip=$('tip');
+function tipHTML(sp,k){const m=sp.m;
+  if(sp.kind==='hyp'){const s=sp.segs[k];const st=STG.find(t=>t.k===s.s);return `<div class="d">${clock(s.t0)} – ${clock(s.t1)}</div><div class="r"><span><i style="background:${st.c}"></i>${st.n}</span><b>${hm(s.m)}</b></div>`;}
+  if(sp.kind==='cat')return `<div class="d">${sp.caption}</div><div class="r"><span>${sp.labels[k]}</span><b>${sp.fmtv(sp.vals[k])}</b></div>${sp.second?`<div class="r"><span>Protein</span><b>${sp.second[k]} g</b></div>`:''}`;
+  if(sp.days){const i=sp.days[k];let rows;
+    if(m==='stages')rows=`<div class="r"><span>Asleep</span><b>${hm(asleep[i])}</b></div>`+STG.map(s=>`<div class="r"><span><i style="background:${s.c}"></i>${s.n}</span><b>${hm(s.v[i])}</b></div>`).join('');
+    else if(m==='nutrition')rows=`<div class="r"><span>Calories</span><b>${int(kcal[i])}</b></div><div class="r"><span>Protein</span><b>${protein[i]} g</b></div>`;
+    else rows=`<div class="r"><span>${M[m].name}</span><b>${M[m].fmt(val(m,i))}${M[m].unit?' '+M[m].unit:''}</b></div>`+(m==='volume'?`<div class="r"><span>Session</span><b>${SESS[DATE[i].getDay()]}</b></div>`:'');
+    return `<div class="d">${dShort(i)}${i===S.sel?' · selected':' · tap to select'}</div>${rows}`;}
+  const u=sp.unit||M[m].unit;return `<div class="d">${sp.full[k]}</div><div class="r"><span>${M[m].name}</span><b>${m==='strain'?(+sp.vals[k]).toFixed(1):int(sp.vals[k])}${u?' '+u:''}</b></div>`;
 }
-function hideTip(){tip.hidden=true;if(xh){xh.remove();xh=null;}}
+function nearest(el,e){const b=el.getBoundingClientRect();const px=e.clientX-b.left,py=e.clientY-b.top;let best=null,bd=1e9;
+  const twoD=/-(radial|heat)/.test(el.dataset.slot);
+  (el._hits||[]).forEach(h=>{const d=twoD?Math.hypot(h.x-px,h.y-py):Math.abs(h.x-px);if(d<bd){bd=d;best=h;}});return best;}
+let drag=null,raf=0;
+function selectDay(i){if(i==null||i===S.sel)return;S.sel=i;save();cancelAnimationFrame(raf);raf=requestAnimationFrame(render);}
+document.addEventListener('pointerdown',e=>{const el=e.target.closest&&e.target.closest('.slot');if(!el||!el._hits||!el._sp||!el._sp.days)return;const h=nearest(el,e);if(!h)return;drag=el.dataset.slot;selectDay(el._sp.days[h.k]);});
+document.addEventListener('pointerup',()=>{drag=null;});
 document.addEventListener('pointermove',e=>{
-  const el=e.target.closest&&e.target.closest('.plot');
-  if(!el||!el._pts){hideTip();return;}
-  const b=el.getBoundingClientRect();const ax=el._orient==='y'?e.clientY-b.top:e.clientX-b.left;
-  let best=null,bd=1e9;el._pts.forEach(([p,i])=>{const d=Math.abs(p-ax);if(d<bd){bd=d;best=[p,i];}});
-  if(!best){hideTip();return;}
-  const key=el.closest('[data-m]').dataset.m;
-  tip.innerHTML=tipHTML(key,best[1]);tip.hidden=false;
-  const tw=tip.offsetWidth,th=tip.offsetHeight;
-  let lx=e.clientX+14,ly=e.clientY-th-12;if(lx+tw>innerWidth-8)lx=e.clientX-tw-14;if(ly<8)ly=e.clientY+16;
-  tip.style.left=lx+'px';tip.style.top=ly+'px';
-  if(el._orient==='x'){if(!xh||xh.parentNode!==el){if(xh)xh.remove();xh=document.createElement('div');xh.className='xh';el.appendChild(xh);}xh.style.left=Math.round(best[0])+'px';}
-  else if(xh){xh.remove();xh=null;}
+  if(drag&&e.buttons){const d=document.querySelector(`[data-slot="${drag}"]`);if(d&&d._sp&&d._sp.days){const h=nearest(d,e);if(h)selectDay(d._sp.days[h.k]);}}
+  const el=e.target.closest&&e.target.closest('.slot');
+  if(!el||!el._hits){tip.hidden=true;return;}const h=nearest(el,e);if(!h){tip.hidden=true;return;}
+  tip.innerHTML=tipHTML(el._sp,h.k);tip.hidden=false;const tw=tip.offsetWidth,th=tip.offsetHeight;let lx=e.clientX+14,ly=e.clientY-th-12;if(lx+tw>innerWidth-8)lx=e.clientX-tw-14;if(ly<8)ly=e.clientY+16;tip.style.left=lx+'px';tip.style.top=ly+'px';
 });
-document.addEventListener('scroll',hideTip,{passive:true});
+document.addEventListener('scroll',()=>{tip.hidden=true},{passive:true});
 
-/* ---------- detail sheet ---------- */
-const sheet=document.getElementById('sheet');let lastFocus=null;
-function openDetail(vid,key){
-  const Vr=VM[vid],m=M[key],h=headInfo(key);lastFocus=document.activeElement;
-  document.getElementById('p-eyebrow').textContent=`${Vr.id} · ${Vr.name} · detail view`;
-  document.getElementById('p-title').textContent=m.name;
-  document.getElementById('p-val').innerHTML=key==='nutrition'?`${h.val} <span style="color:var(--ink-3)">·</span> ${h.val2}`:h.val;
-  document.getElementById('p-delta').innerHTML=h.delta;
-  const pc=document.getElementById('p-chart');
-  const hgt=Vr.head==='overlay'?250:230;
-  if(Vr.kind==='gauge'){pc.className='pchart gd';pc.innerHTML=`<div data-v="${vid}" data-m="${key}" data-detail="1" style="display:contents"><div class="ringslot" data-slot="ring"></div><div class="plot" data-slot="strip" style="height:${hgt-60}px"></div></div>`;}
-  else{pc.className='pchart';pc.innerHTML=`<div data-v="${vid}" data-m="${key}" data-detail="1" class="${Vr.frame==='bleed'?'f-bleed':''}" style="position:relative;height:${hgt}px;${Vr.frame==='bleed'?'border-radius:16px;background:var(--surface-2);--ring:var(--surface-2)':''}${Vr.frame==='inset'?'background:var(--well);border-radius:12px;padding:8px;--ring:var(--well)':''}"><div class="plot" data-slot="main" style="height:100%"></div></div>`;}
-  const lg=document.getElementById('p-lg');
-  lg.innerHTML=key==='stages'?STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join(''):
-    `<span><i style="background:${A(m.fam)}"></i>${key==='nutrition'?'Today':'Today / value'}</span>`+(Vr.annot==='band'?`<span><i style="background:var(--ink);opacity:.2"></i>${key==='hrv'||key==='rhr'?'Personal baseline':'Typical range (±1 SD)'}</span>`:'')+(Vr.annot!=='none'&&Vr.annot!=='band'?`<span><i style="background:transparent;border-top:1px dashed var(--ink-2);border-radius:0;height:1px"></i>Goal / reference line</span>`:'');
-  const rowsFor=()=>{
-    if(key==='stages')return [['Asleep',...asleep.map(hm)],...STG.map(s=>[s.n,...s.v.map(hm)])];
-    if(key==='nutrition')return m.split.map(s=>[s.label==='kcal'?'Calories (kcal)':'Protein (g)',...s.vals.map(int)]);
-    const s=m.s;const rr=[[`${m.name}${s.unit?' ('+s.unit+')':''}`,...s.vals.map(s.fmt)]];if(key==='volume')rr.push(['Session',...m.sessions]);return rr;};
-  document.getElementById('p-table').innerHTML=`<thead><tr><th></th>${DAYS.map((d,i)=>`<th class="num">${d}</th>`).join('')}</tr></thead><tbody>${rowsFor().map(rw=>`<tr><td>${rw[0]}</td>${rw.slice(1).map((c,i)=>`<td class="num${i===TD?' today-col':''}">${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
-  sheet.hidden=false;document.body.style.overflow='hidden';
-  requestAnimationFrame(()=>{paint(pc);document.getElementById('p-close').focus();});
-}
-function closeDetail(){sheet.hidden=true;document.body.style.overflow='';hideTip();if(lastFocus)lastFocus.focus();}
-stage.addEventListener('click',e=>{const c=e.target.closest('.card');if(c)openDetail(c.dataset.v,c.dataset.m);});
-stage.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('card')){e.preventDefault();openDetail(e.target.dataset.v,e.target.dataset.m);}});
-document.getElementById('p-close').onclick=closeDetail;
-sheet.addEventListener('click',e=>{if(e.target===sheet)closeDetail();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden)closeDetail();});
+/* ================= popover ================= */
+const pop=$('pop');let popKey=null;
+function openPop(key,btn){popKey=key;const [vid,m]=key.split('|');const c=cfg(vid,m);
+  pop.innerHTML=`<div class="pl">${M[m].name} · ${vid}</div><div class="pl" style="margin-top:4px">Chart</div><div class="seg">${['line','bar','area'].map(t=>`<button data-ptype="${t}" aria-pressed="${c.type===t}">${ICON[t]}${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+  <div class="pl">Range</div><div class="seg">${['D','W','M'].map(r=>`<button data-prange="${r}" aria-pressed="${c.range===r}">${{D:'Day',W:'Week',M:'Month'}[r]}</button>`).join('')}</div>
+  <div class="pa"><button data-preset>${S.over[key]?'Match page settings':'Using page settings'}</button><button class="go" data-popen>Full view</button></div>`;
+  pop.hidden=false;const b=btn.getBoundingClientRect();let x=b.right-pop.offsetWidth,y=b.bottom+6;if(x<8)x=8;if(y+pop.offsetHeight>innerHeight-8)y=Math.max(8,b.top-pop.offsetHeight-6);pop.style.left=x+'px';pop.style.top=y+'px';}
+function setOver(key,patch){S.over[key]={...(S.over[key]||{}),...patch};save();render();}
+pop.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.stopPropagation();const [vid,m]=popKey.split('|');
+  if(b.dataset.ptype)setOver(popKey,{type:b.dataset.ptype});
+  else if(b.dataset.prange)setOver(popKey,{range:b.dataset.prange});
+  else if('preset' in b.dataset){delete S.over[popKey];save();render();}
+  else if('popen' in b.dataset){pop.hidden=true;openSheet(vid,m);return;}
+  const btn=document.querySelector(`[data-menu="${popKey}"]`);if(btn)openPop(popKey,btn);else pop.hidden=true;});
 
-/* ---------- dataset table ---------- */
-(function(){
-  const rows=[
-    ['sleep','Sleep score',M.score.s.vals.map(String),'goal 85'],
-    ['sleep','Asleep',asleep.map(hm),'goal 7h 30m'],
-    ...STG.map(s=>['sleep',`· ${s.n}`,s.v.map(hm),'']),
-    ['heart','Recovery (%)',M.recovery.s.vals.map(String),'goal 67'],
-    ['heart','HRV (ms)',M.hrv.s.vals.map(String),'baseline 55–70'],
-    ['heart','Resting HR (bpm)',M.rhr.s.vals.map(String),'baseline 50–55'],
-    ['train','Daily strain (0–21)',M.strain.s.vals.map(v=>v.toFixed(1)),'target 14'],
-    ['train','Volume (kg)',M.volume.s.vals.map(v=>v?int(v):'rest'),'50k / week'],
-    ['nutri','Calories (kcal)',M.nutrition.split[0].vals.map(int),'goal 2,500'],
-    ['nutri','Protein (g)',M.nutrition.split[1].vals.map(String),'goal 170'],
-    ['train','Steps',M.steps.s.vals.map(int),'goal 10,000'],
-  ];
-  document.getElementById('dtable').innerHTML=`<thead><tr><th>Metric</th>${DAYS.map((d,i)=>`<th class="num">${d} ${DATES[i].split(' ')[1]}</th>`).join('')}<th>Goal / baseline</th></tr></thead><tbody>${rows.map(([f,n,v,g])=>`<tr><td>${n.startsWith('·')?'':`<span class="dot" style="background:${A(f)}"></span>`}${n}</td>${v.map((c,i)=>`<td class="num${i===TD?' today-col':''}">${c}</td>`).join('')}<td>${g}</td></tr>`).join('')}</tbody>`;
-})();
+/* ================= sheet ================= */
+let sheetKey=null,lastFocus=null;
+function openSheet(vid,m){sheetKey=`${vid}|${m}`;lastFocus=document.activeElement;$('sheet').hidden=false;document.body.style.overflow='hidden';renderSheet();$('s-x').focus();}
+function closeSheet(){$('sheet').hidden=true;document.body.style.overflow='';sheetKey=null;tip.hidden=true;if(lastFocus&&document.contains(lastFocus))lastFocus.focus();}
+function renderSheet(){const [vid,m]=sheetKey.split('|');const s=S.sel;const c=cfg(vid,m);const sp=series(m,c.range,s);
+  $('s-eb').textContent=`${vid} · ${VM[vid].name} · full view`;$('s-title').textContent=M[m].name;
+  const gl=`<span><i style="background:none;border-top:1px dashed rgba(17,17,15,.5);border-radius:0;height:0"></i>`;
+  const legend=m==='stages'?`<div class="plg">${STG.map(x=>`<span><i style="background:${x.c}"></i>${x.n}</span>`).join('')}${sp.kind!=='hyp'?gl+'Goal 7.5h</span>':''}</div>`:(sp.goal!=null&&sp.kind==='time'?`<div class="plg">${gl}Goal ${M[m].short(M[m].goal)}</span></div>`:'');
+  let rows='';
+  if(sp.days)rows=sp.days.map(i=>`<tr class="${i===s?'on':''}"><td>${dShort(i)}</td><td class="n">${m==='stages'?hm(asleep[i]):M[m].fmt(val(m,i))+(M[m].unit?' '+M[m].unit:'')}</td>${m==='nutrition'?`<td class="n">${protein[i]} g</td>`:''}</tr>`).reverse().join('');
+  else if(sp.kind==='cat')rows=sp.labels.map((l,k)=>`<tr><td>${l}</td><td class="n">${sp.fmtv(sp.vals[k])}</td>${sp.second?`<td class="n">${sp.second[k]} g</td>`:''}</tr>`).join('');
+  else if(sp.kind==='hyp')rows=sp.segs.map(g=>`<tr><td>${clock(g.t0)} – ${clock(g.t1)}</td><td>${STG.find(t=>t.k===g.s).n}</td><td class="n">${hm(g.m)}</td></tr>`).join('');
+  else if(sp.kind==='time')rows=sp.vals.map((v,k)=>`<tr><td>${sp.full[k]}</td><td class="n">${m==='strain'?(+v).toFixed(1):int(v)}${(sp.unit||M[m].unit)?' '+(sp.unit||M[m].unit):''}</td></tr>`).join('');
+  else rows=`<tr><td>${sp.title}</td><td>${sp.sub}</td></tr>`;
+  for(const k in SL)if(k.startsWith('sheet-'))delete SL[k];
+  const sid=`sheet-${m}`;SL[sid]={vid,m,kind:'chart',opts:{axis:'full',fs:10.5}};
+  $('s-body').innerHTML=`<div class="card fam-${M[m].fam}" style="cursor:default;margin-top:14px;background:rgba(255,255,255,.55);padding:16px 14px">
+    ${valHTML(m,s,'v52')}<div style="margin-top:10px">${deltaHTML(m,s)}</div>
+    <div class="pctl">${dwm(vid,m)}${tseg(vid,m)}<div class="step"><button data-sday="-1" aria-label="Previous day"${s<=0?' disabled':''}>‹</button><b>${dShort(s)}</b><button data-sday="1" aria-label="Next day"${s>=N-1?' disabled':''}>›</button></div></div>
+    <p style="font-size:12px;margin-top:10px">${sp.caption||({W:'The 7 days around the selected day. Tap a day to select it.',M:'Last 30 days. Tap a day to select it.'})[c.range]}</p>
+    <div class="slot" data-slot="${sid}" style="height:240px;margin-top:12px"></div>${legend}</div>
+    <div class="tbl"><table><tbody>${rows}</tbody></table></div>`;
+  paint($('s-body'));}
 
+/* ================= events ================= */
+document.addEventListener('click',e=>{
+  const t=e.target;
+  if(!pop.hidden&&!t.closest('#pop')&&!t.closest('[data-menu]'))pop.hidden=true;
+  const b=t.closest('button');
+  if(b){
+    if(b.dataset.gtype){S.type=b.dataset.gtype;save();render();return;}
+    if(b.dataset.grange){S.range=b.dataset.grange;save();render();return;}
+    if(b.dataset.gacc){S.acc=b.dataset.gacc;save();render();return;}
+    if(b.id==='d-prev'){selectDay(Math.max(0,S.sel-1));return;}
+    if(b.id==='d-next'){selectDay(Math.min(N-1,S.sel+1));return;}
+    if(b.id==='g-reset'){S.over={};save();render();return;}
+    if(b.id==='s-x'){closeSheet();return;}
+    if(b.dataset.menu){if(!pop.hidden&&popKey===b.dataset.menu){pop.hidden=true;return;}openPop(b.dataset.menu,b);return;}
+    if(b.dataset.dwm){const [vid,m,r]=b.dataset.dwm.split('|');setOver(`${vid}|${m}`,{range:r});return;}
+    if(b.dataset.tseg){const [vid,m,ty]=b.dataset.tseg.split('|');setOver(`${vid}|${m}`,{type:ty});return;}
+    if(b.dataset.day){selectDay(+b.dataset.day);return;}
+    if(b.dataset.sday){selectDay(clamp(S.sel+(+b.dataset.sday),0,N-1));return;}
+    if(b.dataset.focus){S.focus=b.dataset.focus;save();render();return;}
+  }
+  if(t.closest('.slot')||t.closest('#sheet'))return;
+  const c=t.closest('[data-open]');if(c){const [vid,m]=c.dataset.open.split('|');openSheet(vid,m);}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){if(!pop.hidden)pop.hidden=true;else if(!$('sheet').hidden)closeSheet();return;}
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('[data-open]')){e.preventDefault();const [vid,m]=e.target.dataset.open.split('|');openSheet(vid,m);}});
+$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();});
+$('jump').innerHTML=V.map(v=>`<a href="#${v.id.toLowerCase()}">${v.id}</a>`).join('')+`<a href="#ranking">Ranking</a>`;
 render();
-let lw=innerWidth,rt;
-addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(innerWidth!==lw){lw=innerWidth;paint(stage);if(!sheet.hidden)paint(document.getElementById('p-chart'));}},120);});
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>paint(stage));
+let lw=innerWidth,rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(innerWidth!==lw){lw=innerWidth;paint(document);}},120);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>paint(document));
 })();
 </script>

@@ -1,0 +1,790 @@
+<title>Metric Card Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one long dark sheet. Variant sections stack; each holds a grid of 350x120 metric cards. Tap a card for its full-width detail. */
+:root{
+  color-scheme: dark;
+  --bg:#0c0d11; --surface:#15161c; --surface-2:#1b1c24; --well:#101116;
+  --line:#262833; --grid:#20222b; --axis:#34374a; --track:#23252f;
+  --ink:#eceef4; --ink-2:#a4a7b6; --ink-3:#6d7081;
+  --sleep:#8b8ff0; --sleep-dim:#3b3e72;
+  --heart:#e5696b; --heart-dim:#6b3035;
+  --train:#5cc08c; --train-dim:#285640;
+  --nutri:#e0b84e; --nutri-dim:#5f4f27;
+  --st-deep:#5a5fe0; --st-rem:#9a93f5; --st-light:#c9cbfa; --st-awake:#e0906e;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, "Segoe UI", sans-serif;
+  --ring: var(--surface);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
+h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h3{font-size:15px;font-weight:600;margin:0}
+p{margin:0;color:var(--ink-2);max-width:68ch}
+.lede{font-size:15px}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+a{color:var(--sleep)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sleep);outline-offset:2px}
+
+/* toolbar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin-inline:-16px;padding:10px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.04) inset}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12px;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{border-color:var(--ink-3);color:var(--ink);background:var(--surface)}
+.chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.jump{display:flex;flex-wrap:wrap;gap:4px}
+.jump a{font-size:12px;color:var(--ink-2);text-decoration:none;padding:4px 7px;border-radius:6px;font-weight:600;font-variant-numeric:tabular-nums}
+.jump a:hover{background:var(--surface);color:var(--ink)}
+
+/* sections */
+section{padding-block:36px 8px;scroll-margin-top:64px}
+.vhead{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;margin-bottom:14px}
+.vtag{font-size:13px;font-weight:700;color:var(--bg);background:var(--ink);border-radius:7px;padding:2px 8px;font-variant-numeric:tabular-nums;align-self:center}
+.vhead p{grid-column:2;font-size:13.5px}
+.specs{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--ink-3)}
+.specs b{color:var(--ink-2);font-weight:500}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),350px));gap:12px;justify-content:start}
+.grid.g-flush{gap:0 24px}
+.grid.g-grouped{gap:1px;background:var(--line);border-radius:18px;overflow:hidden;width:fit-content;max-width:100%;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),350px))}
+
+/* card */
+.card{position:relative;height:120px;min-width:0;cursor:pointer;display:flex;flex-direction:column;padding:12px 14px;text-align:left;border:0;width:100%;color:var(--ink)}
+.card:hover .h-title{color:var(--ink)}
+.h-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0}
+.h-left{display:flex;align-items:baseline;gap:8px;min-width:0}
+.h-title{font-size:12.5px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.h-val{font-weight:600;letter-spacing:-.01em;white-space:nowrap;color:var(--ink)}
+.h-val small{font-size:.62em;font-weight:500;color:var(--ink-2);margin-left:2px;letter-spacing:0}
+.h-delta{font-size:11.5px;color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.h-delta em{font-style:normal;color:var(--ink-2)}
+.plot{position:relative;flex:1;min-height:0;min-width:0}
+.plot svg{display:block;overflow:visible}
+.lg{display:inline-flex;gap:7px;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+.lg span{display:inline-flex;align-items:center;gap:3px}
+.lg i{width:7px;height:7px;border-radius:2px;display:inline-block}
+
+/* head layouts */
+.l-inline .h-val{font-size:17px}
+.l-inline .plot{margin-top:6px}
+.l-stack .h-val{font-size:24px;line-height:1.1;margin-top:2px}
+.l-stack .plot{margin-top:4px}
+.l-side{flex-direction:row;gap:12px}
+.l-side .side-txt{width:112px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+.l-side .h-val{font-size:26px;line-height:1.1}
+.l-side .lg{display:grid;grid-template-columns:auto auto;gap:2px 8px}
+.l-gauge{flex-direction:row;gap:14px;align-items:center}
+.l-gauge .ringslot{width:88px;height:88px;flex:none;position:relative}
+.l-gauge .gtxt{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
+.l-gauge .plot{margin-top:6px}
+.l-overlay{padding:0}
+.l-overlay .ov{position:absolute;left:14px;top:12px;right:14px;z-index:1;pointer-events:none}
+.l-overlay .h-val{font-size:22px;line-height:1.15}
+.l-overlay .plot{position:absolute;inset:0}
+
+/* framings */
+.f-filled{background:var(--surface);border-radius:16px;--ring:var(--surface)}
+.f-soft{background:linear-gradient(180deg,var(--surface-2),var(--surface));border-radius:22px;--ring:var(--surface)}
+.f-outline{background:transparent;border:1px solid var(--line);border-radius:14px;--ring:var(--bg)}
+.f-flush{background:transparent;border-top:1px solid var(--line);border-radius:0;padding-inline:2px;--ring:var(--bg)}
+.f-tinted{border-radius:22px}
+.f-tinted.fam-sleep{background:color-mix(in oklab,var(--sleep) 9%,var(--surface));--ring:color-mix(in oklab,var(--sleep) 9%,var(--surface))}
+.f-tinted.fam-heart{background:color-mix(in oklab,var(--heart) 9%,var(--surface));--ring:color-mix(in oklab,var(--heart) 9%,var(--surface))}
+.f-tinted.fam-train{background:color-mix(in oklab,var(--train) 9%,var(--surface));--ring:color-mix(in oklab,var(--train) 9%,var(--surface))}
+.f-tinted.fam-nutri{background:color-mix(in oklab,var(--nutri) 9%,var(--surface));--ring:color-mix(in oklab,var(--nutri) 9%,var(--surface))}
+.f-inset{background:var(--surface);border-radius:16px;--ring:var(--well)}
+.f-inset .plot{background:var(--well);border-radius:8px}
+.f-elevated{background:var(--surface-2);border-radius:14px;box-shadow:0 8px 24px -12px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.035) inset;--ring:var(--surface-2)}
+.f-square{background:var(--surface);border-radius:6px;--ring:var(--surface)}
+.f-grouped{background:var(--surface);border-radius:0;--ring:var(--surface)}
+.f-bleed{background:var(--surface);border-radius:18px;overflow:hidden;--ring:var(--surface)}
+
+/* by-metric view */
+.mv .cell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.mv .cell>.lbl{font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:baseline}
+.mv .cell>.lbl b{color:var(--ink);font-weight:700}
+.mv .grid{gap:22px 16px}
+
+/* tooltip & crosshair */
+.tip{position:fixed;z-index:30;pointer-events:none;background:#23252f;border:1px solid #33364a;border-radius:10px;padding:7px 10px;font-size:12px;color:var(--ink);box-shadow:0 10px 30px -10px rgba(0,0,0,.8);max-width:260px;font-variant-numeric:tabular-nums}
+.tip .d{color:var(--ink-3);font-size:11px;margin-bottom:2px}
+.tip .r{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.tip .r span{display:inline-flex;align-items:center;gap:5px;color:var(--ink-2)}
+.tip i{width:7px;height:7px;border-radius:2px;display:inline-block}
+.xh{position:absolute;top:0;bottom:0;width:1px;background:var(--ink-3);opacity:.45;pointer-events:none}
+
+/* detail sheet */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(5,6,9,.72);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
+.sheet[hidden]{display:none!important}
+.panel{background:var(--surface);width:100%;max-width:760px;border-radius:22px 22px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom,0px));max-height:92%;overflow:auto;--ring:var(--surface)}
+@media (min-width:720px){.sheet{align-items:center}.panel{border-radius:22px;padding:22px 24px 26px}}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pclose{border:0;background:var(--surface-2);border-radius:999px;width:32px;height:32px;cursor:pointer;color:var(--ink-2);font-size:16px;flex:none}
+.pval{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:4px}
+.pval small{font-size:15px;color:var(--ink-2);font-weight:500;margin-left:3px}
+.pchart{position:relative;margin-top:16px}
+.pchart.gd{display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:center}
+@media (max-width:560px){.pchart.gd{grid-template-columns:1fr}.pchart.gd .ringslot{margin:0 auto}}
+.pchart .ringslot{width:180px;height:180px;position:relative}
+.plg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12px;color:var(--ink-2)}
+.plg span{display:inline-flex;align-items:center;gap:6px}
+.plg i{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+/* tables */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface);white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:1px}
+.today-col{color:var(--ink);font-weight:600}
+.dtable td{color:var(--ink-2)}
+.dtable td:first-child{color:var(--ink);white-space:nowrap}
+.rank td{color:var(--ink-2)}
+.rank td:first-child{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.rank td.v{white-space:nowrap;color:var(--ink)}
+.rank td.v b{font-weight:700}
+.meter{display:inline-flex;gap:2px;vertical-align:middle}
+.meter i{width:6px;height:10px;border-radius:2px;background:var(--track);display:inline-block}
+.meter i.on{background:var(--ink-2)}
+.rec{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.rec div{background:var(--surface);border-radius:14px;padding:14px 16px}
+.rec h3{margin-bottom:4px}
+.rec p{font-size:13px}
+.foot{margin-top:28px;font-size:12px;color:var(--ink-3)}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .12s ease}.card:active{transform:scale(.985)}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Design system study · metric cards</div>
+    <h1>Metric Card Lab</h1>
+    <p class="lede">One 7-day dataset (Mon Sep 22 to Sun Sep 28, today is Sunday) drawn ten ways. Every variant plots the same nine metrics with the same numbers, so any difference you notice comes from the treatment. Cards are 350 × 120. Tap one to open its full-width detail view, or hover for daily values.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="View controls">
+    <div class="seg" role="group" aria-label="Layout">
+      <button id="vb-variant" aria-pressed="true">By variant</button>
+      <button id="vb-metric" aria-pressed="false">By metric</button>
+    </div>
+    <nav class="jump" id="jump" aria-label="Jump to variant"></nav>
+    <div class="chips" id="mchips" hidden></div>
+  </div>
+
+  <main id="stage"></main>
+
+  <section id="data" aria-labelledby="data-h">
+    <div class="eyebrow">Source data</div>
+    <h2 id="data-h">The shared dataset</h2>
+    <p>Every chart above is drawn from this table. Goals and targets used for annotations are listed in the last column.</p>
+    <div class="tscroll"><table class="dtable" id="dtable"></table></div>
+  </section>
+
+  <section id="rank" aria-labelledby="rank-h">
+    <div class="eyebrow">Verdict</div>
+    <h2 id="rank-h">Which variant reads fastest at a glance</h2>
+    <p>Ranked by how quickly a card answers the question people open a health app with: how am I doing today compared with normal? These rankings are design judgement from the rendered cards, not user-test results. Before you commit, run a 5-second test with the top three.</p>
+    <div class="tscroll"><table class="rank">
+      <thead><tr><th>#</th><th>Variant</th><th>Glance speed</th><th>What the eye gets first</th><th>Why it's fast (or slow)</th><th>Where it breaks</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="v"><b>V4</b> Number + sparkline</td><td><span class="meter" aria-label="5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Today's value, then trend direction</td><td>The number sits where the eye lands (top-left), in the largest type. The sparkline gives one gesture of shape with no axes or grid to parse. Chart ink is about 30% of the card.</td><td>No goal context. The hidden y-scale exaggerates small swings: RHR moving 51 to 59 bpm looks as dramatic as recovery moving 31% to 86%.</td></tr>
+        <tr><td>2</td><td class="v"><b>V9</b> Bullet vs goal</td><td><span class="meter" aria-label="5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>Am I past the goal line?</td><td>Today, the week's range, the average tick and the goal marker all share one horizontal track, so "on target?" is answered by a single left-right comparison. It works best for steps, protein and sleep duration.</td><td>No day-by-day trend. On metrics without a goal (HRV, RHR) it becomes a dot on a range and loses its main advantage.</td></tr>
+        <tr><td>3</td><td class="v"><b>V3</b> Today-accent bars</td><td><span class="meter" aria-label="4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>The one bright bar (today)</td><td>Daily metrics are discrete, so discrete bars match the data. Muting six days makes today pop through contrast, and the goal line turns each day into pass or fail. Day initials are the only axis you need.</td><td>Zero-based bars flatten narrow-range metrics: RHR and HRV look nearly constant. Use it for strain, volume, steps and nutrition.</td></tr>
+        <tr><td>4</td><td class="v"><b>V5</b> Ring gauge</td><td><span class="meter" aria-label="4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>How full the ring is</td><td>Completion toward a bounded goal is read before any number (the Apple Activity effect). The accent-tinted card identifies the metric family before you read the title.</td><td>Rings suit bounded targets only. For RHR the ring's range is arbitrary. The trend is pushed into a tiny strip, and nine rings in a feed look alike.</td></tr>
+        <tr><td>5</td><td class="v"><b>V8</b> Deviation from average</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Up or down vs my normal</td><td>Bars grow from your own 7-day average, and bright means "better", which handles lower-is-better metrics like RHR correctly. It answers "is today unusual?" quickly.</td><td>People have to learn the convention once. The absolute value lives only in the header, and rest days show up as large negative volume.</td></tr>
+        <tr><td>6</td><td class="v"><b>V2</b> Soft area</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>Overall trend shape</td><td>The large stacked value plus a calm filled shape give a quick sense of direction, and the average line adds context with one hairline.</td><td>The filled area on a non-zero baseline implies magnitude it doesn't have. The stacked header leaves the plot only 46px tall.</td></tr>
+        <tr><td>7</td><td class="v"><b>V10</b> Full-bleed annotated</td><td><span class="meter" aria-label="3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>The shape, then the labeled peak</td><td>It has the most visual presence. Labeled high and low points save a trip to the axis, which makes it a strong single hero card.</td><td>The overlaid header competes with the data. Repeated nine times it gets loud, and in-plot labels can collide on dense weeks.</td></tr>
+        <tr><td>8</td><td class="v"><b>V6</b> Dots in typical range</td><td><span class="meter" aria-label="2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>Which dots escape the band</td><td>This is the right model for HRV and RHR, where "within my normal range" matters more than the raw number.</td><td>The ±1 SD band is abstract for score, steps and volume. The 100% stacked sleep bars hide total duration. Two readings are needed.</td></tr>
+        <tr><td>9</td><td class="v"><b>V7</b> Heat strip</td><td><span class="meter" aria-label="2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td><td>A row of numbers</td><td>Values are printed in every cell, so it is precise without axes, and weekly rhythm (Wed and Sat dips) is visible.</td><td>Color intensity is a weak magnitude channel, so you end up reading seven numbers. The stage heat grid needs a legend to decode.</td></tr>
+        <tr><td>10</td><td class="v"><b>V1</b> Full-axis line</td><td><span class="meter" aria-label="1 of 5"><i class="on"></i><i></i><i></i><i></i><i></i></span></td><td>Tick labels and gridlines</td><td>It is the most exact reading, but y ticks, gridlines, day labels and a goal label consume about 40% of a 120px card before any data appears.</td><td>Too much chrome for a card. It is the right treatment for the full-width detail view, where it has room.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rec">
+      <div><h3>Card default</h3><p>Use the V4 frame, with the big number left and chart right, as the base card for every metric. It won because the number is read before the chart.</p></div>
+      <div><h3>Swap the chart by metric type</h3><p>Use V3 today-accent bars for discrete daily totals (strain, volume, steps, calories + protein). Use a V4 sparkline for continuous physiology (HRV, RHR, sleep score). Use V9 bullets where a goal is the question (sleep duration, steps).</p></div>
+      <div><h3>Detail view</h3><p>Use the V1 full-axis treatment, with a V6 typical-range band added for HRV and RHR. Precision belongs where there's room for it.</p></div>
+    </div>
+    <p class="foot">Sleep-stage colors were checked with a color-vision-deficiency simulator against the dark card surface. Adjacent stages stay distinguishable (worst pair ΔE 15.3), and every stacked chart also uses 2px gaps and a legend.</p>
+  </section>
+</div>
+
+<div class="tip" id="tip" hidden></div>
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="p-title">
+    <div class="phead">
+      <div>
+        <div class="eyebrow" id="p-eyebrow"></div>
+        <h2 id="p-title"></h2>
+        <div class="pval" id="p-val"></div>
+        <div class="h-delta" id="p-delta" style="margin-top:4px"></div>
+      </div>
+      <button class="pclose" id="p-close" aria-label="Close detail view">✕</button>
+    </div>
+    <div class="pchart" id="p-chart"></div>
+    <div class="plg" id="p-lg"></div>
+    <div class="tscroll"><table class="dtable" id="p-table"></table></div>
+  </div>
+</div>
+
+<script>
+(() => {
+/* ---------- data ---------- */
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], DI='MTWTFSS';
+const DATES=['Sep 22','Sep 23','Sep 24','Sep 25','Sep 26','Sep 27','Sep 28'];
+const TD=6;
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const sdev=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
+const int=v=>Math.round(v).toLocaleString('en-US');
+const kf=v=>Math.abs(v)>=1000?(v/1000).toFixed(1).replace(/\.0$/,'')+'k':String(Math.round(v));
+const hm=min=>{min=Math.round(min);const h=Math.floor(min/60),m=min%60;return h?`${h}h ${String(m).padStart(2,'0')}m`:`${m}m`};
+const hs=v=>{const h=v/60;return (Math.abs(h-Math.round(h))<.01?Math.round(h):h.toFixed(1))+'h'};
+
+function ser(o){
+  o.avg=mean(o.vals);o.sd=sdev(o.vals);
+  o.band=o.band||[o.avg-o.sd,o.avg+o.sd];
+  if(o.higher===undefined)o.higher=true;
+  o.fmt=o.fmt||int;o.short=o.short||kf;
+  o.gauge=o.gauge||o.domBar;
+  return o;
+}
+const STG=[
+  {k:'deep',n:'Deep',c:'var(--st-deep)',v:[72,85,58,92,80,48,88]},
+  {k:'rem',n:'REM',c:'var(--st-rem)',v:[98,105,82,112,100,74,110]},
+  {k:'light',n:'Light',c:'var(--st-light)',v:[232,240,214,248,236,198,252]},
+  {k:'awake',n:'Awake',c:'var(--st-awake)',v:[18,14,26,12,16,34,15]},
+];
+const asleep=DAYS.map((_,i)=>STG[0].v[i]+STG[1].v[i]+STG[2].v[i]);
+const inbed=DAYS.map((_,i)=>asleep[i]+STG[3].v[i]);
+
+const M={
+  score:{name:'Sleep score',fam:'sleep',s:ser({vals:[78,84,71,88,82,65,86],domLine:[60,100],domBar:[0,100],goal:85,unit:''})},
+  stages:{name:'Sleep stages',fam:'sleep',s:ser({vals:asleep,domLine:[0,540],domBar:[0,540],goal:450,unit:'',fmt:hm,short:hs})},
+  recovery:{name:'Recovery',fam:'heart',s:ser({vals:[64,78,42,86,72,31,81],domLine:[0,100],domBar:[0,100],goal:67,unit:'%'})},
+  hrv:{name:'HRV',fam:'heart',s:ser({vals:[62,68,51,74,66,44,71],domLine:[40,80],domBar:[0,80],goal:null,band:[55,70],unit:'ms',gauge:[0,100]})},
+  rhr:{name:'Resting HR',fam:'heart',s:ser({vals:[54,52,57,51,53,59,52],domLine:[48,62],domBar:[0,70],goal:null,band:[50,55],higher:false,unit:'bpm',gauge:[40,70]})},
+  strain:{name:'Daily strain',fam:'train',s:ser({vals:[12.4,14.8,9.6,16.2,13.1,7.8,11.5],domLine:[0,21],domBar:[0,21],goal:14,unit:'',fmt:v=>v.toFixed(1),short:v=>(+v.toFixed(1)).toString()})},
+  volume:{name:'Workout volume',fam:'train',s:ser({vals:[8420,9150,0,12600,8900,0,7300],domLine:[0,14000],domBar:[0,14000],goal:null,unit:'kg',gauge:[0,50000]}),
+    sessions:['Push','Pull','Rest','Legs','Upper','Rest','Full body']},
+  nutrition:{name:'Calories + protein',fam:'nutri',split:[
+    ser({label:'kcal',vals:[2480,2610,2150,2790,2540,2320,2460],domLine:[2000,2900],domBar:[0,3000],goal:2500,higher:null,unit:'kcal'}),
+    ser({label:'protein',vals:[168,182,124,191,176,132,172],domLine:[110,200],domBar:[0,200],goal:170,unit:'g'})]},
+  steps:{name:'Steps',fam:'train',s:ser({vals:[9840,11230,6420,8910,12450,4870,10120],domLine:[4000,13000],domBar:[0,13000],goal:10000,unit:''})},
+};
+const ORDER=['score','stages','recovery','hrv','rhr','strain','volume','nutrition','steps'];
+M.volume.s.week=M.volume.s.vals.reduce((a,b)=>a+b,0);
+M.volume.s.weekGoal=50000;
+
+/* ---------- variants ---------- */
+const V=[
+  {id:'V1',name:'Full-axis line',kind:'line',stages:'stackcol',axis:'full',grid:'full',annot:'goal',frame:'filled',head:'inline',
+   desc:'The conventional chart: y ticks, day labels, full horizontal grid and a dashed goal line. Everything is labeled, so nothing needs a tooltip.',
+   spec:['Line (bars for volume)','Full axes','Full grid','Goal line','Filled card, inline header']},
+  {id:'V2',name:'Soft area',kind:'area',stages:'stackarea',axis:'minimal',grid:'baseline',annot:'avg',frame:'soft',head:'stack',
+   desc:'A large stacked value over a filled trend. The only axis labels are the domain ends and first and last day, with a 7-day average hairline.',
+   spec:['Area / stacked area','Minimal axes','Baseline only','7-day average','Gradient card, stacked header']},
+  {id:'V3',name:'Today-accent bars',kind:'bar',stages:'stackcol',axis:'days',grid:'none',annot:'goal',frame:'outline',head:'inline',emph:true,
+   desc:'Discrete daily columns with six muted days and today in full accent. Day initials are the only axis. The goal line turns each day into pass or fail.',
+   spec:['Bars / stacked bars','Day labels only','No grid','Goal line','Outline card, inline header']},
+  {id:'V4',name:'Number + sparkline',kind:'spark',stages:'minicols',axis:'none',grid:'none',annot:'none',frame:'flush',head:'side',
+   desc:'The number leads and the chart is secondary. A 96px sparkline with an endpoint dot, and no axes, grid or card, only a hairline divider.',
+   spec:['Sparkline','No axes','No grid','Endpoint only','Flush list row, side header']},
+  {id:'V5',name:'Ring gauge',kind:'gauge',stages:'donut',axis:'none',grid:'none',annot:'goal',frame:'tinted',head:'gauge',
+   desc:'Today as progress around a ring, with a goal tick on the ring. A micro bar strip keeps the week visible. The card is tinted with the family accent.',
+   spec:['Radial gauge + micro bars','No axes (strip: day initials)','No grid','Goal tick','Accent-tinted card']},
+  {id:'V6',name:'Dots in typical range',kind:'dots',stages:'pct',axis:'minimal',grid:'none',annot:'band',frame:'inset',head:'inline',
+   desc:'Each day is a dot against a shaded "typical" band: your personal baseline for HRV and RHR, or ±1 SD of the week elsewhere. Sleep stages show as a 100% share of the night.',
+   spec:['Dot plot / 100% stacked','Minimal axes','No grid','Typical-range band','Card with inset plot well']},
+  {id:'V7',name:'Heat strip',kind:'heat',stages:'heatgrid',axis:'days',grid:'none',annot:'none',frame:'elevated',head:'stack',
+   desc:'Seven tiles with the value printed in each. Intensity shows relative level. Sleep stages become a stage × day heat grid.',
+   spec:['Heat cells','Day labels only','No grid','Values in cells','Elevated card, stacked header']},
+  {id:'V8',name:'Deviation from average',kind:'delta',stages:'hbars',axis:'minimal',grid:'baseline',annot:'avg',frame:'square',head:'inline',
+   desc:'Bars grow up or down from your 7-day average. A bright bar means better than normal (lower is better for RHR). Sleep stages become horizontal nightly bars against an average tick.',
+   spec:['Diverging bars / horizontal stacks','Average label only','Average as baseline','Average','Square card, inline header']},
+  {id:'V9',name:'Bullet vs goal',kind:'bullet',stages:'hbullet',axis:'minimal',grid:'none',annot:'both',frame:'grouped',head:'stack',
+   desc:'One horizontal track shows today\'s value, the week\'s min–max range, the average tick and the goal marker. The chart answers "am I on target?" and nothing else.',
+   spec:['Bullet chart','Scale ends only','No grid','Goal + average','Grouped list, stacked header']},
+  {id:'V10',name:'Full-bleed annotated',kind:'bleed',stages:'bleedcol',axis:'inplot',grid:'none',annot:'goal',frame:'bleed',head:'overlay',
+   desc:'The chart runs edge to edge behind an overlaid header. There is no axis. The week\'s high and low are labeled in the plot, plus a goal line.',
+   spec:['Edge-to-edge area / columns','In-plot labels','No grid','Goal + high/low labels','Bleed card, overlay header']},
+];
+
+/* ---------- svg helpers ---------- */
+const r=v=>Math.round(v*10)/10;
+const A=f=>`var(--${f})`, D=f=>`var(--${f}-dim)`;
+const tx=(x,y,s,{a='start',fs=9,c='var(--ink-3)',w=400}={})=>`<text x="${r(x)}" y="${r(y)}" text-anchor="${a}" font-size="${fs}" font-weight="${w}" style="fill:${c}">${s}</text>`;
+const hl=(x1,x2,y,c,dash)=>`<line x1="${r(x1)}" x2="${r(x2)}" y1="${Math.round(y)+.5}" y2="${Math.round(y)+.5}" style="stroke:${c}" stroke-width="1"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const vl=(x,y1,y2,c,w=1)=>`<line x1="${r(x)}" x2="${r(x)}" y1="${r(y1)}" y2="${r(y2)}" style="stroke:${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const circ=(x,y,rad,fill,ring)=>`<circle cx="${r(x)}" cy="${r(y)}" r="${rad}" style="fill:${fill}${ring?';stroke:var(--ring)':''}"${ring?' stroke-width="2"':''}/>`;
+const yS=(dom,y0,y1)=>v=>y1-(Math.max(dom[0],Math.min(dom[1],v))-dom[0])/(dom[1]-dom[0])*(y1-y0);
+function barP(x,yd,w,yb,rad){
+  const h=Math.abs(yb-yd);rad=Math.max(0,Math.min(rad,h,w/2));
+  if(yd<=yb)return `M${r(x)},${r(yb)}V${r(yd+rad)}Q${r(x)},${r(yd)} ${r(x+rad)},${r(yd)}H${r(x+w-rad)}Q${r(x+w)},${r(yd)} ${r(x+w)},${r(yd+rad)}V${r(yb)}Z`;
+  return `M${r(x)},${r(yb)}V${r(yd-rad)}Q${r(x)},${r(yd)} ${r(x+rad)},${r(yd)}H${r(x+w-rad)}Q${r(x+w)},${r(yd)} ${r(x+w)},${r(yd-rad)}V${r(yb)}Z`;
+}
+function hbarP(x0,x1,y,h,rad){rad=Math.max(0,Math.min(rad,x1-x0,h/2));
+  return `M${r(x0)},${r(y)}H${r(x1-rad)}Q${r(x1)},${r(y)} ${r(x1)},${r(y+rad)}V${r(y+h-rad)}Q${r(x1)},${r(y+h)} ${r(x1-rad)},${r(y+h)}H${r(x0)}Z`;}
+function arcP(cx,cy,R,a0,a1){
+  const p=a=>[cx+R*Math.sin(a),cy-R*Math.cos(a)];const [x0,y0]=p(a0),[x1,y1]=p(a1);
+  return `M${r(x0)},${r(y0)}A${R},${R} 0 ${a1-a0>Math.PI?1:0} 1 ${r(x1)},${r(y1)}`;}
+const nice3=d=>[d[0],(d[0]+d[1])/2,d[1]];
+
+function geo(W,H,o){
+  const fs=o.detail?11:9;
+  const hasY=o.axis==='full'||o.axis==='minimal';
+  const hasX=o.axis==='full'||o.axis==='minimal'||o.axis==='days';
+  const lab=['goal','avg','both'].includes(o.annot)&&o.axis!=='none';
+  const L=o.L??(hasY?(o.detail?42:28):2), R=o.R??(lab?(o.detail?64:38):2), T=o.T??(o.detail?8:5), B=hasX?fs+7:2;
+  const x0=L,x1=W-R,y0=T,y1=H-B,bw=(x1-x0)/7;
+  return {fs,hasY,hasX,lab,x0,x1,y0,y1,bw,W,H,cx:i=>x0+bw*(i+.5)};
+}
+function axes(g,dom,s,o){
+  let out='';const y=yS(dom,g.y0,g.y1);
+  const ticks=o.axis==='full'?nice3(dom):o.axis==='minimal'?[dom[0],dom[1]]:[];
+  if(o.grid==='full')nice3(dom).forEach(t=>out+=hl(g.x0,g.x1,y(t),'var(--grid)'));
+  if(o.grid==='full'||o.grid==='baseline')out+=hl(g.x0,g.x1,g.y1,'var(--axis)');
+  ticks.forEach(t=>out+=tx(g.x0-6,y(t)+g.fs*.35,s.short(t),{a:'end',fs:g.fs}));
+  if(g.hasX)for(let i=0;i<7;i++){
+    const lbl=o.axis==='minimal'?(i===0||i===6?(o.detail?DAYS[i]:DI[i]):''):(o.detail?DAYS[i]:DI[i]);
+    if(lbl)out+=tx(g.cx(i),g.y1+g.fs+4,lbl,{a:'middle',fs:g.fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400});
+  }
+  return out;
+}
+function annot(g,dom,s,o){
+  const y=yS(dom,g.y0,g.y1);let out='';
+  if(o.annot==='band'){const b=s.band;out+=`<rect x="${r(g.x0)}" y="${r(y(b[1]))}" width="${r(g.x1-g.x0)}" height="${r(Math.max(1,y(b[0])-y(b[1])))}" rx="3" style="fill:var(--ink)" opacity=".07"/>`;
+    if(o.detail)out+=tx(g.x1-4,y(b[1])-4,s.bandLabel||'typical range',{a:'end',fs:g.fs,c:'var(--ink-3)'});return out;}
+  const L=[];
+  if((o.annot==='goal'||o.annot==='both')&&s.goal!=null)L.push(['goal',s.goal,'var(--ink-2)','3 3']);
+  if(o.annot==='avg'||o.annot==='both'||(o.annot==='goal'&&s.goal==null))L.push(['avg',s.avg,'var(--ink-3)',null]);
+  let lastY=-99;
+  L.forEach(([t,v,c,dash])=>{const yy=y(v);out+=hl(g.x0,g.x1,yy,c,dash);
+    if(g.lab){let ly=yy+g.fs*.35;if(Math.abs(ly-lastY)<g.fs+1)ly=lastY+(ly>=lastY?g.fs+1:-(g.fs+1));lastY=ly;
+      out+=tx(g.x1+5,ly,`${t} ${s.short(v)}`,{fs:g.fs-.5,c});}});
+  return out;
+}
+
+/* ---------- single-series kinds ---------- */
+function single(kind,s,fam,W,H,o){
+  const svg=[],pts=[];
+  if(kind==='heat')return heat(s,fam,W,H,o);
+  if(kind==='bullet')return bullet(s,fam,W,H,o);
+  if(kind==='delta')return delta(s,fam,W,H,o);
+  if(kind==='bleed'||kind==='bleedbar')return bleed(kind,s,fam,W,H,o);
+  const isBar=kind==='bar'||kind==='sparkbar';
+  const dom=isBar?s.domBar:s.domLine;
+  const g=geo(W,H,kind==='spark'||kind==='sparkbar'?{...o,axis:'none',annot:'none',L:4,R:8,T:6}:o);
+  const y=yS(dom,g.y0,g.y1);
+  svg.push(axes(g,dom,s,o),annot(g,dom,s,o));
+  s.vals.forEach((v,i)=>pts.push([g.cx(i),i]));
+  if(isBar){
+    const bw=Math.min(o.detail?30:(kind==='sparkbar'?10:18),g.bw*.58);
+    s.vals.forEach((v,i)=>{const x=g.cx(i)-bw/2;
+      if(v<=0){svg.push(circ(g.cx(i),g.y1-2,1.6,'var(--ink-3)'));return;}
+      const emph=o.emph||kind==='sparkbar';
+      svg.push(`<path d="${barP(x,y(v),bw,g.y1,o.detail?5:3)}" style="fill:${emph&&i!==TD?D(fam):A(fam)}"${!emph?' opacity=".9"':''}/>`);
+      if(o.detail&&v>0)svg.push(tx(g.cx(i),y(v)-6,s.short(v),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
+    });
+    return {svg:svg.join(''),pts};
+  }
+  const P=s.vals.map((v,i)=>[g.cx(i),y(v)]);
+  const d='M'+P.map(p=>p.map(r).join(',')).join('L');
+  if(kind==='area'){svg.push(`<path d="${d}L${r(P[6][0])},${g.y1}L${r(P[0][0])},${g.y1}Z" style="fill:${A(fam)}" opacity=".14"/>`);}
+  if(kind==='dots'){
+    svg.push(`<path d="${d}" fill="none" style="stroke:${A(fam)}" stroke-width="1.2" opacity=".35"/>`);
+    P.forEach((p,i)=>{const out=s.vals[i]<s.band[0]||s.vals[i]>s.band[1];
+      svg.push(i===TD?circ(p[0],p[1],o.detail?6:5,A(fam),true):circ(p[0],p[1],o.detail?4.5:3.5,out?A(fam):D(fam),true));});
+    if(o.detail)P.forEach((p,i)=>svg.push(tx(p[0],p[1]-10,s.short(s.vals[i]),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)'})));
+    return {svg:svg.join(''),pts};
+  }
+  svg.push(`<path d="${d}" fill="none" style="stroke:${A(fam)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`);
+  if(kind==='line'&&o.axis==='full')P.slice(0,6).forEach(p=>svg.push(circ(p[0],p[1],2.5,A(fam),true)));
+  if(o.detail&&kind!=='spark')P.forEach((p,i)=>i!==TD&&svg.push(tx(p[0],p[1]-9,s.short(s.vals[i]),{a:'middle',fs:g.fs-1,c:'var(--ink-3)'})));
+  svg.push(circ(P[6][0],P[6][1],o.detail?5:4,A(fam),true));
+  return {svg:svg.join(''),pts};
+}
+function heat(s,fam,W,H,o){
+  const g=geo(W,H,{...o,L:0,R:0,T:0});const gap=o.detail?6:3;const cw=(W-gap*6)/7;const ch=g.y1-g.y0;
+  const svg=[axes(g,[0,1],s,{...o,axis:'days',grid:'none'})],pts=[];
+  const [lo,hi]=s.domLine;
+  s.vals.forEach((v,i)=>{const x=i*(cw+gap);const t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));
+    const op=v<=0?.05:.14+.8*t;
+    svg.push(`<rect x="${r(x)}" y="${g.y0}" width="${r(cw)}" height="${r(ch)}" rx="${o.detail?8:6}" style="fill:${A(fam)}" opacity="${op.toFixed(2)}"/>`);
+    if(i===TD)svg.push(`<rect x="${r(x+.75)}" y="${g.y0+.75}" width="${r(cw-1.5)}" height="${r(ch-1.5)}" rx="${o.detail?7.5:5.5}" fill="none" style="stroke:var(--ink)" stroke-width="1.5" opacity=".85"/>`);
+    const lbl=v<=0?'rest':s.short(v);
+    svg.push(tx(x+cw/2,g.y0+ch/2+(o.detail?5:3.5),lbl,{a:'middle',fs:o.detail?14:(ch<22?9:10.5),c:op>.6?'#121318':'var(--ink)',w:600}));
+    pts.push([x+cw/2,i]);});
+  return {svg:svg.join(''),pts};
+}
+function bullet(s,fam,W,H,o){
+  const compact=H<36;const fs=o.detail?11:9;
+  const L=compact?(o.detail?64:44):0;
+  const x0=L+2,x1=W-4;const dom=s.domLine;const x=v=>x0+(Math.max(dom[0],Math.min(dom[1],v))-dom[0])/(dom[1]-dom[0])*(x1-x0);
+  const th=o.detail?22:(compact?9:13);const ty=compact?(H-th)/2:(o.detail?H/2-th/2:fs+6);
+  const svg=[];
+  if(compact)svg.push(tx(0,ty+th/2+fs*.35,s.label,{fs,c:'var(--ink-2)'}));
+  svg.push(`<rect x="${x0}" y="${r(ty)}" width="${r(x1-x0)}" height="${th}" rx="${th/2}" style="fill:var(--track)"/>`);
+  const mn=Math.min(...s.vals),mx=Math.max(...s.vals);
+  svg.push(`<rect x="${r(x(mn))}" y="${r(ty)}" width="${r(Math.max(2,x(mx)-x(mn)))}" height="${th}" rx="${th/2}" style="fill:${D(fam)}"/>`);
+  const v=s.vals[TD];
+  if(dom[0]===0){const bh=Math.max(4,th*.46);svg.push(`<path d="${hbarP(x0,x(v),ty+(th-bh)/2,bh,bh/2)}" style="fill:${A(fam)}"/>`);}
+  svg.push(circ(x(v),ty+th/2,o.detail?7:(compact?4:5),A(fam),true));
+  svg.push(vl(x(s.avg),ty+2,ty+th-2,'var(--ink-3)',1.5));
+  if(s.goal!=null){svg.push(vl(x(s.goal),ty-3,ty+th+3,'var(--ink)',2));
+    if(!compact){const gx=Math.min(x1,Math.max(x0+20,x(s.goal)));svg.push(tx(gx,ty-5,`goal ${s.short(s.goal)}`,{a:gx>=x1-2?'end':'middle',fs,c:'var(--ink-2)'}));}}
+  if(!compact){svg.push(tx(x0,ty+th+fs+5,s.short(dom[0]),{fs,c:'var(--ink-3)'}),tx(x1,ty+th+fs+5,s.short(dom[1]),{a:'end',fs,c:'var(--ink-3)'}));
+    svg.push(tx((x0+x1)/2,ty+th+fs+5,`avg ${s.short(s.avg)} · range ${s.short(mn)}–${s.short(mx)}`,{a:'middle',fs,c:'var(--ink-3)'}));}
+  return {svg:svg.join(''),pts:null};
+}
+function delta(s,fam,W,H,o){
+  const fs=o.detail?11:9;const L=o.detail?46:30,R=o.detail?8:4,T=o.detail?14:6,B=fs+7;
+  const x0=L,x1=W-R,y0=T,y1=H-B,bw=(x1-x0)/7,cx=i=>x0+bw*(i+.5);
+  const dv=s.vals.map(v=>v-s.avg);const m=Math.max(...dv.map(Math.abs))*1.1||1;
+  const y=v=>(y0+y1)/2-v/m*(y1-y0)/2;const y0l=y(0);
+  const svg=[hl(x0,x1,y0l,'var(--axis)')],pts=[];
+  svg.push(tx(x0-6,y0l-2,'avg',{a:'end',fs:fs-1,c:'var(--ink-3)'}),tx(x0-6,y0l+fs,s.short(s.avg),{a:'end',fs:fs-1,c:'var(--ink-2)'}));
+  const w=Math.min(o.detail?28:16,bw*.56);
+  dv.forEach((d,i)=>{const better=s.higher===null?true:(s.higher?d>=0:d<=0);
+    svg.push(`<path d="${barP(cx(i)-w/2,y(d),w,y0l,o.detail?5:3)}" style="fill:${better?A(fam):D(fam)}"/>`);
+    svg.push(tx(cx(i),H-3,o.detail?DAYS[i]:DI[i],{a:'middle',fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
+    if(i===TD||o.detail){const lbl=(d>=0?'+':'−')+s.short(Math.abs(d));svg.push(tx(cx(i),d>=0?y(d)-4:y(d)+fs+2,lbl,{a:'middle',fs:fs-.5,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));}
+    pts.push([cx(i),i]);});
+  return {svg:svg.join(''),pts};
+}
+function bleed(kind,s,fam,W,H,o){
+  const top=o.detail?40:64,bot=o.detail?20:14,fs=o.detail?11:9;
+  const pad=o.detail?20:16;const cx=i=>pad+i*(W-2*pad)/6;
+  const isBar=kind==='bleedbar';const dom=isBar?s.domBar:s.domLine;
+  const y=yS(dom,top,H-bot);const svg=[],pts=[];
+  if(s.goal!=null){const gy=y(s.goal);svg.push(hl(0,W,gy,'var(--ink-2)','3 3'),tx(8,gy-4,`goal ${s.short(s.goal)}`,{fs,c:'var(--ink-2)'}));}
+  if(isBar){const bw=Math.min(o.detail?34:22,(W-2*pad)/7*.62);
+    s.vals.forEach((v,i)=>{if(v<=0){svg.push(circ(cx(i),H-bot-2,1.6,'var(--ink-3)'));}else svg.push(`<path d="${barP(cx(i)-bw/2,y(v),bw,H,4)}" style="fill:${i===TD?A(fam):D(fam)}"/>`);pts.push([cx(i),i]);});
+  }else{
+    const P=s.vals.map((v,i)=>[cx(i),y(v)]);
+    const d='M'+P.map(p=>p.map(r).join(',')).join('L');
+    svg.push(`<path d="M0,${r(P[0][1])}L${d.slice(1)}L${W},${r(P[6][1])}L${W},${H}L0,${H}Z" style="fill:${A(fam)}" opacity=".16"/>`);
+    svg.push(`<path d="M0,${r(P[0][1])}L${d.slice(1)}L${W},${r(P[6][1])}" fill="none" style="stroke:${A(fam)}" stroke-width="2" stroke-linejoin="round"/>`);
+    svg.push(circ(P[6][0],P[6][1],o.detail?5:4,A(fam),true));
+    P.forEach((p,i)=>pts.push([p[0],i]));
+  }
+  const vals=s.vals.slice(0,6);const hi=vals.indexOf(Math.max(...vals)),lo=vals.indexOf(Math.min(...vals));
+  [[hi,'high'],[lo,'low']].forEach(([i,t])=>{if(s.vals[i]<=0)return;const yy=y(s.vals[i]);const above=t==='high'||isBar;
+    const ly=above?yy-7:yy+fs+6;svg.push(tx(cx(i),Math.min(ly,H-bot+fs),`${t} ${s.short(s.vals[i])}`,{a:'middle',fs,c:'var(--ink-2)',w:500}));});
+  for(let i=0;i<7;i++)if(o.detail||i===0||i===TD)svg.push(tx(cx(i),H-4,o.detail?DAYS[i]:(i===TD?'today':DAYS[i]),{a:i===0&&!o.detail?'start':(i===TD&&!o.detail?'end':'middle'),fs:fs-.5,c:'var(--ink-3)'}));
+  return {svg:svg.join(''),pts};
+}
+
+/* ---------- sleep-stage kinds ---------- */
+const ST={short:hs,avg:mean(asleep),goal:450,domBar:[0,540],band:[mean(asleep)-sdev(asleep),mean(asleep)+sdev(asleep)]};
+function stackcol(W,H,o){
+  const mini=o.mini;const g=geo(W,H,mini?{...o,annot:'none'}:o);const dom=[0,540];const y=yS(dom,g.y0,g.y1);
+  const svg=[axes(g,dom,ST,o),annot(g,dom,ST,o)],pts=[];const bw=Math.min(o.detail?30:(mini?10:18),g.bw*.58);const gap=o.detail?2:1.5;
+  for(let i=0;i<7;i++){let acc=0;const x=g.cx(i)-bw/2;const fade=o.emph&&i!==TD;
+    STG.forEach((st,j)=>{const a=acc,b=acc+st.v[i];acc=b;const ya=y(a),yb=y(b);
+      const top=j===3;const h=ya-yb-(j>0?gap:0);if(h<=0)return;
+      svg.push(top?`<path d="${barP(x,yb,bw,yb+h,o.detail?5:3)}" style="fill:${st.c}"${fade?' opacity=".35"':''}/>`
+        :`<rect x="${r(x)}" y="${r(yb)}" width="${r(bw)}" height="${r(h)}" style="fill:${st.c}"${fade?' opacity=".35"':''}/>`);});
+    if(o.detail)svg.push(tx(g.cx(i),y(inbed[i])-6,hs(asleep[i]).replace('h','h'),{a:'middle',fs:g.fs-1,c:i===TD?'var(--ink)':'var(--ink-3)'}));
+    pts.push([g.cx(i),i]);}
+  return {svg:svg.join(''),pts};
+}
+function stackarea(W,H,o){
+  const g=geo(W,H,o);const dom=[0,540];const y=yS(dom,g.y0,g.y1);
+  const svg=[axes(g,dom,ST,o)],pts=[];
+  const cum=[0,1,2,3].map(j=>DAYS.map((_,i)=>STG.slice(0,j+1).reduce((s,st)=>s+st.v[i],0)));
+  for(let j=3;j>=0;j--){const top=cum[j].map((v,i)=>`${r(g.cx(i))},${r(y(v))}`).join('L');
+    svg.push(`<path d="M${top}L${r(g.cx(6))},${g.y1}L${r(g.cx(0))},${g.y1}Z" style="fill:${STG[j].c}"/>`);}
+  for(let j=0;j<3;j++)svg.push(`<path d="M${cum[j].map((v,i)=>`${r(g.cx(i))},${r(y(v))}`).join('L')}" fill="none" style="stroke:var(--ring)" stroke-width="1.5"/>`);
+  svg.push(annot(g,dom,ST,o));
+  for(let i=0;i<7;i++)pts.push([g.cx(i),i]);
+  return {svg:svg.join(''),pts};
+}
+function pct(W,H,o){
+  const g=geo(W,H,{...o,annot:'none'});const svg=[],pts=[];const y=yS([0,1],g.y0,g.y1);
+  svg.push(axes(g,[0,1],{short:v=>Math.round(v*100)+'%'},o));
+  const bw=Math.min(o.detail?30:14,g.bw*.5);const gap=o.detail?2:1.5;
+  for(let i=0;i<7;i++){let acc=0;const tot=inbed[i];
+    STG.forEach((st,j)=>{const a=acc/tot,b=(acc+st.v[i])/tot;acc+=st.v[i];const h=y(a)-y(b)-(j>0?gap:0);
+      svg.push(`<rect x="${r(g.cx(i)-bw/2)}" y="${r(y(b))}" width="${r(bw)}" height="${r(Math.max(0,h))}" rx="${j===3||j===0?2:0}" style="fill:${st.c}"${i!==TD?' opacity=".7"':''}/>`);});
+    pts.push([g.cx(i),i]);}
+  if(o.detail){const yy=y((STG[0].v[TD]+STG[1].v[TD])/inbed[TD]);svg.push(tx(g.x1+4,yy+4,`deep + REM ${Math.round((STG[0].v[TD]+STG[1].v[TD])/inbed[TD]*100)}%`,{fs:g.fs-1,c:'var(--ink-2)'}));}
+  return {svg:svg.join(''),pts};
+}
+function heatgrid(W,H,o){
+  const fs=o.detail?11:8.5;const L=o.detail?52:12;const B=fs+6;const gap=o.detail?4:2;
+  const cw=(W-L-gap*6)/7,ch=(H-B-gap*3)/4;const svg=[],pts=[];
+  STG.forEach((st,j)=>{const mx=Math.max(...st.v),mn=Math.min(...st.v);
+    svg.push(tx(0,j*(ch+gap)+ch/2+fs*.35,o.detail?st.n:st.n[0],{fs,c:'var(--ink-3)'}));
+    st.v.forEach((v,i)=>{const t=(v-mn)/(mx-mn||1);const op=j===3?.25+.75*t:.25+.75*t;
+      svg.push(`<rect x="${r(L+i*(cw+gap))}" y="${r(j*(ch+gap))}" width="${r(cw)}" height="${r(ch)}" rx="${o.detail?5:2.5}" style="fill:${st.c}" opacity="${op.toFixed(2)}"/>`);
+      if(o.detail)svg.push(tx(L+i*(cw+gap)+cw/2,j*(ch+gap)+ch/2+4,hm(v),{a:'middle',fs:fs-1,c:op>.6?'#121318':'var(--ink)',w:500}));});});
+  for(let i=0;i<7;i++){const cx=L+i*(cw+gap)+cw/2;svg.push(tx(cx,H-2,o.detail?DAYS[i]:DI[i],{a:'middle',fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));pts.push([cx,i]);}
+  return {svg:svg.join(''),pts};
+}
+function hbars(W,H,o){
+  const fs=o.detail?11:8.5;const L=o.detail?40:12,R=o.detail?70:44;const x0=L,x1=W-R;const x=v=>x0+v/540*(x1-x0);
+  const rh=H/7;const bh=Math.max(3,rh-(o.detail?8:3));const svg=[],pts=[];const gap=o.detail?2:1.5;
+  for(let i=0;i<7;i++){const yy=i*rh+(rh-bh)/2;let acc=0;
+    svg.push(tx(0,yy+bh/2+fs*.35,o.detail?DAYS[i]:DI[i],{fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
+    STG.forEach((st,j)=>{const a=x(acc)+(j?gap:0),b=x(acc+st.v[i]);acc+=st.v[i];
+      svg.push(j===3?`<path d="${hbarP(a,b,yy,bh,Math.min(2,bh/2))}" style="fill:${st.c}"/>`:`<rect x="${r(a)}" y="${r(yy)}" width="${r(Math.max(0,b-a))}" height="${r(bh)}" style="fill:${st.c}"${i!==TD?' opacity=".75"':''}/>`);});
+    if(o.detail||i===TD)svg.push(tx(W-R+6+(o.detail?0:0),yy+bh/2+fs*.35,hm(asleep[i]),{fs:fs,c:i===TD?'var(--ink)':'var(--ink-3)',w:i===TD?600:400}));
+    pts.push([yy+bh/2,i]);}
+  const ax=x(ST.avg);svg.push(vl(ax,-2,H+1,'var(--ink-2)',1.5));
+  svg.push(tx(W-R+6,fs,'avg',{fs:fs-.5,c:'var(--ink-3)'}),tx(W-R+6,fs*2+2,hm(ST.avg),{fs:fs-.5,c:'var(--ink-2)'}));
+  return {svg:svg.join(''),pts,orient:'y'};
+}
+function hbullet(W,H,o){
+  const fs=o.detail?11:9;const x0=2,x1=W-4;const x=v=>x0+v/540*(x1-x0);
+  const th=o.detail?24:13;const ty=o.detail?H/2-th/2:fs+6;const svg=[];let acc=0;const gap=o.detail?2:1.5;
+  svg.push(`<rect x="${x0}" y="${r(ty)}" width="${r(x1-x0)}" height="${th}" rx="${th/2}" style="fill:var(--track)"/>`);
+  STG.forEach((st,j)=>{const a=x(acc)+(j?gap:0),b=x(acc+st.v[TD]);acc+=st.v[TD];
+    svg.push(j===0?`<path d="M${r(a+th/2)},${r(ty)}H${r(b)}V${r(ty+th)}H${r(a+th/2)}A${th/2},${th/2} 0 0 1 ${r(a+th/2)},${r(ty)}Z" style="fill:${st.c}"/>`
+      :j===3?`<path d="${hbarP(a,b,ty,th,th/2)}" style="fill:${st.c}"/>`:`<rect x="${r(a)}" y="${r(ty)}" width="${r(b-a)}" height="${th}" style="fill:${st.c}"/>`);
+    if(o.detail)svg.push(tx((a+b)/2,ty+th/2+4,hm(st.v[TD]),{a:'middle',fs:fs-1,c:j>=2?'#121318':'var(--ink)',w:500}));});
+  svg.push(vl(x(ST.avg),ty+th+1,ty+th+6,'var(--ink-2)',1.5));
+  svg.push(vl(x(450),ty-3,ty+th+3,'var(--ink)',2),tx(x(450),ty-5,'goal 7.5h',{a:'middle',fs,c:'var(--ink-2)'}));
+  svg.push(tx(x0,ty+th+fs+5,'0',{fs}),tx(x1,ty+th+fs+5,'9h',{a:'end',fs}),tx(x(ST.avg),ty+th+fs+5,`avg ${hm(ST.avg)}`,{a:'middle',fs,c:'var(--ink-3)'}));
+  return {svg:svg.join(''),pts:null};
+}
+function bleedcol(W,H,o){
+  const top=o.detail?40:64,bot=o.detail?20:14,fs=o.detail?11:9,pad=o.detail?20:16;const cx=i=>pad+i*(W-2*pad)/6;
+  const y=yS([0,540],top,H-bot);const bw=Math.min(o.detail?34:22,(W-2*pad)/7*.62);const svg=[],pts=[];const gap=1.5;
+  const gy=y(450);svg.push(hl(0,W,gy,'var(--ink-2)','3 3'),tx(W-8,gy-4,'goal 7.5h',{a:'end',fs,c:'var(--ink-2)'}));
+  for(let i=0;i<7;i++){let acc=0;const x=cx(i)-bw/2;
+    STG.forEach((st,j)=>{const a=acc,b=acc+st.v[i];acc=b;const yb=y(b),ya=j===0?H:y(a)-gap;const h=ya-yb;
+      svg.push(j===3?`<path d="${barP(x,yb,bw,ya,4)}" style="fill:${st.c}"/>`:`<rect x="${r(x)}" y="${r(yb)}" width="${r(bw)}" height="${r(h)}" style="fill:${st.c}"/>`);});
+    pts.push([cx(i),i]);}
+  const hi=asleep.slice(0,6).indexOf(Math.max(...asleep.slice(0,6))),lo=asleep.indexOf(Math.min(...asleep));
+  if(o.detail)[[hi,'high'],[lo,'low']].forEach(([i,t])=>svg.push(tx(cx(i),y(inbed[i])-6,`${t} ${hm(asleep[i])}`,{a:'middle',fs,c:'var(--ink-2)',w:500})));
+  return {svg:svg.join(''),pts};
+}
+
+/* ---------- gauges ---------- */
+function ring(frac,fam,R,sw,extra=''){
+  frac=Math.max(0,Math.min(1,frac));const c=R+sw;
+  const trk=`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}" opacity=".16"/>`;
+  const arc=frac>=.999?`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}"/>`
+    :frac>0?`<path d="${arcP(c,c,R,0,frac*2*Math.PI)}" fill="none" style="stroke:${A(fam)}" stroke-width="${sw}" stroke-linecap="round"/>`:'';
+  return trk+arc+extra;
+}
+function tick(c,R,sw,frac){const a=frac*2*Math.PI;const p=rr=>[c+rr*Math.sin(a),c-rr*Math.cos(a)];const [a1,b1]=p(R-sw/2-2),[a2,b2]=p(R+sw/2+2);
+  return `<line x1="${r(a1)}" y1="${r(b1)}" x2="${r(a2)}" y2="${r(b2)}" style="stroke:var(--ink)" stroke-width="2" stroke-linecap="round"/>`;}
+function gaugeSvg(key,size){
+  const m=M[key],fam=m.fam;const big=size>120;const sw=big?14:8;const R=size/2-sw;const c=R+sw;
+  const cT=(a,b)=>`<text x="${c}" y="${c+(big?4:3)}" text-anchor="middle" font-size="${big?30:17}" font-weight="600" style="fill:var(--ink)">${a}</text>`+(b?`<text x="${c}" y="${c+(big?24:15)}" text-anchor="middle" font-size="${big?12:9}" style="fill:var(--ink-3)">${b}</text>`:'');
+  let inner='';
+  if(key==='stages'){const tot=inbed[TD];let acc=0;const gapA=.035;
+    inner+=`<circle cx="${c}" cy="${c}" r="${R}" fill="none" style="stroke:var(--track)" stroke-width="${sw}"/>`;
+    STG.forEach(st=>{const a0=acc/tot*2*Math.PI+gapA/2,a1=(acc+st.v[TD])/tot*2*Math.PI-gapA/2;acc+=st.v[TD];
+      inner+=`<path d="${arcP(c,c,R,a0,a1)}" fill="none" style="stroke:${st.c}" stroke-width="${sw}"/>`;});
+    inner+=cT(hm(asleep[TD]).replace(' ',''),'asleep').replace(`font-size="${big?30:17}"`,`font-size="${big?26:13}"`);
+  }else if(key==='nutrition'){const [cal,pro]=m.split;const sw2=big?11:6;const R2=R-sw-(big?4:3);
+    inner+=ring(cal.vals[TD]/cal.goal,fam,R,sw)+`<g transform="translate(${c-(R2+sw2)},${c-(R2+sw2)})">${ring(pro.vals[TD]/pro.goal,fam,R2,sw2)}</g>`;
+    inner=inner.replace(/(<g[^>]*>)(<circle[^>]*opacity=".16"\/>)/,'$1$2');
+    inner+=`<text x="${c}" y="${c-(big?2:1)}" text-anchor="middle" font-size="${big?20:12}" font-weight="600" style="fill:var(--ink)">${int(cal.vals[TD])}</text><text x="${c}" y="${c+(big?18:11)}" text-anchor="middle" font-size="${big?12:8.5}" style="fill:var(--ink-3)">${pro.vals[TD]} g</text>`;
+  }else{const s=m.s;const [lo,hi]=s.gauge;
+    const val=key==='volume'?s.week:s.vals[TD];const f=(val-lo)/(hi-lo);
+    const goal=key==='volume'?null:s.goal;
+    inner+=ring(f,fam,R,sw,goal!=null&&goal<hi?tick(c,R,sw,(goal-lo)/(hi-lo)):'');
+    if(key==='hrv'||key==='rhr'){inner+=tick(c,R,sw,(s.band[0]-lo)/(hi-lo))+tick(c,R,sw,(s.band[1]-lo)/(hi-lo));}
+    const lbl=key==='volume'?kf(val):s.short(val);
+    const sub=key==='volume'?`of ${kf(s.weekGoal)} wk`:key==='steps'?`${Math.round(val/s.goal*100)}% goal`:s.unit||(goal!=null?`goal ${s.short(goal)}`:'');
+    inner+=cT(lbl,sub);
+  }
+  return `<svg width="${2*c}" height="${2*c}" viewBox="0 0 ${2*c} ${2*c}">${inner}</svg>`;
+}
+
+/* ---------- dispatcher ---------- */
+const SK={stackcol,stackarea,pct,heatgrid,hbars,hbullet,bleedcol,minicols:(W,H,o)=>stackcol(W,H,{...o,mini:true,axis:'none'})};
+function drawSlot(Vr,key,slot,W,H,detail){
+  const m=M[key];const o={axis:Vr.axis,grid:Vr.grid,annot:Vr.annot,detail,emph:!!Vr.emph};
+  if(Vr.kind==='gauge'){
+    if(slot==='ring')return {svg:gaugeSvg(key,W),pts:null};
+    const so={...o,axis:'days',grid:'none',annot:'none',emph:true,T:2};
+    if(key==='stages')return stackcol(W,H,{...so,mini:!detail});
+    if(key==='nutrition')return single('bar',m.split[0],m.fam,W,H,so);
+    return single('bar',m.s,m.fam,W,H,so);
+  }
+  if(key==='stages')return SK[Vr.stages](W,H,o);
+  let kind=Vr.kind;
+  if(key==='volume'){if(kind==='line'||kind==='area')kind='bar';if(kind==='spark')kind='sparkbar';if(kind==='bleed')kind='bleedbar';}
+  if(key==='nutrition'){
+    const rows=kind==='bullet'||kind==='heat';const [a,b]=m.split;const gap=rows?(detail?14:4):(detail?28:14);
+    const parts=[];const pts=[];
+    [a,b].forEach((s,k)=>{let w=W,h=H,ox=0,oy=0;
+      if(rows){h=(H-gap)/2;oy=k*(h+gap);}else{w=(W-gap)/2;ox=k*(w+gap);}
+      const oo={...o};let res;
+      if(!rows){oo.T=kind==='bleed'?undefined:(detail?24:15);}
+      if(kind==='heat'){res=heat(s,m.fam,w,h,{...oo,axis:'none'});}
+      else if(kind==='bullet')res=bullet(s,m.fam,w,h,{...oo});
+      else res=single(kind,s,m.fam,w,h,oo);
+      let lab='';
+      if(!rows&&kind!=='bleed')lab=tx((o.axis==='full'||o.axis==='minimal')&&kind!=='delta'?(detail?42:28):(kind==='delta'?(detail?46:30):2),detail?13:9,s.label==='kcal'?'calories':'protein (g)',{fs:detail?11:8.5,c:'var(--ink-2)',w:500});
+      if(kind==='heat')lab=tx(-2,0,'',{});
+      parts.push(`<g transform="translate(${r(ox)},${r(oy)})">${lab}${res.svg}</g>`);
+      if(res.pts)res.pts.forEach(p=>pts.push([p[0]+ox,p[1]]));});
+    return {svg:parts.join(''),pts:pts.length?pts:null};
+  }
+  return single(kind,m.s,m.fam,W,H,o);
+}
+
+/* ---------- header copy ---------- */
+function headInfo(key){
+  const m=M[key];
+  if(key==='nutrition'){const [c,p]=m.split;return {val:`${int(c.vals[TD])}<small>kcal</small>`,val2:`${p.vals[TD]}<small>g</small>`,
+    delta:`<em>${Math.round(c.vals[TD]/c.goal*100)}%</em> kcal · <em>${Math.round(p.vals[TD]/p.goal*100)}%</em> protein goal`};}
+  const s=m.s,v=s.vals[TD];
+  if(key==='stages'){const d=v-s.avg;return {val:hm(v),delta:`${d>=0?'▲':'▼'} <em>${hm(Math.abs(d))}</em> vs 7-day avg`};}
+  const d=v-s.avg;const ds=key==='strain'?Math.abs(d).toFixed(1):int(Math.abs(d));
+  const unit=s.unit?`<small>${s.unit}</small>`:'';
+  return {val:`${s.fmt(v)}${unit}`,delta:`${d>=0?'▲':'▼'} <em>${ds}${s.unit==='%'?' pts':s.unit?' '+s.unit:''}</em> vs 7-day avg`};
+}
+const legend=()=>`<span class="lg" aria-label="Legend">${STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join('')}</span>`;
+const legendShort=()=>`<span class="lg" aria-label="Legend">${STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n==='Light'?'Lt':s.n==='Awake'?'Aw':s.n==='Deep'?'Dp':'REM'}</span>`).join('')}</span>`;
+
+function cardHTML(Vr,key){
+  const m=M[key],h=headInfo(key);const isSt=key==='stages',isN=key==='nutrition';
+  const cls=`card f-${Vr.frame} fam-${m.fam} l-${Vr.head}`;
+  const valInline=isN?`${h.val} · ${h.val2}`:h.val;
+  const slot=`<div class="plot" data-slot="main"></div>`;
+  let inner='';
+  switch(Vr.head){
+    case 'inline':inner=`<div class="h-row"><div class="h-left"><span class="h-title">${m.name}</span>${isSt?legendShort():''}</div><span class="h-val">${valInline}</span></div>${slot}`;break;
+    case 'stack':inner=`<div class="h-row"><span class="h-title">${m.name}</span>${isSt?legend():`<span class="h-delta">${isN?'':h.delta}</span>`}</div><div class="h-row"><span class="h-val">${valInline}</span>${isSt?`<span class="h-delta">${h.delta}</span>`:''}</div>${slot}`;break;
+    case 'side':inner=`<div class="side-txt"><span class="h-title">${m.name}</span><span class="h-val">${h.val}</span>${isN?`<span class="h-delta"><em>${h.val2.replace('<small>g</small>',' g')}</em> protein</span>`:isSt?legend():`<span class="h-delta">${h.delta}</span>`}</div>${slot}`;break;
+    case 'gauge':inner=`<div class="ringslot" data-slot="ring"></div><div class="gtxt"><div class="h-row"><span class="h-title">${m.name}</span></div><span class="h-delta">${isSt?legend():isN?'kcal outer · protein inner':key==='volume'?`<em>${kf(m.s.week)}</em> kg this week`:h.delta}</span>${slot.replace('main','strip')}</div>`;break;
+    case 'overlay':inner=`<div class="ov"><div class="h-row"><span class="h-title">${m.name}</span>${isSt?legendShort():`<span class="h-delta">${isN?'':h.delta.replace(' vs 7-day avg',' vs avg')}</span>`}</div><div class="h-val">${valInline}</div></div>${slot}`;break;
+  }
+  return `<div class="${cls}" role="button" tabindex="0" data-v="${Vr.id}" data-m="${key}" aria-label="${Vr.id} ${m.name}, open detail">${inner}</div>`;
+}
+
+/* ---------- render ---------- */
+const stage=document.getElementById('stage');
+const VM=Object.fromEntries(V.map(v=>[v.id,v]));
+let mode='variant',metric='stages';
+try{const sv=localStorage.getItem('mcl-view');if(sv){const j=JSON.parse(sv);mode=j.mode||mode;metric=M[j.metric]?j.metric:metric;}}catch(e){}
+
+function gridCls(Vr){return Vr.frame==='flush'?'grid g-flush':Vr.frame==='grouped'?'grid g-grouped':'grid';}
+function render(){
+  document.getElementById('vb-variant').setAttribute('aria-pressed',mode==='variant');
+  document.getElementById('vb-metric').setAttribute('aria-pressed',mode==='metric');
+  document.getElementById('jump').hidden=mode!=='variant';
+  document.getElementById('mchips').hidden=mode!=='metric';
+  if(mode==='variant'){
+    stage.innerHTML=V.map(Vr=>`<section id="${Vr.id.toLowerCase()}" aria-labelledby="${Vr.id}-h">
+      <div class="vhead"><span class="vtag">${Vr.id}</span><h2 id="${Vr.id}-h">${Vr.name}</h2><p>${Vr.desc}</p>
+      <div class="specs">${['Chart','Axes','Grid','Annotation','Framing'].map((k,i)=>`<span>${k} <b>${Vr.spec[i]}</b></span>`).join('')}</div></div>
+      <div class="${gridCls(Vr)}">${ORDER.map(k=>cardHTML(Vr,k)).join('')}</div></section>`).join('');
+  }else{
+    document.querySelectorAll('#mchips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.m===metric));
+    stage.innerHTML=`<section class="mv" aria-label="${M[metric].name} across variants"><div class="vhead"><span class="vtag">${M[metric].fam}</span><h2>${M[metric].name}, ten ways</h2><p>The same metric in every variant, side by side. Framing differences stay intact.</p></div>
+      <div class="grid">${V.map(Vr=>`<div class="cell"><div class="lbl"><b>${Vr.id}</b>${Vr.name}</div>${Vr.frame==='grouped'?`<div class="g-grouped" style="border-radius:18px;overflow:hidden">${cardHTML(Vr,metric)}</div>`:cardHTML(Vr,metric)}</div>`).join('')}</div></section>`;
+  }
+  paint(stage);
+}
+function paint(root){
+  root.querySelectorAll('[data-slot]').forEach(el=>{
+    const card=el.closest('[data-v]');const Vr=VM[card.dataset.v],key=card.dataset.m;
+    const W=Math.floor(el.clientWidth),H=Math.floor(el.clientHeight);if(W<10||H<10)return;
+    const det=!!card.dataset.detail;
+    const res=drawSlot(Vr,key,el.dataset.slot,W,H,det);
+    el.innerHTML=el.dataset.slot==='ring'?res.svg:`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${res.svg}</svg>`;
+    el._pts=res.pts;el._orient=res.orient||'x';
+  });
+}
+document.getElementById('mchips').innerHTML=ORDER.map(k=>`<button class="chip" data-m="${k}" aria-pressed="false"><i style="background:${A(M[k].fam)}"></i>${M[k].name}</button>`).join('');
+document.getElementById('jump').innerHTML=V.map(v=>`<a href="#${v.id.toLowerCase()}">${v.id}</a>`).join('')+`<a href="#rank">Ranking</a>`;
+const save=()=>{try{localStorage.setItem('mcl-view',JSON.stringify({mode,metric}))}catch(e){}};
+document.getElementById('vb-variant').onclick=()=>{mode='variant';save();render();};
+document.getElementById('vb-metric').onclick=()=>{mode='metric';save();render();};
+document.getElementById('mchips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;metric=b.dataset.m;save();render();});
+
+/* ---------- tooltip ---------- */
+const tip=document.getElementById('tip');let xh=null;
+function tipHTML(key,i){
+  const m=M[key];let rows='';
+  if(key==='stages'){rows=`<div class="r"><span>Asleep</span><b>${hm(asleep[i])}</b></div>`+STG.map(s=>`<div class="r"><span><i style="background:${s.c}"></i>${s.n}</span>${hm(s.v[i])}</div>`).join('');}
+  else if(key==='nutrition'){const [c,p]=m.split;rows=`<div class="r"><span>Calories</span><b>${int(c.vals[i])} kcal</b></div><div class="r"><span>Protein</span><b>${p.vals[i]} g</b></div>`;}
+  else{const s=m.s;rows=`<div class="r"><span>${m.name}</span><b>${s.fmt(s.vals[i])}${s.unit?' '+s.unit:''}</b></div>`;if(key==='volume')rows+=`<div class="r"><span>Session</span>${m.sessions[i]}</div>`;}
+  return `<div class="d">${DAYS[i]} ${DATES[i]}${i===TD?' · today':''}</div>${rows}`;
+}
+function hideTip(){tip.hidden=true;if(xh){xh.remove();xh=null;}}
+document.addEventListener('pointermove',e=>{
+  const el=e.target.closest&&e.target.closest('.plot');
+  if(!el||!el._pts){hideTip();return;}
+  const b=el.getBoundingClientRect();const ax=el._orient==='y'?e.clientY-b.top:e.clientX-b.left;
+  let best=null,bd=1e9;el._pts.forEach(([p,i])=>{const d=Math.abs(p-ax);if(d<bd){bd=d;best=[p,i];}});
+  if(!best){hideTip();return;}
+  const key=el.closest('[data-m]').dataset.m;
+  tip.innerHTML=tipHTML(key,best[1]);tip.hidden=false;
+  const tw=tip.offsetWidth,th=tip.offsetHeight;
+  let lx=e.clientX+14,ly=e.clientY-th-12;if(lx+tw>innerWidth-8)lx=e.clientX-tw-14;if(ly<8)ly=e.clientY+16;
+  tip.style.left=lx+'px';tip.style.top=ly+'px';
+  if(el._orient==='x'){if(!xh||xh.parentNode!==el){if(xh)xh.remove();xh=document.createElement('div');xh.className='xh';el.appendChild(xh);}xh.style.left=Math.round(best[0])+'px';}
+  else if(xh){xh.remove();xh=null;}
+});
+document.addEventListener('scroll',hideTip,{passive:true});
+
+/* ---------- detail sheet ---------- */
+const sheet=document.getElementById('sheet');let lastFocus=null;
+function openDetail(vid,key){
+  const Vr=VM[vid],m=M[key],h=headInfo(key);lastFocus=document.activeElement;
+  document.getElementById('p-eyebrow').textContent=`${Vr.id} · ${Vr.name} · detail view`;
+  document.getElementById('p-title').textContent=m.name;
+  document.getElementById('p-val').innerHTML=key==='nutrition'?`${h.val} <span style="color:var(--ink-3)">·</span> ${h.val2}`:h.val;
+  document.getElementById('p-delta').innerHTML=h.delta;
+  const pc=document.getElementById('p-chart');
+  const hgt=Vr.head==='overlay'?250:230;
+  if(Vr.kind==='gauge'){pc.className='pchart gd';pc.innerHTML=`<div data-v="${vid}" data-m="${key}" data-detail="1" style="display:contents"><div class="ringslot" data-slot="ring"></div><div class="plot" data-slot="strip" style="height:${hgt-60}px"></div></div>`;}
+  else{pc.className='pchart';pc.innerHTML=`<div data-v="${vid}" data-m="${key}" data-detail="1" class="${Vr.frame==='bleed'?'f-bleed':''}" style="position:relative;height:${hgt}px;${Vr.frame==='bleed'?'border-radius:16px;background:var(--surface-2);--ring:var(--surface-2)':''}${Vr.frame==='inset'?'background:var(--well);border-radius:12px;padding:8px;--ring:var(--well)':''}"><div class="plot" data-slot="main" style="height:100%"></div></div>`;}
+  const lg=document.getElementById('p-lg');
+  lg.innerHTML=key==='stages'?STG.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join(''):
+    `<span><i style="background:${A(m.fam)}"></i>${key==='nutrition'?'Today':'Today / value'}</span>`+(Vr.annot==='band'?`<span><i style="background:var(--ink);opacity:.2"></i>${key==='hrv'||key==='rhr'?'Personal baseline':'Typical range (±1 SD)'}</span>`:'')+(Vr.annot!=='none'&&Vr.annot!=='band'?`<span><i style="background:transparent;border-top:1px dashed var(--ink-2);border-radius:0;height:1px"></i>Goal / reference line</span>`:'');
+  const rowsFor=()=>{
+    if(key==='stages')return [['Asleep',...asleep.map(hm)],...STG.map(s=>[s.n,...s.v.map(hm)])];
+    if(key==='nutrition')return m.split.map(s=>[s.label==='kcal'?'Calories (kcal)':'Protein (g)',...s.vals.map(int)]);
+    const s=m.s;const rr=[[`${m.name}${s.unit?' ('+s.unit+')':''}`,...s.vals.map(s.fmt)]];if(key==='volume')rr.push(['Session',...m.sessions]);return rr;};
+  document.getElementById('p-table').innerHTML=`<thead><tr><th></th>${DAYS.map((d,i)=>`<th class="num">${d}</th>`).join('')}</tr></thead><tbody>${rowsFor().map(rw=>`<tr><td>${rw[0]}</td>${rw.slice(1).map((c,i)=>`<td class="num${i===TD?' today-col':''}">${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  sheet.hidden=false;document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>{paint(pc);document.getElementById('p-close').focus();});
+}
+function closeDetail(){sheet.hidden=true;document.body.style.overflow='';hideTip();if(lastFocus)lastFocus.focus();}
+stage.addEventListener('click',e=>{const c=e.target.closest('.card');if(c)openDetail(c.dataset.v,c.dataset.m);});
+stage.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('card')){e.preventDefault();openDetail(e.target.dataset.v,e.target.dataset.m);}});
+document.getElementById('p-close').onclick=closeDetail;
+sheet.addEventListener('click',e=>{if(e.target===sheet)closeDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden)closeDetail();});
+
+/* ---------- dataset table ---------- */
+(function(){
+  const rows=[
+    ['sleep','Sleep score',M.score.s.vals.map(String),'goal 85'],
+    ['sleep','Asleep',asleep.map(hm),'goal 7h 30m'],
+    ...STG.map(s=>['sleep',`· ${s.n}`,s.v.map(hm),'']),
+    ['heart','Recovery (%)',M.recovery.s.vals.map(String),'goal 67'],
+    ['heart','HRV (ms)',M.hrv.s.vals.map(String),'baseline 55–70'],
+    ['heart','Resting HR (bpm)',M.rhr.s.vals.map(String),'baseline 50–55'],
+    ['train','Daily strain (0–21)',M.strain.s.vals.map(v=>v.toFixed(1)),'target 14'],
+    ['train','Volume (kg)',M.volume.s.vals.map(v=>v?int(v):'rest'),'50k / week'],
+    ['nutri','Calories (kcal)',M.nutrition.split[0].vals.map(int),'goal 2,500'],
+    ['nutri','Protein (g)',M.nutrition.split[1].vals.map(String),'goal 170'],
+    ['train','Steps',M.steps.s.vals.map(int),'goal 10,000'],
+  ];
+  document.getElementById('dtable').innerHTML=`<thead><tr><th>Metric</th>${DAYS.map((d,i)=>`<th class="num">${d} ${DATES[i].split(' ')[1]}</th>`).join('')}<th>Goal / baseline</th></tr></thead><tbody>${rows.map(([f,n,v,g])=>`<tr><td>${n.startsWith('·')?'':`<span class="dot" style="background:${A(f)}"></span>`}${n}</td>${v.map((c,i)=>`<td class="num${i===TD?' today-col':''}">${c}</td>`).join('')}<td>${g}</td></tr>`).join('')}</tbody>`;
+})();
+
+render();
+let lw=innerWidth,rt;
+addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(innerWidth!==lw){lw=innerWidth;paint(stage);if(!sheet.hidden)paint(document.getElementById('p-chart'));}},120);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>paint(stage));
+})();
+</script>

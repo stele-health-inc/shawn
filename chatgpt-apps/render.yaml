@@ -1,0 +1,15 @@
+# One-click deploy on Render (https://render.com): new Blueprint → this repo.
+services:
+  - type: web
+    name: chatgpt-apps
+    runtime: docker
+    rootDir: chatgpt-apps
+    plan: starter
+    healthCheckPath: /healthz
+    envVars:
+      - key: PUBLIC_BASE_URL
+        sync: false # set to https://<service>.onrender.com (or your custom domain)
+      - key: FILES_SECRET
+        generateValue: true
+      - key: CONTACT_EMAIL
+        sync: false

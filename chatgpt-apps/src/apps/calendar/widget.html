@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Calendar Invite & Date Math</title>
+  <style>
+    .date-badge { display: grid; place-items: center; width: 56px; height: 60px; border-radius: var(--radius-sm); background: var(--bg-2); border: 1px solid var(--border); line-height: 1.1; }
+    .date-badge .m { font-size: 11px; text-transform: uppercase; color: var(--danger); font-weight: 700; }
+    .date-badge .d { font-size: 24px; font-weight: 700; }
+    .event { display: flex; gap: 14px; align-items: flex-start; }
+    .meta-list { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+    .meta-list dt { color: var(--fg-2); }
+    .meta-list dd { margin: 0; }
+    .slot { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; }
+    .slot.best { border-color: var(--success); background: var(--success-bg); }
+    .zone-row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+    .zone-row .t { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .big { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  </style>
+</head>
+<body>
+  <div class="card" id="root"><div class="empty">Working…</div></div>
+  <script>
+    const root = document.getElementById("root");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    function event(o) {
+      const d = new Date(o.startLocal);
+      root.innerHTML = `
+        <div class="event">
+          <div class="date-badge"><span class="m">${MONTHS[d.getMonth()]}</span><span class="d">${d.getDate()}</span></div>
+          <div class="stack" style="flex:1">
+            <div><h1>${esc(o.title)}</h1><p class="muted">${esc(o.startDisplay)} · ${esc(o.duration)}</p></div>
+            <dl class="meta-list">
+              <dt>Time zone</dt><dd>${esc(o.timeZone)}</dd>
+              ${o.location ? `<dt>Where</dt><dd>${esc(o.location)}</dd>` : ""}
+              ${o.recurrence ? `<dt>Repeats</dt><dd>${esc(o.recurrence)}</dd>` : ""}
+              ${o.reminder ? `<dt>Reminder</dt><dd>${esc(o.reminder)}</dd>` : ""}
+              ${o.attendees ? `<dt>Guests</dt><dd>${esc(o.attendees.join(", "))}</dd>` : ""}
+            </dl>
+            <div class="row">
+              <button class="primary" data-url="${esc(o.links.google)}">Add to Google Calendar</button>
+              <button data-url="${esc(o.links.outlook)}">Outlook.com</button>
+              <button data-url="${esc(o.links.office365)}">Office 365</button>
+              <button data-url="${esc(o.downloads.ics)}">Download .ics (Apple / any)</button>
+            </div>
+            <p class="tiny">The .ics opens in Apple Calendar, Google, Outlook and most other apps.</p>
+          </div>
+        </div>`;
+    }
+
+    function date(o) {
+      root.innerHTML = `
+        <h1>${o.resultDisplay ? esc(o.resultDisplay) : "Date difference"}</h1>
+        ${o.weekday && o.operation !== "weekday" ? `<p class="muted">${esc(o.weekday)}</p>` : ""}
+        <table style="margin-top:10px"><tbody>
+          ${o.rows.map((r) => `<tr><th>${esc(r.label)}</th><td class="num">${esc(r.value)}</td></tr>`).join("")}
+        </tbody></table>
+        <p class="tiny" style="margin-top:8px">${esc(o.explanation)}</p>`;
+    }
+
+    function zones(o) {
+      const row = (r, src) => `<tr${src ? ' style="font-weight:600"' : ""}>
+        <td>${esc(r.label)}<div class="tiny">${esc(r.zone)} · ${esc(r.offset)}</div></td>
+        <td class="num">${esc(r.display)} ${r.dayDelta ? `<span class="badge warn">${r.dayDelta > 0 ? "+1 day" : "−1 day"}</span>` : ""}</td>
+        <td class="num tiny">${esc(r.abbreviation)}</td></tr>`;
+      root.innerHTML = `
+        <h1>Time zone conversion</h1>
+        <table style="margin-top:8px"><tbody>${row(o.source, true)}${o.rows.map((r) => row(r, false)).join("")}</tbody></table>
+        <p class="tiny" style="margin-top:8px">UTC ${esc(o.utc.replace("T", " ").replace("Z", ""))}</p>`;
+    }
+
+    function slots(o) {
+      if (!o.slots.length) { root.innerHTML = `<h1>No overlap found</h1><p class="muted">${esc(o.summary)}</p>`; return; }
+      root.innerHTML = `
+        <h1>Meeting slots · ${esc(o.date)} · ${o.durationMinutes} min</h1>
+        <p class="tiny">Ranked by how many participants stay inside their working hours.</p>
+        <div class="stack" style="margin-top:10px">
+          ${o.slots.map((s, i) => `
+            <div class="slot ${i === 0 ? "best" : ""}">
+              <div class="row between"><span class="badge ${s.score === 1 ? "ok" : "warn"}">${s.score === 1 ? "Everyone in hours" : "Slightly outside for some"}</span>${i === 0 ? '<span class="tiny">Best</span>' : ""}</div>
+              ${s.rows.map((r) => `<div class="zone-row"><span>${esc(r.label)}</span><span class="t">${esc(r.display)}${r.dayDelta ? " (+1d)" : ""}</span></div>`).join("")}
+            </div>`).join("")}
+        </div>`;
+    }
+
+    function render() {
+      const o = Widget.output;
+      if (!o) return;
+      ({ event, date, zones, slots }[o.view] || (() => { root.innerHTML = `<pre class="mono">${esc(JSON.stringify(o, null, 2))}</pre>`; }))(o);
+      root.querySelectorAll("button[data-url]").forEach((b) => (b.onclick = () => Widget.openLink(b.dataset.url)));
+      Widget.reportSize();
+    }
+    Widget.onResult(render);
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# fly launch --no-deploy && fly secrets set FILES_SECRET=$(openssl rand -hex 32) PUBLIC_BASE_URL=https://<app>.fly.dev && fly deploy
+app = "chatgpt-apps"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8787"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 8787
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  method = "GET"
+  path = "/healthz"

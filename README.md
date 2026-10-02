@@ -76,6 +76,10 @@ Posting the same post twice returns the existing save (`"created": false`).
 
 Each save stores: `url`, `creator`, `posted_at`, `saved_at`, `thumbnail_url`, `transcript` (clean script) and `raw_transcript`, `caption`, `summary`, `hook`, `tags`, `category`, `status`, `remake_idea`, `remake_note`, `notes`, plus `processing_state` / `error`. See the migration for the full schema.
 
+## Also in this repo
+
+[`chatgpt-apps/`](chatgpt-apps/) — five ChatGPT apps (Apps SDK / MCP Apps) served from one stateless server: Verified Citations, Calendar Invite & Date Math, Timesheet & Overtime Calculator, Mortgage & Loan Calculator, QR Code Studio. See its README for the launch guide.
+
 ## Costs (rough, per reel)
 
 Apify ≈ $0.002–0.005 · Deepgram ≈ $0.004/min · Claude ≈ $0.01–0.03. Vercel and Supabase free tiers cover personal use.

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Mortgage & Loan Calculator",
+    "subtitle": "Mortgage & loan payments",
+    "description": "Exact mortgage, auto and personal-loan math with an interactive breakdown: monthly payment including taxes, insurance, HOA and PMI, full amortization with a downloadable schedule, extra-payment payoff savings, home affordability from income and debts, and refinance break-even. Estimates only, not financial advice.",
+    "category": "FINANCE"
+  },
+  "tools": {
+    "calculate_mortgage_payment": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Computes the payment and amortization from the supplied numbers; nothing is stored or submitted.",
+        "open_world_justification": "No network access; it does not contact lenders or fetch rates.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "calculate_loan_payment": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Pure amortization math on the given amount, rate and term.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "calculate_home_affordability": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Applies debt-to-income rules to the supplied income and debts; nothing is stored.",
+        "open_world_justification": "No network access; no credit or lender systems are contacted.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "compare_refinance": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Compares two amortization schedules computed from the given terms.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    }
+  },
+  "test_cases": [
+    { "description": "Full mortgage payment with escrow items and PMI.", "user_prompt": "What's my monthly payment on a $450,000 house with 10% down at 6.5% for 30 years? Property tax is 1.2%, insurance $1,800 a year, HOA $50 a month.", "file_attachment_urls": null, "tools_triggered": "calculate_mortgage_payment", "expected_output": "A payment breakdown (principal & interest, tax, insurance, HOA, PMI) with the total, total interest, payoff date, balance chart and a CSV schedule download.", "expected_output_url": null },
+    { "description": "Extra-payment savings.", "user_prompt": "On a $300k mortgage at 7% over 30 years, how much do I save if I pay an extra $250 a month?", "file_attachment_urls": null, "tools_triggered": "calculate_mortgage_payment", "expected_output": "Interest saved, months saved and the earlier payoff date, with both balance curves on the chart.", "expected_output_url": null },
+    { "description": "Car loan.", "user_prompt": "Monthly payment on a $32,000 car loan at 7.9% APR for 60 months", "file_attachment_urls": null, "tools_triggered": "calculate_loan_payment", "expected_output": "The monthly payment, total interest, total paid and payoff date with a yearly table.", "expected_output_url": null },
+    { "description": "Affordability from income.", "user_prompt": "How much house can I afford making $120k a year with $600/month in car payments and $60k saved for a down payment at 6.5%?", "file_attachment_urls": null, "tools_triggered": "calculate_home_affordability", "expected_output": "A maximum price under the 28/36 rules, the monthly cost at that price, and a more conservative figure.", "expected_output_url": null },
+    { "description": "Refinance break-even.", "user_prompt": "Should I refinance my $380k balance from 7.25% with 27 years left to a new 30-year at 5.75% with $6,000 closing costs?", "file_attachment_urls": null, "tools_triggered": "compare_refinance", "expected_output": "Old vs new payment, monthly savings, break-even months for the closing costs and the lifetime difference, with the longer term noted.", "expected_output_url": null }
+  ],
+  "negative_test_cases": [
+    { "description": "Do not trigger for current market rates.", "user_prompt": "What are mortgage rates today?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it has no rate data.", "expected_output_url": null },
+    { "description": "Do not trigger for property listings.", "user_prompt": "Show me houses for sale in Austin under $500k", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it does not search listings.", "expected_output_url": null },
+    { "description": "Do not trigger for investment advice.", "user_prompt": "Should I invest in index funds or pay off my mortgage early?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "ChatGPT answers conversationally; the app gives no advice.", "expected_output_url": null }
+  ]
+}

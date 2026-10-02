@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Verified Citations",
+    "subtitle": "Checked APA/MLA citations",
+    "description": "Formats citations in APA 7, MLA 9, Chicago, Harvard and IEEE from real bibliographic data, looks papers up in Crossref and OpenAlex by title or DOI, flags pasted references that do not exist, and exports BibTeX or RIS. Every lookup result links to a resolvable DOI so invented references never reach a bibliography.",
+    "category": "EDUCATION"
+  },
+  "tools": {
+    "format_citation": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Formats the supplied bibliographic fields into citation styles; nothing is stored.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "lookup_reference": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": true, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Only reads public bibliographic records and returns them; it creates or changes nothing.",
+        "open_world_justification": "Sends read-only search queries to the public Crossref and OpenAlex APIs on the open internet.",
+        "destructive_justification": "Cannot delete, overwrite or publish anything."
+      }
+    },
+    "verify_references": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": true, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Only reads public bibliographic records to match the pasted references; nothing is stored or changed.",
+        "open_world_justification": "Sends read-only search queries to the public Crossref and OpenAlex APIs on the open internet.",
+        "destructive_justification": "Cannot delete, overwrite or publish anything."
+      }
+    },
+    "export_bibliography": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Serializes the supplied references to BibTeX/RIS/text and returns a download link; nothing is stored.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a file only."
+      }
+    }
+  },
+  "test_cases": [
+    { "description": "Format a journal article from known details.", "user_prompt": "Cite in APA: LeCun, Bengio and Hinton, 'Deep learning', Nature, 2015, volume 521, issue 7553, pages 436-444, DOI 10.1038/nature14539", "file_attachment_urls": null, "tools_triggered": "format_citation", "expected_output": "The APA 7 reference entry and in-text citation, with the widget offering MLA, Chicago, Harvard and IEEE versions and copy buttons.", "expected_output_url": null },
+    { "description": "Look up by title and get a real DOI.", "user_prompt": "Give me the MLA citation for the paper 'Attention Is All You Need'", "file_attachment_urls": null, "tools_triggered": "lookup_reference", "expected_output": "The matching Crossref record (Vaswani et al., 2017) with its DOI, formatted in MLA, and alternative candidates listed.", "expected_output_url": null },
+    { "description": "Look up by DOI.", "user_prompt": "APA citation for doi 10.1038/nature14539", "file_attachment_urls": null, "tools_triggered": "lookup_reference", "expected_output": "The exact record for that DOI (LeCun, Bengio & Hinton, 2015, Nature) formatted in APA.", "expected_output_url": null },
+    { "description": "Verify a pasted bibliography.", "user_prompt": "Are these references real? 1) LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature, 521(7553), 436-444. 2) Smith, J. (2021). Quantum gardening for beginners. Journal of Imaginary Botany, 12(3), 45-67.", "file_attachment_urls": null, "tools_triggered": "verify_references", "expected_output": "The first reference is marked verified with its DOI; the second is marked not found and flagged as possibly fabricated.", "expected_output_url": null },
+    { "description": "Export to BibTeX.", "user_prompt": "Export that LeCun 2015 Nature citation as a BibTeX file", "file_attachment_urls": null, "tools_triggered": "export_bibliography", "expected_output": "A .bib download link with a preview of the @article entry.", "expected_output_url": null }
+  ],
+  "negative_test_cases": [
+    { "description": "Do not trigger for summarizing a paper.", "user_prompt": "Summarize the main findings of the 2015 Nature paper on deep learning", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "ChatGPT answers conversationally; no citation formatting is requested.", "expected_output_url": null },
+    { "description": "Do not trigger for legal citations.", "user_prompt": "Cite Brown v. Board of Education in Bluebook format", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it does not support legal citation styles.", "expected_output_url": null },
+    { "description": "Do not trigger for grammar help.", "user_prompt": "Proofread my essay introduction for grammar", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked.", "expected_output_url": null }
+  ]
+}

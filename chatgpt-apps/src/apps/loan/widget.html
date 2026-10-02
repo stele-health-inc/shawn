@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Mortgage & Loan Calculator</title>
+  <style>
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 10px 0; }
+    .bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--bg-3); margin: 6px 0; }
+    .bar span { display: block; height: 100%; }
+    .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--fg-2); }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+    .c1 { background: #4f6df5; } .c2 { background: #f5a54f; } .c3 { background: #4fc7a6; } .c4 { background: #b48cf5; } .c5 { background: #f55f7a; }
+    .chart-wrap { margin: 10px 0 4px; }
+    svg.chart { width: 100%; height: 150px; display: block; }
+    details summary { cursor: pointer; font-size: 13px; color: var(--fg-2); margin-top: 6px; }
+    .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cmp .kpi.good { outline: 2px solid var(--success); }
+  </style>
+</head>
+<body>
+  <div class="card" id="root"><div class="empty">Running the numbers…</div></div>
+  <script>
+    const root = document.getElementById("root");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    let cur = "USD";
+    const fmt = (n, d = 0) => { try { return new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: d, minimumFractionDigits: d }).format(n); } catch { return cur + " " + n.toFixed(d); } };
+    const pct = (n) => n.toFixed(2).replace(/\.?0+$/, "") + "%";
+
+    function balanceChart(series) {
+      // series: [{label, points:[{x: year, y: balance}], cls}]
+      const W = 600, H = 150, L = 46, R = 8, T = 10, B = 24;
+      const maxY = Math.max(...series.flatMap((s) => s.points.map((p) => p.y)), 1);
+      const maxX = Math.max(...series.flatMap((s) => s.points.map((p) => p.x)), 1);
+      const sx = (x) => L + (x / maxX) * (W - L - R);
+      const sy = (y) => T + (1 - y / maxY) * (H - T - B);
+      const ticks = [0, 0.5, 1].map((f) => `<text x="${L - 6}" y="${sy(maxY * f) + 3}" text-anchor="end">${fmt(maxY * f / 1000, 0).replace(/\.00$/, "")}k</text><line x1="${L}" x2="${W - R}" y1="${sy(maxY * f)}" y2="${sy(maxY * f)}" stroke="currentColor" stroke-opacity="0.12"/>`).join("");
+      const xt = [];
+      const step = maxX > 20 ? 5 : maxX > 8 ? 2 : 1;
+      for (let x = 0; x <= maxX; x += step) xt.push(`<text x="${sx(x)}" y="${H - 6}" text-anchor="middle">${x}y</text>`);
+      const paths = series.map((s) => `<path d="${s.points.map((p, i) => `${i ? "L" : "M"}${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(" ")}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round"/>`).join("");
+      return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Loan balance over time">${ticks}${xt}${paths}</svg>`;
+    }
+    const pts = (a, startBalance) => [{ x: 0, y: startBalance }, ...a.yearly.map((y) => ({ x: y.year, y: y.balance }))];
+
+    function yearlyTable(a, max = 40) {
+      return `<details><summary>Yearly amortization (${a.yearly.length} years)</summary>
+        <table style="margin-top:6px"><thead><tr><th>Year</th><th class="num">Principal</th><th class="num">Interest</th><th class="num">Balance</th></tr></thead>
+        <tbody>${a.yearly.slice(0, max).map((y) => `<tr><td>${y.year} <span class="tiny">${esc(y.date)}</span></td><td class="num">${fmt(y.principal)}</td><td class="num">${fmt(y.interest)}</td><td class="num">${fmt(y.balance)}</td></tr>`).join("")}</tbody></table></details>`;
+    }
+
+    function mortgage(o) {
+      const m = o.monthly;
+      const parts = [["P&I", m.principalInterest, "c1"], ["Tax", m.propertyTax, "c2"], ["Insurance", m.insurance, "c3"], ["HOA", m.hoa, "c4"], ["PMI", m.pmi, "c5"]].filter((p) => p[1] > 0);
+      const series = [{ color: "#4f6df5", points: pts(o.base, o.loanAmount) }];
+      if (o.withExtra) series.push({ color: "#4fc7a6", points: pts(o.withExtra, o.loanAmount) });
+      root.innerHTML = `
+        <div class="row between"><div><h1>${fmt(m.total, 2)} <span class="muted" style="font-weight:400;font-size:13px">/ month</span></h1>
+          <p class="muted">${fmt(o.homePrice)} home · ${pct(o.downPaymentPercent)} down · ${fmt(o.loanAmount)} loan at ${pct(o.annualRate)} for ${o.termYears} yrs</p></div>
+          <button data-url="${esc(o.downloads.schedule)}">Download schedule (CSV)</button></div>
+        <div class="bar">${parts.map((p) => `<span class="${p[2]}" style="width:${(p[1] / m.total) * 100}%"></span>`).join("")}</div>
+        <div class="legend">${parts.map((p) => `<span><i class="${p[2]}"></i>${p[0]} ${fmt(p[1], 2)}</span>`).join("")}</div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">${fmt(o.base.totalInterest)}</div><div class="l">Total interest</div></div>
+          <div class="kpi"><div class="v">${fmt(o.base.totalPaid + o.downPayment)}</div><div class="l">Total cost incl. down</div></div>
+          <div class="kpi"><div class="v">${esc(o.base.payoffDate)}</div><div class="l">Paid off</div></div>
+          ${o.pmiMonthsRemaining ? `<div class="kpi"><div class="v">${o.pmiMonthsRemaining} mo</div><div class="l">PMI until LTV 80%</div></div>` : ""}
+        </div>
+        ${o.withExtra ? `<div class="note"><strong>+${fmt(o.withExtra.extraMonthly)}/month extra:</strong> saves ${fmt(o.withExtra.interestSaved)} in interest and ${o.withExtra.monthsSaved} months — paid off ${esc(o.withExtra.payoffDate)}.</div>` : ""}
+        <div class="chart-wrap">${balanceChart(series)}<div class="legend"><span><i class="c1"></i>Balance</span>${o.withExtra ? '<span><i class="c3"></i>With extra payments</span>' : ""}</div></div>
+        ${yearlyTable(o.base)}
+        <p class="tiny" style="margin-top:8px">${esc(o.disclaimer)}</p>`;
+    }
+
+    function loan(o) {
+      const series = [{ color: "#4f6df5", points: pts(o.base, o.amount) }];
+      if (o.withExtra) series.push({ color: "#4fc7a6", points: pts(o.withExtra, o.amount) });
+      root.innerHTML = `
+        <div class="row between"><div><h1>${fmt(o.base.payment, 2)} <span class="muted" style="font-weight:400;font-size:13px">/ month</span></h1>
+          <p class="muted">${esc(o.label)} · ${fmt(o.amount)} at ${pct(o.annualRate)} APR · ${o.termMonths} months</p></div>
+          <button data-url="${esc(o.downloads.schedule)}">Download schedule (CSV)</button></div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">${fmt(o.base.totalInterest)}</div><div class="l">Total interest</div></div>
+          <div class="kpi"><div class="v">${fmt(o.base.totalPaid)}</div><div class="l">Total paid</div></div>
+          <div class="kpi"><div class="v">${esc(o.base.payoffDate)}</div><div class="l">Paid off</div></div>
+        </div>
+        ${o.withExtra ? `<div class="note"><strong>+${fmt(o.withExtra.extraMonthly)}/month extra:</strong> saves ${fmt(o.withExtra.interestSaved)} and ${o.withExtra.monthsSaved} months — paid off ${esc(o.withExtra.payoffDate)}.</div>` : ""}
+        <div class="chart-wrap">${balanceChart(series)}</div>
+        ${yearlyTable(o.base)}
+        <p class="tiny" style="margin-top:8px">${esc(o.disclaimer)}</p>`;
+    }
+
+    function affordability(o) {
+      const m = o.monthly;
+      const parts = [["P&I", m.principalInterest, "c1"], ["Tax", m.propertyTax, "c2"], ["Insurance", m.insurance, "c3"], ["HOA", m.hoa, "c4"], ["PMI", m.pmi, "c5"]].filter((p) => p[1] > 0);
+      root.innerHTML = `
+        <h1>Up to about ${fmt(o.maxPrice)}</h1>
+        <p class="muted">Loan ${fmt(o.maxLoan)} + ${fmt(o.downPayment)} down · housing budget ${fmt(o.monthlyHousingBudget, 2)}/month (${o.limitingRule === "front" ? Math.round(o.assumptions.frontRatio * 100) + "% housing rule" : Math.round(o.assumptions.backRatio * 100) + "% total-debt rule"})</p>
+        <div class="bar">${parts.map((p) => `<span class="${p[2]}" style="width:${(p[1] / m.total) * 100}%"></span>`).join("")}</div>
+        <div class="legend">${parts.map((p) => `<span><i class="${p[2]}"></i>${p[0]} ${fmt(p[1], 2)}</span>`).join("")}</div>
+        <div class="cmp" style="margin-top:10px">
+          <div class="kpi"><div class="v">${fmt(o.maxPrice)}</div><div class="l">Max by lender rules · ${fmt(m.total, 2)}/mo</div></div>
+          <div class="kpi good"><div class="v">${fmt(o.conservative.maxPrice)}</div><div class="l">Comfortable (25% of income) · ${fmt(o.conservative.monthlyTotal, 2)}/mo</div></div>
+        </div>
+        <p class="tiny" style="margin-top:8px">Assumes ${pct(o.assumptions.annualRate)} for ${o.assumptions.termYears} years, property tax ${pct(o.assumptions.propertyTaxPercent)}/yr, insurance ${fmt(o.assumptions.insuranceYearly)}/yr. ${esc(o.disclaimer)}</p>`;
+    }
+
+    function refinance(o) {
+      const good = o.monthlySavings > 0;
+      root.innerHTML = `
+        <h1>${good ? "Saves" : "Costs"} ${fmt(Math.abs(o.monthlySavings), 2)} / month</h1>
+        <p class="muted">${o.breakEvenMonths != null ? `Break-even on ${fmt(o.closingCosts)} closing costs in ${o.breakEvenMonths} months` : o.closingCosts ? "Closing costs are not recouped through monthly savings" : "No closing costs"}</p>
+        <div class="cmp" style="margin-top:10px">
+          <div class="kpi"><div class="l">Current · ${pct(o.current.rate)} · ${o.current.months} mo left</div><div class="v">${fmt(o.current.payment, 2)}</div><div class="l">${fmt(o.current.totalInterest)} interest remaining</div></div>
+          <div class="kpi ${o.lifetimeSavings > 0 ? "good" : ""}"><div class="l">New · ${pct(o.next.rate)} · ${o.next.months} mo</div><div class="v">${fmt(o.next.payment, 2)}</div><div class="l">${fmt(o.next.totalInterest)} interest</div></div>
+        </div>
+        <div class="note" style="margin-top:10px">Lifetime: you ${o.lifetimeSavings >= 0 ? "save" : "pay"} about <strong>${fmt(Math.abs(o.lifetimeSavings))}</strong> in total payments${o.next.months > o.current.months ? " — note the new loan runs " + (o.next.months - o.current.months) + " months longer" : ""}.</div>
+        <p class="tiny" style="margin-top:8px">${esc(o.disclaimer)}</p>`;
+    }
+
+    function render() {
+      const o = Widget.output;
+      if (!o) return;
+      cur = o.currency || "USD";
+      ({ mortgage, loan, affordability, refinance }[o.view] || (() => { root.innerHTML = `<pre class="mono">${esc(JSON.stringify(o, null, 2))}</pre>`; }))(o);
+      root.querySelectorAll("button[data-url]").forEach((b) => (b.onclick = () => Widget.openLink(b.dataset.url)));
+      root.querySelectorAll("details").forEach((d) => d.addEventListener("toggle", Widget.reportSize));
+      Widget.reportSize();
+    }
+    Widget.onResult(render);
+  </script>
+</body>
+</html>

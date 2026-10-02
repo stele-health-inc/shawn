@@ -1,0 +1,39 @@
+{
+  "name": "chatgpt-apps",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Five ChatGPT apps (Apps SDK / MCP Apps) served from one stateless MCP server.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "smoke": "tsx src/smoke.ts",
+    "submission": "tsx src/submission.ts",
+    "preview": "tsx src/preview.ts",
+    "check": "npm run typecheck && npm test && npm run smoke && npm run submission"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "luxon": "^3.7.2",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^22.10.0",
+    "@types/qrcode": "^1.5.6",
+    "playwright": "^1.63.0",
+    "tsx": "^4.23.0",
+    "typescript": "^5.9.3"
+  }
+}

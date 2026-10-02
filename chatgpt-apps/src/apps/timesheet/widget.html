@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Timesheet & Overtime Calculator</title>
+  <style>
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin: 10px 0; }
+    .scroll { overflow-x: auto; }
+    td.ot { color: var(--warning); font-weight: 600; }
+    td.dt { color: var(--danger); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="card" id="root"><div class="empty">Adding up hours…</div></div>
+  <script>
+    const root = document.getElementById("root");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    function timesheet(o) {
+      const multiWeek = o.weeks.length > 1;
+      root.innerHTML = `
+        <div class="row between">
+          <div><h1>${esc(o.employeeName ? `${o.employeeName} — timesheet` : "Timesheet")}</h1>${o.periodLabel ? `<p class="muted">${esc(o.periodLabel)}</p>` : ""}</div>
+          <div class="row">
+            <button class="primary" data-url="${esc(o.downloads.pdf)}">Download PDF</button>
+            <button data-url="${esc(o.downloads.csv)}">CSV</button>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">${esc(o.totals.hours)}</div><div class="l">Total · ${o.totals.hoursDecimal} h</div></div>
+          <div class="kpi"><div class="v">${esc(o.totals.regular)}</div><div class="l">Regular</div></div>
+          <div class="kpi"><div class="v">${esc(o.totals.overtime)}</div><div class="l">Overtime</div></div>
+          ${o.totals.double !== "0:00" ? `<div class="kpi"><div class="v">${esc(o.totals.double)}</div><div class="l">Double time</div></div>` : ""}
+          ${o.pay ? `<div class="kpi"><div class="v">${esc(o.pay.gross)}</div><div class="l">Gross · ${esc(o.pay.rate)}/h</div></div>` : ""}
+        </div>
+        <div class="scroll"><table>
+          <thead><tr><th>Date</th><th>In</th><th>Out</th><th class="num">Break</th><th class="num">Hours</th><th class="num">Reg</th><th class="num">OT</th>${o.totals.double !== "0:00" ? '<th class="num">DT</th>' : ""}</tr></thead>
+          <tbody>${o.days.map((d) => `<tr>
+            <td>${esc(d.weekday)} ${esc(d.date.slice(5))}${d.note ? `<div class="tiny">${esc(d.note)}</div>` : ""}</td>
+            <td>${esc(d.in)}</td><td>${esc(d.out)}</td>
+            <td class="num">${d.breakMinutes ? d.breakMinutes + "m" : "—"}</td>
+            <td class="num">${esc(d.hours)}</td><td class="num">${esc(d.regular)}</td>
+            <td class="num ${d.overtime !== "0:00" ? "ot" : ""}">${d.overtime !== "0:00" ? esc(d.overtime) : "—"}</td>
+            ${o.totals.double !== "0:00" ? `<td class="num ${d.double !== "0:00" ? "dt" : ""}">${d.double !== "0:00" ? esc(d.double) : "—"}</td>` : ""}
+          </tr>`).join("")}</tbody>
+          ${multiWeek ? `<tfoot>${o.weeks.map((w) => `<tr><td colspan="4">Week ${esc(w.weekStart)} → ${esc(w.weekEnd)}</td><td class="num">${esc(w.hours)}</td><td class="num">${esc(w.regular)}</td><td class="num">${esc(w.overtime)}</td>${o.totals.double !== "0:00" ? `<td class="num">${esc(w.double)}</td>` : ""}</tr>`).join("")}</tfoot>` : ""}
+        </table></div>
+        ${o.pay ? `<p class="tiny" style="margin-top:8px">Regular ${esc(o.pay.regular)} · Overtime ${esc(o.pay.overtime)}${o.pay.double !== o.pay.regular && o.totals.double !== "0:00" ? ` · Double ${esc(o.pay.double)}` : ""}</p>` : ""}
+        <p class="tiny">Rules: ${esc(o.rulesApplied)}</p>`;
+    }
+
+    function hours(o) {
+      root.innerHTML = `
+        <h1>${esc(o.total.hm)} <span class="muted" style="font-weight:400;font-size:14px">= ${o.total.decimal} hours</span></h1>
+        <table style="margin-top:8px"><tbody>
+          ${o.items.map((i) => `<tr><td class="mono">${esc(i.input)}</td><td class="num">${esc(i.hm)}</td><td class="num muted">${i.decimal} h</td></tr>`).join("")}
+        </tbody><tfoot><tr><td>Total</td><td class="num">${esc(o.total.hm)}</td><td class="num">${o.total.decimal} h</td></tr></tfoot></table>`;
+    }
+
+    function render() {
+      const o = Widget.output;
+      if (!o) return;
+      (o.days ? timesheet : hours)(o);
+      root.querySelectorAll("button[data-url]").forEach((b) => (b.onclick = () => Widget.openLink(b.dataset.url)));
+      Widget.reportSize();
+    }
+    Widget.onResult(render);
+  </script>
+</body>
+</html>

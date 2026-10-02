@@ -1,0 +1,48 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "QR Code Studio",
+    "subtitle": "QR codes for links & Wi-Fi",
+    "description": "QR Code Studio generates standards-compliant QR codes for links, text, phone numbers, email, Wi-Fi networks and contact cards, shows them instantly in the conversation, and provides PNG and SVG downloads for print or screen.",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "create_qr_code": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Encodes the supplied text into a QR image in memory and returns it; stores nothing and changes no data.",
+        "open_world_justification": "Makes no network requests and does not touch any external system.",
+        "destructive_justification": "Cannot delete, overwrite or send anything."
+      }
+    },
+    "create_wifi_qr_code": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Builds the WIFI: payload from the given network name and password and renders it; the credentials are only embedded in the returned image.",
+        "open_world_justification": "Makes no network requests and does not connect to or configure any network.",
+        "destructive_justification": "Cannot delete, overwrite or send anything."
+      }
+    },
+    "create_vcard_qr_code": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Formats the supplied contact fields as a vCard and renders it as a QR image; nothing is stored.",
+        "open_world_justification": "Makes no network requests and does not touch any contact list or external system.",
+        "destructive_justification": "Cannot delete, overwrite or send anything."
+      }
+    }
+  },
+  "test_cases": [
+    { "description": "Generate a QR code for a URL.", "user_prompt": "Make a QR code for https://example.com/menu", "file_attachment_urls": null, "tools_triggered": "create_qr_code", "expected_output": "A scannable QR code for the link is shown in the widget with PNG and SVG download buttons.", "expected_output_url": null },
+    { "description": "Generate a Wi-Fi join code.", "user_prompt": "Create a wifi QR code for my guest network 'CoffeeShop' with password latte123", "file_attachment_urls": null, "tools_triggered": "create_wifi_qr_code", "expected_output": "A QR code encoding WIFI:T:WPA;S:CoffeeShop;P:latte123;; is shown; scanning it joins the network.", "expected_output_url": null },
+    { "description": "Generate a contact card code.", "user_prompt": "QR code for my business card: Ada Lovelace, ada@example.com, +44 20 7946 0958, Analytical Engines Ltd", "file_attachment_urls": null, "tools_triggered": "create_vcard_qr_code", "expected_output": "A vCard QR code is shown; scanning it opens 'Add contact' with the name, email, phone and organization filled in.", "expected_output_url": null },
+    { "description": "Email QR with a prefilled subject.", "user_prompt": "Make a QR code that opens an email to support@example.com with the subject 'Help'", "file_attachment_urls": null, "tools_triggered": "create_qr_code", "expected_output": "A QR code encoding mailto:support@example.com?subject=Help is shown with downloads.", "expected_output_url": null },
+    { "description": "Styled code with high error correction for print.", "user_prompt": "I need a dark blue QR code for example.com with high error correction, 1024 px, for a poster", "file_attachment_urls": null, "tools_triggered": "create_qr_code", "expected_output": "A QR code with #1a3a8a modules at error-correction level H is shown and the PNG download is 1024 px wide.", "expected_output_url": null }
+  ],
+  "negative_test_cases": [
+    { "description": "Do not trigger for reading or decoding a QR code.", "user_prompt": "What does this QR code in my photo say?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it only generates codes and cannot decode images.", "expected_output_url": null },
+    { "description": "Do not trigger for barcodes or product codes.", "user_prompt": "Generate a UPC barcode for my product", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked because it creates QR codes, not linear barcodes.", "expected_output_url": null },
+    { "description": "Do not trigger for general questions about QR codes.", "user_prompt": "How do QR codes work and when were they invented?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "ChatGPT answers conversationally; no code is generated.", "expected_output_url": null }
+  ]
+}

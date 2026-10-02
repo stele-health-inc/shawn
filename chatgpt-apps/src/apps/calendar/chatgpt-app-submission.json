@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Calendar Invite & Date Math",
+    "subtitle": "Invites, date math, time zones",
+    "description": "Turns plans into real calendar entries (downloadable .ics plus Add-to-Google-Calendar and Outlook links, no account connection) and does exact date arithmetic: business-day deadlines, days between dates, day of week, time-zone conversion and cross-time-zone meeting planning.",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "create_calendar_invite": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Builds an .ics file and prefilled calendar links from the supplied event details; it does not write to any calendar or store the event.",
+        "open_world_justification": "Makes no network requests; the Google/Outlook links only open a prefilled form the user confirms themselves.",
+        "destructive_justification": "Cannot modify or delete existing events or send invitations."
+      }
+    },
+    "calculate_date": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Pure date arithmetic on the given inputs.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "convert_time_zones": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Converts the given time between time zones using the built-in zone database.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "find_meeting_times": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Ranks candidate meeting slots from the given time zones and working hours; it does not read or book any calendar.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    }
+  },
+  "test_cases": [
+    { "description": "Create a one-off invite with a reminder.", "user_prompt": "Add a dentist appointment to my calendar on Oct 9 2026 at 2:30pm New York time, 45 minutes, 12 Main St, remind me 30 minutes before", "file_attachment_urls": null, "tools_triggered": "create_calendar_invite", "expected_output": "An event card with the date, time zone and location is shown with Add to Google Calendar, Outlook and Download .ics buttons; the .ics contains the reminder.", "expected_output_url": null },
+    { "description": "Recurring weekday standup.", "user_prompt": "Make a calendar invite for a 15-minute team standup every Monday, Wednesday and Friday at 9am Berlin time starting Oct 12 2026, 12 occurrences", "file_attachment_urls": null, "tools_triggered": "create_calendar_invite", "expected_output": "An event card showing 'Repeats weekly on Mon/Wed/Fri, 12 times' with the .ics download and calendar links.", "expected_output_url": null },
+    { "description": "Business-day deadline.", "user_prompt": "What date is 45 business days after October 2, 2026, skipping Thanksgiving (Nov 26) and Christmas?", "file_attachment_urls": null, "tools_triggered": "calculate_date", "expected_output": "The exact resulting date and weekday, with the number of weekend/holiday days skipped.", "expected_output_url": null },
+    { "description": "Time-zone conversion.", "user_prompt": "If it's 2:30pm on Oct 9 2026 in Los Angeles, what time is it in London, Bangalore and Tokyo?", "file_attachment_urls": null, "tools_triggered": "convert_time_zones", "expected_output": "A table with each city's local time, abbreviation and UTC offset, marking Tokyo as the next day.", "expected_output_url": null },
+    { "description": "Cross-time-zone meeting planning.", "user_prompt": "Find a 30-minute slot on Oct 13 2026 that works during business hours for New York, London and Bangalore", "file_attachment_urls": null, "tools_triggered": "find_meeting_times", "expected_output": "Ranked slots with each participant's local time, the best one marked.", "expected_output_url": null }
+  ],
+  "negative_test_cases": [
+    { "description": "Do not trigger for reading the user's existing calendar.", "user_prompt": "What meetings do I have tomorrow?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it cannot read calendars.", "expected_output_url": null },
+    { "description": "Do not trigger for general history questions involving dates.", "user_prompt": "When did the Berlin Wall fall and why?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "ChatGPT answers conversationally; no date arithmetic is needed.", "expected_output_url": null },
+    { "description": "Do not trigger for sending emails or messages.", "user_prompt": "Email my team to say the meeting moved to Friday", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it does not send messages.", "expected_output_url": null }
+  ]
+}

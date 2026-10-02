@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Timesheet & Overtime Calculator",
+    "subtitle": "Hours, overtime & pay",
+    "description": "Adds up work hours from clock-in and clock-out times with unpaid breaks, overnight shifts and rounding, applies weekly and daily overtime rules, computes gross pay at a given rate, and exports a printable PDF timesheet or CSV. Also totals and converts durations.",
+    "category": "BUSINESS"
+  },
+  "tools": {
+    "calculate_timesheet": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Computes hours, overtime and pay from the supplied entries and renders PDF/CSV files on demand; nothing is stored or submitted anywhere.",
+        "open_world_justification": "No network access; it does not connect to payroll or HR systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    },
+    "add_hours": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Pure arithmetic on the supplied durations.",
+        "open_world_justification": "No network access or external systems.",
+        "destructive_justification": "Computes a result only."
+      }
+    }
+  },
+  "test_cases": [
+    { "description": "Weekly timesheet with breaks and pay.", "user_prompt": "Add up my hours: Mon 8:00-5:30, Tue 8:00-6:15, Wed 7:45-4:15, Thu 8-5, Fri 8:00-7:00, 30 min lunch each day except Tuesday which was 45, at $22.50 an hour, week of Sep 28 2026", "file_attachment_urls": null, "tools_triggered": "calculate_timesheet", "expected_output": "A day-by-day table with regular and overtime hours (overtime beyond 40h/week), gross pay, and PDF/CSV download buttons.", "expected_output_url": null },
+    { "description": "California daily overtime rules.", "user_prompt": "I worked 9am to 10pm with a 30 minute break on Oct 5 2026 in California at $30/hr. How much overtime and double time?", "file_attachment_urls": null, "tools_triggered": "calculate_timesheet", "expected_output": "12.5 hours split into 8 regular, 4 overtime and 0.5 double time with the pay for each.", "expected_output_url": null },
+    { "description": "Overnight shift.", "user_prompt": "Night shift timesheet: Oct 1 10pm to 6am, Oct 2 10pm to 6:30am, 30 minute unpaid break each night", "file_attachment_urls": null, "tools_triggered": "calculate_timesheet", "expected_output": "Each shift is counted across midnight (7.5h and 8h) with the correct total.", "expected_output_url": null },
+    { "description": "Quarter-hour rounding.", "user_prompt": "Make a timesheet for Sam Rivera, Oct 5-9 2026, 8:03 to 16:52 every day, rounded to 15 minutes, no breaks", "file_attachment_urls": null, "tools_triggered": "calculate_timesheet", "expected_output": "Each day rounds to 8:45 and the sheet shows the employee name; a printable PDF is offered.", "expected_output_url": null },
+    { "description": "Add durations.", "user_prompt": "Add 7:45 + 8:15 + 1h 30m + 90 minutes and give me the total in decimal hours", "file_attachment_urls": null, "tools_triggered": "add_hours", "expected_output": "Total 19:00 (19.0 hours) with each item converted.", "expected_output_url": null }
+  ],
+  "negative_test_cases": [
+    { "description": "Do not trigger for tax withholding or net pay.", "user_prompt": "How much federal tax will be withheld from my $900 paycheck?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked; it does not compute taxes or net pay.", "expected_output_url": null },
+    { "description": "Do not trigger for clock time arithmetic unrelated to work hours.", "user_prompt": "What time is it in Tokyo right now?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "The app is not invoked.", "expected_output_url": null },
+    { "description": "Do not trigger for labor-law advice.", "user_prompt": "Is my employer allowed to deny me overtime pay in Texas?", "file_attachment_urls": null, "tools_triggered": null, "expected_output": "ChatGPT answers conversationally; no calculation is requested.", "expected_output_url": null }
+  ]
+}

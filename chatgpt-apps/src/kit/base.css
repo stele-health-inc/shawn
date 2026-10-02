@@ -1,0 +1,80 @@
+/* Shared widget styles. Host-provided MCP Apps style variables win; the
+   fallbacks keep the widget legible in hosts that pass none. */
+:root {
+  --bg: var(--color-background-primary, #ffffff);
+  --bg-2: var(--color-background-secondary, #f5f5f7);
+  --bg-3: var(--color-background-tertiary, #ebebef);
+  --fg: var(--color-text-primary, #111114);
+  --fg-2: var(--color-text-secondary, #5e5e66);
+  --fg-3: var(--color-text-tertiary, #8b8b94);
+  --border: var(--color-border-primary, #e2e2e8);
+  --inverse-bg: var(--color-background-inverse, #111114);
+  --inverse-fg: var(--color-text-inverse, #ffffff);
+  --success: var(--color-text-success, #0f7a3d);
+  --success-bg: var(--color-background-success, #e4f6ea);
+  --danger: var(--color-text-danger, #b3261e);
+  --danger-bg: var(--color-background-danger, #fbe9e7);
+  --warning: var(--color-text-warning, #8a5a00);
+  --warning-bg: var(--color-background-warning, #fff4d6);
+  --info: var(--color-text-info, #1f4fd1);
+  --radius: var(--border-radius-md, 12px);
+  --radius-sm: var(--border-radius-sm, 8px);
+  --radius-full: var(--border-radius-full, 999px);
+  --sans: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif);
+  --mono: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+:root[data-theme="dark"] {
+  --bg: var(--color-background-primary, #1b1b1f);
+  --bg-2: var(--color-background-secondary, #26262b);
+  --bg-3: var(--color-background-tertiary, #303036);
+  --fg: var(--color-text-primary, #f2f2f5);
+  --fg-2: var(--color-text-secondary, #b4b4bd);
+  --fg-3: var(--color-text-tertiary, #83838c);
+  --border: var(--color-border-primary, #3a3a42);
+  --inverse-bg: var(--color-background-inverse, #f2f2f5);
+  --inverse-fg: var(--color-text-inverse, #111114);
+  --success-bg: var(--color-background-success, #113a22);
+  --success: var(--color-text-success, #7bdc9b);
+  --danger-bg: var(--color-background-danger, #4a1a16);
+  --danger: var(--color-text-danger, #ff9b93);
+  --warning-bg: var(--color-background-warning, #3d2d08);
+  --warning: var(--color-text-warning, #ffd36b);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: transparent; color: var(--fg); font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+body { padding: 4px; }
+.card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.card + .card { margin-top: 10px; }
+h1 { font-size: 17px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: 14px; margin: 14px 0 6px; font-weight: 600; }
+p { margin: 0; }
+.muted { color: var(--fg-2); }
+.tiny { font-size: 12px; color: var(--fg-3); }
+.mono { font-family: var(--mono); font-size: 12px; word-break: break-all; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.between { justify-content: space-between; }
+.stack { display: grid; gap: 10px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+@media (max-width: 420px) { .grid2 { grid-template-columns: 1fr; } }
+button, .btn { font: inherit; font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: var(--radius-full); border: 1px solid var(--border); background: var(--bg-2); color: var(--fg); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+button:hover, .btn:hover { background: var(--bg-3); }
+button.primary, .btn.primary { background: var(--inverse-bg); color: var(--inverse-fg); border-color: transparent; }
+button.primary:hover, .btn.primary:hover { opacity: 0.9; }
+button:disabled { opacity: 0.5; cursor: default; }
+select, input { font: inherit; font-size: 13px; padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--fg); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--fg-2); font-weight: 600; font-size: 12px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tfoot td { font-weight: 600; border-bottom: 0; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); background: var(--bg-3); color: var(--fg-2); }
+.badge.ok { background: var(--success-bg); color: var(--success); }
+.badge.bad { background: var(--danger-bg); color: var(--danger); }
+.badge.warn { background: var(--warning-bg); color: var(--warning); }
+.kpi { background: var(--bg-2); border-radius: var(--radius-sm); padding: 10px 12px; }
+.kpi .v { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 12px; color: var(--fg-2); }
+.empty { padding: 24px; text-align: center; color: var(--fg-3); }
+.note { font-size: 12px; color: var(--fg-2); background: var(--bg-2); border-radius: var(--radius-sm); padding: 8px 10px; }
+pre { margin: 0; white-space: pre-wrap; }
+svg.chart text { font-family: var(--sans); font-size: 10px; fill: var(--fg-2); }

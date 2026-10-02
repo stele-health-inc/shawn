@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>QR Code Studio</title>
+  <style>
+    .wrap { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: start; }
+    @media (max-width: 460px) { .wrap { grid-template-columns: 1fr; } }
+    .qr { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
+    .qr svg { width: 100%; height: 100%; display: block; }
+    .payload { background: var(--bg-2); border-radius: var(--radius-sm); padding: 8px 10px; max-height: 90px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <div class="card" id="root">
+    <div class="empty">Generating QR code…</div>
+  </div>
+  <script>
+    const root = document.getElementById("root");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const KIND_LABEL = { url: "Link", text: "Text", phone: "Phone", sms: "SMS", email: "Email", geo: "Location", wifi: "Wi-Fi", vcard: "Contact" };
+
+    function render() {
+      const o = Widget.output;
+      const svg = Widget.meta && Widget.meta.svg;
+      if (!o) return;
+      root.innerHTML = `
+        <div class="wrap">
+          <div class="qr" aria-label="QR code">${svg || '<span class="tiny">Preview unavailable — use the downloads</span>'}</div>
+          <div class="stack">
+            <div>
+              <div class="row between">
+                <h1>${esc(o.summary)}</h1>
+                <span class="badge">${esc(KIND_LABEL[o.kind] || o.kind)}</span>
+              </div>
+              <p class="tiny">Version ${o.version} · ${o.modules}×${o.modules} modules · error correction ${esc(o.errorCorrection)}</p>
+            </div>
+            <div class="payload mono">${esc(o.payload)}</div>
+            ${o.tip ? `<div class="note">${esc(o.tip)}</div>` : ""}
+            <div class="row">
+              <button class="primary" id="png">Download PNG</button>
+              <button id="svgbtn">Download SVG</button>
+              <button id="copy">Copy content</button>
+            </div>
+            <p class="tiny">Tip: point your phone camera at the code to test it before printing.</p>
+          </div>
+        </div>`;
+      document.getElementById("png").onclick = () => Widget.openLink(o.downloads.png);
+      document.getElementById("svgbtn").onclick = () => Widget.openLink(o.downloads.svg);
+      const copy = document.getElementById("copy");
+      copy.onclick = async () => { await Widget.copy(o.payload); copy.textContent = "Copied"; setTimeout(() => (copy.textContent = "Copy content"), 1500); };
+      Widget.reportSize();
+    }
+    Widget.onResult(render);
+  </script>
+</body>
+</html>

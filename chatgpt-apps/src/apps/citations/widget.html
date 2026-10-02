@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Verified Citations</title>
+  <style>
+    .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tabs button { padding: 5px 10px; font-size: 12px; }
+    .tabs button.on { background: var(--inverse-bg); color: var(--inverse-fg); border-color: transparent; }
+    .cite { background: var(--bg-2); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13.5px; line-height: 1.5; padding-left: 2em; text-indent: -2em; }
+    .cite i { font-style: italic; }
+    .item { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .item + .item { margin-top: 8px; }
+    .item .orig { font-size: 12px; color: var(--fg-2); margin-bottom: 6px; }
+    .item.verified { border-left: 3px solid var(--success); }
+    .item.likely { border-left: 3px solid var(--warning); }
+    .item.not_found { border-left: 3px solid var(--danger); }
+    .item.unavailable { border-left: 3px solid var(--fg-3); }
+    a { color: var(--info); }
+    .counts { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+    .score { font-size: 11px; color: var(--fg-3); }
+  </style>
+</head>
+<body>
+  <div class="card" id="root"><div class="empty">Working…</div></div>
+  <script>
+    const root = document.getElementById("root");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const LABEL = { apa: "APA 7", mla: "MLA 9", chicago: "Chicago", harvard: "Harvard", ieee: "IEEE" };
+    const STATUS = { verified: ["ok", "Verified"], likely: ["warn", "Likely"], not_found: ["bad", "Not found"], unavailable: ["", "Not checked"] };
+    let style = "apa";
+
+    const tabs = () => `<div class="tabs">${Object.keys(LABEL).map((s) => `<button data-style="${s}" class="${s === style ? "on" : ""}">${LABEL[s]}</button>`).join("")}</div>`;
+    const copyBtn = (text, label = "Copy") => `<button class="copy" data-text="${esc(text)}">${label}</button>`;
+    const doiLink = (ref) => ref.doi ? `<a href="https://doi.org/${esc(ref.doi)}" data-url="https://doi.org/${esc(ref.doi)}">doi:${esc(ref.doi)}</a>` : ref.url ? `<a href="${esc(ref.url)}" data-url="${esc(ref.url)}">source</a>` : "";
+    const citeBlock = (styles) => `<div class="cite">${styles[style].html}</div><div class="row" style="margin-top:6px"><span class="tiny">In-text: <span class="mono">${esc(styles[style].inText)}</span></span>${copyBtn(styles[style].text)}${copyBtn(styles[style].inText, "Copy in-text")}</div>`;
+
+    function citation(o) {
+      root.innerHTML = `
+        <div class="row between"><h1>Citation</h1>${tabs()}</div>
+        <div style="margin-top:10px">${citeBlock(o.styles)}</div>
+        ${o.reference.doi || o.reference.url ? `<p class="tiny" style="margin-top:6px">${doiLink(o.reference)}</p>` : ""}
+        ${o.tips.length ? `<div class="note" style="margin-top:8px">${o.tips.map(esc).join("<br>")}</div>` : ""}`;
+    }
+
+    function lookup(o) {
+      root.innerHTML = `
+        <div class="row between"><div><h1>${o.candidates.length ? "Matches for your query" : "No match found"}</h1><p class="tiny">“${esc(o.query)}”</p></div>${tabs()}</div>
+        ${o.error ? `<div class="note" style="margin-top:8px">${esc(o.error)}</div>` : ""}
+        <div style="margin-top:10px">
+          ${o.candidates.map((c, i) => `<div class="item ${c.score >= 0.78 ? "verified" : c.score >= 0.55 ? "likely" : ""}">
+            <div class="row between"><span><span class="badge ${c.score >= 0.78 ? "ok" : c.score >= 0.55 ? "warn" : ""}">${i === 0 ? "Best match" : "Candidate"} · ${Math.round(c.score * 100)}%</span> <span class="score">${esc(c.source)}${c.citedBy != null ? ` · cited ${c.citedBy}×` : ""}</span></span>${doiLink(c.reference)}</div>
+            <div style="margin-top:6px">${citeBlock(c.styles)}</div>
+          </div>`).join("")}
+        </div>`;
+    }
+
+    function verify(o) {
+      root.innerHTML = `
+        <div class="row between"><h1>Reference check</h1>${tabs()}</div>
+        <div class="counts">
+          <span class="badge ok">${o.counts.verified} verified</span><span class="badge warn">${o.counts.likely} likely</span><span class="badge bad">${o.counts.not_found} not found</span>${o.counts.unavailable ? `<span class="badge">${o.counts.unavailable} not checked</span>` : ""}
+        </div>
+        ${o.results.map((r) => `<div class="item ${r.status}">
+          <div class="row between"><span class="badge ${STATUS[r.status][0]}">${STATUS[r.status][1]}${r.score != null ? ` · ${Math.round(r.score * 100)}%` : ""}</span>${r.match ? doiLink(r.match) : ""}</div>
+          <div class="orig" style="margin-top:6px">${esc(r.input)}</div>
+          ${r.note ? `<p class="tiny" style="margin-bottom:6px">${esc(r.note)}</p>` : ""}
+          ${r.styles ? citeBlock(r.styles) : ""}
+        </div>`).join("")}`;
+    }
+
+    function exportView(o) {
+      root.innerHTML = `
+        <div class="row between"><h1>${o.count} reference${o.count === 1 ? "" : "s"} · ${esc(o.format.toUpperCase())}</h1><button class="primary" data-url="${esc(o.download)}">Download</button></div>
+        <pre class="mono" style="margin-top:10px;background:var(--bg-2);padding:10px;border-radius:var(--radius-sm);max-height:220px;overflow:auto">${esc(o.preview)}</pre>`;
+    }
+
+    function render() {
+      const o = Widget.output;
+      if (!o) return;
+      if (o.style && !render.styleTouched) style = o.style;
+      ({ citation, lookup, verify, export: exportView }[o.view] || (() => { root.innerHTML = `<pre class="mono">${esc(JSON.stringify(o, null, 2))}</pre>`; }))(o);
+      root.querySelectorAll("[data-style]").forEach((b) => (b.onclick = () => { style = b.dataset.style; render.styleTouched = true; render(); }));
+      root.querySelectorAll("[data-url]").forEach((b) => (b.onclick = (e) => { e.preventDefault(); Widget.openLink(b.dataset.url); }));
+      root.querySelectorAll("button.copy").forEach((b) => (b.onclick = async () => { await Widget.copy(b.dataset.text); const t = b.textContent; b.textContent = "Copied"; setTimeout(() => (b.textContent = t), 1500); }));
+      Widget.reportSize();
+    }
+    Widget.onResult(render);
+  </script>
+</body>
+</html>

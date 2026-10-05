@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blank Page Live Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600;700&family=DM+Mono:wght@500&display=swap">
+<style>
+/* Layout: a stage. Step rail on top, the TV (what the room sees) on the left,
+   host and attendee notes on the right. Paper, marker and highlighter set the palette. */
+:root {
+  --bg: #0D1326;          /* the dark room */
+  --surface: #151D36;
+  --surface-2: #1E2848;
+  --line: #2E3A63;
+  --fg: #F4F2EC;
+  --muted: #AEB7D0;
+  --accent: #FFD23F;      /* highlighter */
+  --on-accent: #1A1404;
+  --side-a: #FF8366;      /* battle side A */
+  --side-b: #5CCBFF;      /* battle side B */
+  --good: #74E0A2;
+  --paper: #FBF8F0;
+  --paper-shade: #E9E3D3;
+  --pen: #18213D;         /* marker ink */
+  --bezel: #05070E;
+  --screen: #0A0F20;
+  --seg-1: #33416E;
+  --seg-2: #4A5A93;
+
+  --f-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hand: "Caveat", "Segoe Print", "Comic Sans MS", cursive;
+  --f-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius: 14px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { font-size: clamp(16px, 0.55vw + 10px, 28px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+
+.wrap { max-width: 1720px; margin: 0 auto; padding-inline: clamp(16px, 3vw, 56px); }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: .75rem 1.5rem; padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: .8rem; min-width: 0; }
+.brand-mark {
+  flex: none; width: 1.35rem; height: 1.75rem; background: var(--paper);
+  border-radius: 2px; transform: rotate(-7deg);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+.brand h1 { font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; letter-spacing: -.01em; line-height: 1.1; }
+.brand-sub { display: block; font-size: .8rem; color: var(--muted); }
+.bar-right { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+
+.seg {
+  display: inline-flex; padding: .25rem; gap: .25rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+}
+.seg button {
+  border: 0; background: transparent; cursor: pointer; color: var(--muted);
+  padding: .55rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: .95rem;
+  white-space: nowrap;
+}
+.seg button .n { font-family: var(--f-mono); font-weight: 500; opacity: .75; margin-right: .35rem; }
+.seg button[aria-checked="true"] { background: var(--accent); color: var(--on-accent); }
+.seg button:not([aria-checked="true"]):hover { color: var(--fg); }
+
+.ghost {
+  border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer;
+  padding: .55rem 1rem; border-radius: 999px; font-size: .85rem; font-weight: 700;
+}
+.ghost:hover { color: var(--fg); border-color: var(--muted); }
+.jump { display: flex; gap: .25rem; }
+.jump a { color: var(--muted); text-decoration: none; font-size: .85rem; font-weight: 700; padding: .5rem .7rem; border-radius: 999px; }
+.jump a:hover { color: var(--fg); background: var(--surface); }
+
+/* ---------- Step rail ---------- */
+.rail { position: relative; margin-top: 1.4rem; }
+.rail-track {
+  position: absolute; left: calc(100% / 14); right: calc(100% / 14); top: calc(1.2rem - 2px);
+  height: 4px; background: var(--line); border-radius: 2px; overflow: hidden;
+}
+.rail-fill { height: 100%; width: 0; background: var(--accent); transition: width .35s ease; }
+.steps { list-style: none; margin: 0; padding: 0; position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.step-btn {
+  width: 100%; background: none; border: 0; cursor: pointer; padding: 0 .2rem;
+  display: flex; flex-direction: column; align-items: center; gap: .3rem; text-align: center;
+}
+.step-num {
+  width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface-2); border: 2px solid var(--line); color: var(--muted);
+  font-family: var(--f-display); font-weight: 800; font-size: 1rem;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.step-name { font-weight: 700; font-size: .88rem; line-height: 1.2; color: var(--muted); }
+.step-dur { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.step-btn:hover .step-num { border-color: var(--muted); }
+.step-btn.done .step-num { border-color: var(--accent); color: var(--accent); }
+.step-btn.done .step-name { color: var(--fg); }
+.step-btn.current .step-num { background: var(--accent); border-color: var(--accent); color: var(--on-accent); transform: scale(1.08); }
+.step-btn.current .step-name { color: var(--fg); }
+.step-btn.skipped .step-num { border-style: dashed; background: var(--bg); opacity: .6; }
+.step-btn.skipped .step-name { text-decoration: line-through; opacity: .6; }
+.step-btn.skipped .step-dur { opacity: .7; }
+
+/* ---------- Stage ---------- */
+.stage {
+  display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 3.25rem); align-items: start;
+  margin-top: 1.6rem;
+}
+.visual { min-width: 0; }
+.devices { position: relative; }
+.devices.with-ipad { padding-bottom: 20%; }
+.devices.with-ipad .tv-unit { width: 82%; }
+.ipad-unit { position: absolute; right: 0; bottom: 0; width: 32%; z-index: 2; }
+
+.tv {
+  background: var(--bezel); border-radius: 1rem; padding: 1.8% 1.8% 2.6%;
+  box-shadow: 0 0 0 1px var(--line), 0 40px 70px -30px rgba(0, 0, 0, .8);
+  position: relative;
+}
+.tv::after {
+  content: ""; position: absolute; bottom: .9%; left: 50%; width: 6px; height: 6px; margin-left: -3px;
+  border-radius: 50%; background: var(--good); opacity: .8;
+}
+.tv-stand { width: 26%; height: .55rem; margin: 0 auto; background: var(--bezel); border-radius: 0 0 .45rem .45rem; box-shadow: 0 0 0 1px var(--line); }
+.screen {
+  position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden;
+  background: var(--screen); border-radius: .3rem; container-type: inline-size;
+  color: var(--fg);
+}
+
+.ipad {
+  background: var(--bezel); border-radius: 1.1rem; padding: 4.5%;
+  box-shadow: 0 0 0 1px var(--line), 0 30px 50px -18px rgba(0, 0, 0, .85);
+}
+.ipad .screen { aspect-ratio: 4 / 3; border-radius: .45rem; display: flex; align-items: center; background: #000; }
+.ipad .mirror { width: 100%; aspect-ratio: 16 / 9; container-type: inline-size; position: relative; background: var(--screen); overflow: hidden; }
+.ipad-status {
+  position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between;
+  padding: 1.6cqw 3cqw; font-size: 3.2cqw; color: var(--muted); font-family: var(--f-mono);
+}
+.ipad-status b { color: var(--good); font-weight: 500; }
+.ipad-label { margin-top: .55rem; font-size: .78rem; color: var(--muted); text-align: center; line-height: 1.3; }
+.ipad-label b { color: var(--fg); }
+
+.caption { display: flex; gap: .6rem; align-items: baseline; margin-top: 1rem; color: var(--muted); font-size: .92rem; }
+.caption b { color: var(--fg); flex: none; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; font-family: var(--f-mono); font-weight: 500; }
+
+.host-controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: 1rem;
+  padding: .75rem .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.host-controls .lbl { font-size: .85rem; color: var(--muted); margin-right: auto; }
+.host-controls .lbl b { color: var(--fg); }
+
+.diff { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.diff-item {
+  padding: .75rem .9rem; border-radius: var(--radius); border: 1px solid var(--line);
+  font-size: .9rem; color: var(--muted); background: transparent;
+}
+.diff-item .k { display: block; font-family: var(--f-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; }
+.diff-item.on { background: var(--surface); border-color: var(--accent); color: var(--fg); }
+.diff-item.on .k { color: var(--accent); }
+.diff-same { margin-top: 1rem; font-size: .9rem; color: var(--muted); }
+
+.info { min-width: 0; display: flex; flex-direction: column; gap: 1.15rem; }
+.eyebrow { font-family: var(--f-mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.info h2 { font-family: var(--f-display); font-weight: 800; font-size: 2.7rem; line-height: 1.02; letter-spacing: -.02em; margin-top: .35rem; }
+.lede { font-size: 1.12rem; color: var(--fg); max-width: 36em; }
+
+.skip-note {
+  border: 2px dashed var(--accent); border-radius: var(--radius); padding: .9rem 1rem;
+  display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; justify-content: space-between;
+}
+.skip-note p { font-size: .95rem; }
+
+.timer {
+  display: grid; grid-template-columns: auto 1fr; gap: .4rem 1.2rem; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1.1rem;
+}
+.timer-digits { font-family: var(--f-mono); font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.timer-digits.zero { color: var(--side-a); }
+.timer-side { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
+.timer-label { font-size: .85rem; color: var(--muted); }
+.timer-label b { color: var(--fg); }
+.timer-btns { display: flex; gap: .5rem; flex-wrap: wrap; }
+.timer-note { grid-column: 1 / -1; font-size: .78rem; color: var(--muted); }
+.timer-note a { color: var(--accent); }
+.adj { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--on-accent); background: var(--accent); padding: .1rem .4rem; border-radius: 4px; margin-left: .35rem; vertical-align: .1em; }
+
+.btn {
+  border: 0; cursor: pointer; border-radius: 999px; padding: .55rem 1.1rem; font-weight: 700; font-size: .9rem;
+  background: var(--surface-2); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line);
+}
+.btn:hover { box-shadow: inset 0 0 0 1px var(--muted); }
+.btn.primary { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.btn.primary:hover { filter: brightness(1.06); }
+
+.roles { display: grid; grid-template-columns: 1fr; gap: .8rem; }
+.role { border-radius: var(--radius); padding: .95rem 1.1rem; border: 1px solid var(--line); }
+.role.host { background: var(--surface); }
+.role h3 { display: flex; align-items: center; gap: .55rem; font-size: .8rem; font-family: var(--f-mono); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.role h3 i { width: .7rem; height: .7rem; border-radius: 50%; display: inline-block; }
+.role.host h3 i { background: var(--accent); }
+.role.attendee h3 i { background: var(--paper); border-radius: 2px; }
+.role ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.role li { position: relative; padding-left: 1.15rem; font-size: 1rem; }
+.role li::before { content: ""; position: absolute; left: 0; top: .6em; width: .45rem; height: .2rem; border-radius: 2px; background: var(--muted); }
+.role.host li::before { background: var(--accent); }
+
+.stage-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.6rem; padding-block: 1rem; border-top: 1px solid var(--line); }
+.stage-nav .keys { font-size: .78rem; color: var(--muted); text-align: center; }
+kbd { font-family: var(--f-mono); font-size: .75rem; padding: .05rem .4rem; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); }
+.nav-btn { min-width: 9rem; padding: .8rem 1.3rem; font-size: 1rem; }
+
+/* ---------- TV screen content (sized to the screen with cqw) ---------- */
+.sc { position: absolute; inset: 0; padding: 4cqw 5cqw; display: flex; flex-direction: column; }
+.sc-kicker { font-family: var(--f-mono); font-size: 1.7cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.sc-big { font-family: var(--f-display); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.clock { font-family: var(--f-mono); font-variant-numeric: tabular-nums; letter-spacing: -.03em; line-height: 1; }
+
+/* welcome */
+.sc-welcome { justify-content: center; gap: 3cqw; }
+.sc-welcome .sc-big { font-size: 7.4cqw; }
+.sc-welcome .sc-big span { color: var(--accent); }
+.how { display: flex; gap: 2cqw; list-style: none; margin: 0; padding: 0; }
+.how li { flex: 1; display: flex; align-items: center; gap: 1.3cqw; font-size: 1.9cqw; padding: 1.4cqw 1.6cqw; border: .2cqw solid var(--line); border-radius: 1cqw; }
+.how b { flex: none; width: 3.4cqw; height: 3.4cqw; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-family: var(--f-display); font-size: 1.8cqw; }
+
+/* prompt */
+.sc-prompt { justify-content: center; gap: 2.5cqw; }
+.sc-prompt .sc-big { font-size: 6.4cqw; max-width: 80cqw; }
+.sc-prompt .sub { font-size: 2cqw; color: var(--muted); }
+.sc-prompt .hl { background: linear-gradient(transparent 58%, rgba(255, 210, 63, .45) 58%); }
+
+/* idea */
+.sc-idea { flex-direction: row; align-items: center; gap: 5cqw; }
+.ring {
+  --p: 1; flex: none; width: 34cqw; aspect-ratio: 1; border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--p) * 360deg), var(--surface-2) 0);
+  display: grid; place-items: center;
+}
+.ring-inner { width: 86%; aspect-ratio: 1; border-radius: 50%; background: var(--screen); display: grid; place-items: center; text-align: center; }
+.ring .clock { font-size: 8.4cqw; }
+.ring small { display: block; font-size: 1.6cqw; color: var(--muted); margin-top: .8cqw; font-family: var(--f-body); }
+.idea-copy { display: flex; flex-direction: column; gap: 2cqw; min-width: 0; }
+.idea-copy .sc-big { font-size: 5.6cqw; }
+.idea-copy .p { font-size: 2.2cqw; color: var(--muted); }
+.idea-copy .p b { color: var(--fg); }
+
+/* paper (photo of a sheet) */
+.paper {
+  --r: 0deg;
+  margin: 0; width: 100%; aspect-ratio: 1 / 1.36; transform: rotate(var(--r));
+  background: linear-gradient(160deg, var(--paper) 0%, var(--paper) 55%, var(--paper-shade) 100%);
+  color: var(--pen); border-radius: .4cqw; padding: 7% 8% 6%;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  box-shadow: 0 .8cqw 1.6cqw rgba(0, 0, 0, .45);
+  font-size: var(--ps, 1.8cqw);
+}
+.paper-title { font-family: var(--f-hand); font-weight: 700; font-size: 1.35em; line-height: 1; }
+.paper svg { flex: 1; width: 100%; min-height: 0; margin-block: 4%; fill: none; stroke: var(--pen); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.paper .fill { fill: var(--pen); }
+.paper-line { font-family: var(--f-hand); font-weight: 600; font-size: .8em; line-height: 1.05; }
+
+/* battle */
+.sc-battle { gap: 1.6cqw; padding-top: 3.4cqw; }
+.vs-row { flex: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 3cqw; min-height: 0; }
+.side { display: flex; flex-direction: column; align-items: center; gap: 1.2cqw; }
+.side .paper { width: 17cqw; --ps: 1.9cqw; }
+.side .who { font-family: var(--f-display); font-weight: 800; font-size: 2.8cqw; }
+.side .tag { font-size: 1.4cqw; font-family: var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: .4cqw 1.1cqw; border-radius: 99cqw; border: .18cqw solid currentColor; }
+.side-a .who, .side-a .tag { color: var(--side-a); }
+.side-b .who, .side-b .tag { color: var(--side-b); }
+.side-a .tag.live { background: var(--side-a); color: var(--screen); border-color: var(--side-a); }
+.vs-mid { display: flex; flex-direction: column; align-items: center; gap: 1.6cqw; }
+.vs-mid .vs { font-family: var(--f-display); font-weight: 800; font-size: 7cqw; line-height: 1; color: var(--fg); }
+.vs-mid .clock { font-size: 6.2cqw; padding: .8cqw 2cqw; border-radius: 1cqw; background: var(--surface-2); }
+.vs-mid small { font-size: 1.5cqw; color: var(--muted); }
+
+/* pitch */
+.sc-pitch { flex-direction: row; align-items: center; gap: 4.5cqw; }
+.sc-pitch .paper { width: 24cqw; --ps: 2.6cqw; flex: none; --r: -2deg; }
+.pitch-copy { flex: 1; display: flex; flex-direction: column; gap: 1.4cqw; min-width: 0; }
+.pitch-copy .sc-big { font-size: 6.8cqw; }
+.pitch-copy .idea-t { font-size: 2.4cqw; color: var(--muted); }
+.pitch-copy .clock { font-size: 9cqw; color: var(--accent); }
+.next-up { font-size: 1.7cqw; color: var(--muted); display: flex; gap: 1.2cqw; flex-wrap: wrap; align-items: center; }
+.next-up span { padding: .4cqw 1.1cqw; border: .18cqw solid var(--line); border-radius: 99cqw; color: var(--fg); }
+
+/* results */
+.sc-results { gap: 1.8cqw; padding: 3.4cqw 4.5cqw; }
+.res-head { display: flex; justify-content: space-between; align-items: baseline; }
+.res-head .sc-big { font-size: 3.6cqw; }
+.res-head .sc-kicker { color: var(--good); }
+.matchups { display: grid; gap: 1.6cqw; flex: 1; align-content: start; }
+.matchup { display: grid; grid-template-columns: 8.6cqw 1fr auto 1fr 8.6cqw; align-items: center; gap: 1.8cqw; padding: 1.2cqw 1.6cqw; border-radius: 1.2cqw; background: var(--surface); }
+.matchup .paper { --ps: 1cqw; }
+.mu-side { display: flex; flex-direction: column; gap: .7cqw; min-width: 0; }
+.mu-side.b { align-items: flex-end; text-align: right; }
+.mu-name { font-family: var(--f-display); font-weight: 800; font-size: 2.3cqw; line-height: 1.05; display: flex; align-items: center; gap: .8cqw; }
+.mu-idea { font-size: 1.4cqw; color: var(--muted); }
+.bar { width: 100%; height: 1.2cqw; border-radius: 99cqw; background: var(--surface-2); overflow: hidden; display: flex; }
+.mu-side.b .bar { justify-content: flex-end; }
+.bar i { display: block; height: 100%; border-radius: 99cqw; transition: width .6s ease; }
+.mu-side.a .bar i { background: var(--side-a); }
+.mu-side.b .bar i { background: var(--side-b); }
+.votes { font-family: var(--f-mono); font-size: 2.2cqw; }
+.mu-vs { font-family: var(--f-display); font-weight: 800; font-size: 2.2cqw; color: var(--muted); }
+.win { font-family: var(--f-mono); font-size: 1.15cqw; letter-spacing: .1em; text-transform: uppercase; background: var(--accent); color: var(--on-accent); padding: .3cqw .8cqw; border-radius: .5cqw; }
+.res-banner { text-align: center; font-size: 2.2cqw; padding: 1.2cqw; border-radius: 1cqw; border: .2cqw dashed var(--accent); }
+.res-banner b { color: var(--accent); }
+.res-banner.pending { border-color: var(--line); color: var(--muted); }
+
+.ranks { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4cqw; align-items: start; }
+.rank { display: flex; flex-direction: column; align-items: center; gap: 1cqw; text-align: center; }
+.rank .paper { width: 85%; --ps: 1.55cqw; }
+.rank-n { font-family: var(--f-display); font-weight: 800; font-size: 2.6cqw; color: var(--muted); line-height: 1; }
+.rank.first .rank-n { color: var(--accent); }
+.rank.first .paper { box-shadow: 0 0 0 .5cqw var(--accent), 0 .8cqw 1.6cqw rgba(0, 0, 0, .45); }
+.rank .who { font-family: var(--f-display); font-weight: 800; font-size: 2cqw; }
+.dots { display: flex; flex-wrap: wrap; justify-content: center; gap: .4cqw; max-width: 90%; }
+.dots i { width: .9cqw; height: .9cqw; border-radius: 50%; background: var(--side-a); }
+.dots-n { font-family: var(--f-mono); font-size: 1.4cqw; color: var(--muted); }
+.mystery {
+  width: 85%; aspect-ratio: 1 / 1.36; border-radius: .6cqw; border: .25cqw dashed var(--line);
+  display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: 6cqw; color: var(--line);
+}
+
+/* wrap */
+.sc-wrap { flex-direction: row; align-items: center; gap: 5cqw; }
+.sc-wrap .paper { width: 20cqw; --ps: 2.2cqw; flex: none; --r: 3deg; box-shadow: 0 0 0 .5cqw var(--accent), 0 .8cqw 1.6cqw rgba(0, 0, 0, .45); }
+.wrap-copy { display: flex; flex-direction: column; gap: 1.8cqw; min-width: 0; }
+.wrap-copy .sc-big { font-size: 7cqw; }
+.wrap-copy .p { font-size: 2.2cqw; color: var(--muted); }
+.wrap-copy .p b { color: var(--fg); }
+.partner { margin-top: 1cqw; display: flex; align-items: center; gap: 2cqw; font-size: 1.6cqw; color: var(--muted); }
+.partner span { border: .2cqw dashed var(--muted); border-radius: .8cqw; padding: 1.2cqw 2.6cqw; font-family: var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
+
+/* iPad camera */
+.cam { position: absolute; inset: 0; background: #111; display: flex; align-items: center; justify-content: center; }
+.cam .paper { width: 30%; --ps: 3.2cqw; --r: 0deg; }
+.cam-frame { position: absolute; inset: 9% 30%; border: .5cqw solid rgba(255, 255, 255, .7); border-radius: 1cqw; }
+.cam-shutter { position: absolute; right: 4%; top: 50%; width: 11%; aspect-ratio: 1; transform: translateY(-50%); border-radius: 50%; background: #fff; box-shadow: 0 0 0 .8cqw #111, 0 0 0 1.4cqw #fff; }
+.cam-count { position: absolute; left: 4%; bottom: 6%; font-family: var(--f-mono); font-size: 3.6cqw; color: #fff; background: rgba(0, 0, 0, .55); padding: .8cqw 1.8cqw; border-radius: 99cqw; }
+
+/* ---------- Sections below the stage ---------- */
+.section { padding-block: clamp(2.5rem, 5vw, 4.5rem); border-top: 1px solid var(--line); }
+.section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 1.6rem; }
+.section-head h2 { font-family: var(--f-display); font-weight: 800; font-size: 2.2rem; letter-spacing: -.02em; line-height: 1.05; }
+.section-head p { color: var(--muted); max-width: 40em; margin-top: .4rem; }
+
+.settings { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+.field { display: flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: .35rem .5rem .35rem 1rem; font-size: .9rem; color: var(--muted); }
+.num {
+  font: inherit; font-family: var(--f-mono); font-size: .95rem; color: var(--on-accent); background: var(--accent);
+  border: 0; border-radius: 6px; padding: .2rem .35rem; width: 3.6rem; text-align: center; font-variant-numeric: tabular-nums;
+}
+.num.wide { width: 7.5rem; }
+.num::-webkit-inner-spin-button { opacity: .6; }
+
+.timeline-bar { display: flex; height: 3.2rem; border-radius: var(--radius); overflow: hidden; margin-bottom: 1.4rem; gap: 3px; background: var(--bg); }
+.tl-seg {
+  min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 .6rem;
+  background: var(--seg-1); font-size: .78rem; line-height: 1.15; overflow: hidden; white-space: nowrap; cursor: pointer; border: 0; color: var(--fg); text-align: left;
+}
+.tl-seg:nth-child(even) { background: var(--seg-2); }
+.tl-seg.fmt { background: var(--accent); color: var(--on-accent); }
+.tl-seg b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.tl-seg span { font-family: var(--f-mono); font-size: .7rem; opacity: .85; }
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+th, td { text-align: left; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--f-mono); font-weight: 500; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
+td.t { font-family: var(--f-mono); font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+td.d { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.detail { color: var(--muted); font-size: .92rem; min-width: 18rem; }
+td.detail .num { width: 3.2rem; font-size: .85rem; }
+.row-link { background: none; border: 0; padding: 0; cursor: pointer; font-weight: 700; color: var(--fg); text-align: left; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: .2em; }
+.row-link:hover { text-decoration-color: var(--accent); }
+tr.fmt-row td { background: rgba(255, 210, 63, .07); }
+tr.total td { background: var(--surface); font-weight: 700; color: var(--fg); }
+
+.compare th.on, .compare td.on { background: rgba(255, 210, 63, .1); color: var(--fg); }
+.compare th.on { color: var(--accent); }
+.compare td { color: var(--muted); }
+.compare td:first-child { color: var(--fg); font-weight: 700; white-space: nowrap; }
+
+.prompts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+.prompt-card {
+  display: flex; flex-direction: column; gap: 1rem; padding: 1.4rem; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line);
+}
+.prompt-card.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.prompt-card .n { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.prompt-card .q { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1.1; letter-spacing: -.01em; }
+.prompt-card .why { color: var(--muted); font-size: .95rem; }
+.prompt-card .ex { font-size: .9rem; color: var(--muted); }
+.prompt-card .ex span { font-family: var(--f-hand); font-size: 1.25rem; color: var(--fg); }
+.prompt-card .btn { align-self: flex-start; margin-top: auto; }
+.prompt-rule { margin-top: 1.4rem; color: var(--muted); font-size: .95rem; }
+.prompt-rule b { color: var(--fg); }
+
+.foot { padding-block: 2rem 3rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  .prompts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .jump { display: none; }
+  .step-name { font-size: .7rem; }
+  .step-dur { display: none; }
+  .info h2 { font-size: 2.1rem; }
+  .diff { grid-template-columns: 1fr; }
+  .devices.with-ipad { padding-bottom: 0; }
+  .devices.with-ipad .tv-unit { width: 100%; }
+  .ipad-unit { position: static; width: 70%; margin: 1rem auto 0; }
+  .stage-nav .keys { display: none; }
+  .nav-btn { min-width: 0; flex: 1; }
+}
+@media (max-width: 480px) {
+  .step-name { display: none; }
+  .step-num { width: 2rem; height: 2rem; font-size: .85rem; }
+  .rail-track { top: calc(1rem - 2px); }
+  .seg button { padding: .5rem .8rem; font-size: .85rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <h1>Blank Page Live</h1>
+        <span class="brand-sub">Live event walkthrough · working title · draft for partner meeting</span>
+      </div>
+    </div>
+    <div class="bar-right">
+      <div class="seg" role="radiogroup" aria-label="Event format" id="formatToggle">
+        <button type="button" role="radio" data-format="battle" aria-checked="true"><span class="n">F1</span>Battle</button>
+        <button type="button" role="radio" data-format="pitch" aria-checked="false"><span class="n">F2</span>Instant pitch</button>
+      </div>
+      <nav class="jump" aria-label="Sections">
+        <a href="#runofshow">Run of show</a>
+        <a href="#formats">Formats</a>
+        <a href="#prompts">Prompts</a>
+      </nav>
+      <button type="button" class="ghost" id="fsBtn">Full screen</button>
+    </div>
+  </header>
+
+  <section id="walkthrough" aria-label="Step-by-step walkthrough">
+    <div class="rail">
+      <div class="rail-track"><div class="rail-fill" id="railFill"></div></div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+
+    <div class="stage" id="stage"></div>
+
+    <div class="stage-nav">
+      <button type="button" class="btn nav-btn" id="prevBtn">← Back</button>
+      <p class="keys"><kbd>←</kbd> <kbd>→</kbd> step &nbsp; <kbd>1</kbd>–<kbd>7</kbd> jump &nbsp; <kbd>F</kbd> switch format &nbsp; <kbd>Space</kbd> timer</p>
+      <button type="button" class="btn primary nav-btn" id="nextBtn">Next →</button>
+    </div>
+  </section>
+
+  <section class="section" id="runofshow">
+    <div class="section-head">
+      <div>
+        <h2>Run of show</h2>
+        <p>Sample timeline for the <b id="rosFormat">Battle</b> format. Every highlighted number is a placeholder: click it to change it, and the step timers above update too.</p>
+      </div>
+      <div class="settings">
+        <label class="field" for="in-start">Doors at <input class="num wide" id="in-start" type="time" value="19:00"></label>
+        <label class="field" for="in-people">Participants <input class="num" id="in-people" type="number" min="2" max="60" step="1"></label>
+        <button type="button" class="ghost" id="resetBtn">Reset numbers</button>
+      </div>
+    </div>
+    <div class="timeline-bar" id="tlBar" aria-hidden="true"></div>
+    <div class="table-scroll">
+      <table id="rosTable">
+        <thead><tr><th>Time</th><th>Step</th><th>Length</th><th>How it's built <span class="adj">adjustable</span></th></tr></thead>
+        <tbody id="rosBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="formats">
+    <div class="section-head">
+      <div>
+        <h2>Battle vs Instant pitch</h2>
+        <p>Same arrival, prompt, idea time and results. The middle of the night is where the two formats split.</p>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="compare" id="compareTable"></table>
+    </div>
+  </section>
+
+  <section class="section" id="prompts">
+    <div class="section-head">
+      <div>
+        <h2>Three example prompts</h2>
+        <p>Pick one to see it on the TV in the walkthrough. Sample ideas on the paper photos change with the prompt.</p>
+      </div>
+    </div>
+    <div class="prompts" id="promptCards"></div>
+    <p class="prompt-rule"><b>What makes a good prompt:</b> anyone can answer it in five minutes, it needs no expertise, and the answers are easy to compare side by side.</p>
+  </section>
+
+  <footer class="foot">
+    Blank Page Live is a working title. Names, ideas, votes and timings are sample placeholders for discussion.
+  </footer>
+</div>
+
+<script>
+(() => {
+  // ---------- Content ----------
+  const FORMATS = {
+    battle: { n: 1, name: "Battle" },
+    pitch:  { n: 2, name: "Instant pitch" }
+  };
+
+  const PEOPLE = ["Maya R.", "Jonas K.", "Priya S.", "Leo M."];
+
+  const DOODLES = {
+    clock: '<circle cx="50" cy="54" r="28"/><path d="M50 54V36M50 54l13 8M28 22l-8 8M72 22l8 8"/>',
+    cup: '<path d="M24 44h44v18a16 16 0 0 1-16 16H40a16 16 0 0 1-16-16z"/><path d="M68 50h5a8 8 0 0 1 0 16h-5"/><path d="M38 34c0-6 6-6 6-13M52 34c0-6 6-6 6-13"/>',
+    bus: '<rect x="20" y="20" width="60" height="50" rx="8"/><path d="M20 46h60M32 70v9M68 70v9M30 30h40"/><circle cx="32" cy="58" r="3"/><circle cx="68" cy="58" r="3"/>',
+    shirt: '<path d="M36 22 20 33l8 12 7-5v40h30V40l7 5 8-12-16-11c-3 7-8 10-14 10s-11-3-14-10z"/>',
+    table: '<ellipse cx="50" cy="51" rx="27" ry="13"/><circle cx="20" cy="30" r="6"/><circle cx="50" cy="22" r="6"/><circle cx="80" cy="30" r="6"/><circle cx="20" cy="72" r="6"/><circle cx="50" cy="80" r="6"/><circle cx="80" cy="72" r="6"/>',
+    paw: '<ellipse cx="50" cy="62" rx="15" ry="13"/><circle cx="28" cy="42" r="7"/><circle cx="42" cy="29" r="7"/><circle cx="58" cy="29" r="7"/><circle cx="72" cy="42" r="7"/>',
+    bench: '<path d="M16 62h68M16 52h68M22 62v16M78 62v16"/><path d="M42 14h32a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H58l-8 7v-7h-8a6 6 0 0 1-6-6V20a6 6 0 0 1 6-6z"/>',
+    cards: '<rect x="20" y="28" width="32" height="46" rx="4" transform="rotate(-10 36 51)"/><rect x="46" y="26" width="32" height="46" rx="4" transform="rotate(9 62 49)"/><path d="M56 40l8 2M55 48l8 2"/>',
+    plant: '<path d="M16 34h68M22 34v46M78 34v46"/><path d="M50 34V20M50 24c-9 1-14-6-14-6s9-3 14 6zM50 22c9-1 13-8 13-8s-10-1-13 8z"/>',
+    wrench: '<path d="M26 76 56 46"/><path d="M56 46a15 15 0 1 1 13 3l-5-9 6-8"/>',
+    tent: '<path d="M14 76 50 26l36 50zM50 26v50M38 76l12-18 12 18"/><path d="M20 18l3 3M82 16l-3 4M88 32l-4 1"/>',
+    piano: '<rect x="16" y="30" width="68" height="42" rx="3"/><path d="M30 30v42M44 30v42M58 30v42M72 30v42"/><path class="fill" d="M26 30h7v22h-7zM40 30h7v22h-7zM68 30h7v22h-7z"/>'
+  };
+
+  const PROMPTS = [
+    {
+      text: "Fix one thing that annoys you every morning.",
+      hl: "every morning",
+      why: "Everyone has a morning, so ideas come fast and the room laughs in recognition.",
+      ideas: [
+        { t: "Puzzle alarm", d: "clock", s: "No snooze until you solve it" },
+        { t: "Auto-brew", d: "cup", s: "Coffee starts when the alarm stops" },
+        { t: "Door bus board", d: "bus", s: "Next bus time on your front door" },
+        { t: "Outfit at 9 pm", d: "shirt", s: "Pick tomorrow's clothes tonight" }
+      ]
+    },
+    {
+      text: "Invent a new way for strangers to meet.",
+      hl: "strangers",
+      why: "Social and warm. The people in the room are the test audience for every idea.",
+      ideas: [
+        { t: "Table for six", d: "table", s: "Dinner with 5 strangers, monthly" },
+        { t: "Dog-walk swap", d: "paw", s: "Walk a neighbour's dog, meet the owner" },
+        { t: "Question bench", d: "bench", s: "A new question on the bench daily" },
+        { t: "Library cards", d: "cards", s: "Swap book cards, find your reader twin" }
+      ]
+    },
+    {
+      text: "Design something your city is missing.",
+      hl: "your city",
+      why: "Local pride. A good fit for a partner with a place-based brand or venue.",
+      ideas: [
+        { t: "Bus-stop gardens", d: "plant", s: "A green roof on every bus stop" },
+        { t: "Repair café", d: "wrench", s: "Fix it free at the library" },
+        { t: "Lot night market", d: "tent", s: "Food stalls on empty car parks" },
+        { t: "Piano map", d: "piano", s: "Find the nearest public piano" }
+      ]
+    }
+  ];
+
+  // Sample results. Battle: pairs (0 v 1), (2 v 3). Instant pitch: sticker dots per person.
+  const BATTLE_VOTES = [[14, 9], [11, 12]];
+  const PITCH_DOTS = [9, 6, 13, 4];
+
+  const DEFAULTS = {
+    start: "19:00", people: 8,
+    arrival: 10, prompt: 2, ideaBattle: 8, ideaPitch: 5,
+    speak: 60, crossfire: 60, vote: 30, change: 30,
+    pitch: 60, pitchChange: 15, dotvote: 5,
+    results: 6, wrap: 5
+  };
+
+  const STEPS = [
+    {
+      key: "arrival", name: "Arrival", title: "Doors open",
+      lede: "People walk in, get one blank sheet and one marker, and find a seat. The TV explains the night on a single screen.",
+      tv: "Welcome screen with tonight's format and three simple instructions.",
+      host: [
+        "Greet people at the door and hand each one a blank sheet and a marker.",
+        "Ask everyone to write their name on the back of the sheet.",
+        "Start on time and explain the rules in under a minute."
+      ],
+      attendee: [
+        "Pick up a sheet and a marker.",
+        "Write your name on the back, top corner.",
+        "Take a seat. The front of the page stays blank for now."
+      ],
+      diff: {
+        battle: "Host explains that people will be paired at random and defend their idea against one other person.",
+        pitch: "Host explains that everyone will pitch straight from their page, one at a time, with no extra prep."
+      }
+    },
+    {
+      key: "prompt", name: "Prompt reveal", title: "The prompt goes up",
+      lede: "One generalized prompt appears on the TV. Everyone answers the same question, so the ideas are easy to compare.",
+      tv: "The prompt, full screen, big enough to read from the back row.",
+      host: [
+        "Count down from three and reveal the prompt on the TV.",
+        "Read it aloud twice.",
+        "Take one or two clarifying questions, then start the clock."
+      ],
+      attendee: [
+        "Read the prompt.",
+        "Ask if something is unclear.",
+        "Markers down until the timer starts."
+      ],
+      same: true
+    },
+    {
+      key: "idea", name: "Idea time", title: "One idea, one page",
+      lede: "The clock runs on the TV. Each person puts a single idea on paper: a title, a sketch and a few words.",
+      tv: "A large countdown, so nobody has to ask how much time is left.",
+      host: [
+        "Start the timer. Call out the halfway point and the last minute.",
+        "Walk the room and keep the energy up with music.",
+        "At zero, photograph every page with the iPad, about 10 seconds each."
+      ],
+      attendee: [
+        "Write one idea with a short title at the top.",
+        "Sketch it. A drawing beats a paragraph.",
+        "Hand your page over for a photo when the clock ends."
+      ],
+      diff: {
+        battle: "Longer idea time, because the idea has to hold up when someone pushes back on it.",
+        pitch: "Shorter idea time. People go straight from the page to the mic with no prep in between."
+      }
+    },
+    {
+      key: "battle", name: "Battle", only: "battle", fmtLabel: "Format 1",
+      title: "Head to head",
+      lede: "Two names are drawn at random. Each person defends their idea, then they challenge each other. The room votes for one.",
+      tv: "Both pages side by side, with the speaker clock in the middle.",
+      host: [
+        "Draw two names on the iPad and call both people up.",
+        "Run the clock: one turn each, then a short crossfire.",
+        "Call the vote by show of hands and tap the count into the iPad."
+      ],
+      attendee: [
+        "On stage: hold up your page and defend your idea.",
+        "Answer your opponent's challenge in the crossfire.",
+        "In the audience: raise your hand for one of the two."
+      ],
+      diff: {
+        battle: "This is the core of Format 1. It replaces the instant pitch round.",
+        pitch: "Not used in Instant pitch. Switch to Battle to include it."
+      }
+    },
+    {
+      key: "pitch", name: "Instant pitch", only: "pitch", fmtLabel: "Format 2",
+      title: "Straight to the mic",
+      lede: "Names are called in random order. Each person stands up and pitches their page right away, with no prep and a hard one-minute limit.",
+      tv: "The current page and name, the pitch clock, and who is up next.",
+      host: [
+        "Call names in random order. The TV shows who is up next.",
+        "Run the pitch clock and cut off kindly at zero.",
+        "After the last pitch, tape the pages to the wall and hand out 3 sticker dots each."
+      ],
+      attendee: [
+        "When your name is up, stand and pitch from your page.",
+        "One minute: what it is, who it's for, why it matters.",
+        "Vote with your 3 dots on the pages you like best, not your own."
+      ],
+      diff: {
+        battle: "Not used in Battle. Switch to Instant pitch to include it.",
+        pitch: "This is the core of Format 2. It replaces the battle round."
+      }
+    },
+    {
+      key: "results", name: "Results on TV", title: "Results on the big screen",
+      lede: "The host runs the results from an iPad mirrored to the TV. Every page appears as a photo with the name and the vote.",
+      tv: "Photos of the pages, names and votes, mirrored live from the host's iPad.",
+      host: [
+        "Mirror the iPad to the TV (AirPlay, or an HDMI adapter).",
+        "Reveal results one at a time to build suspense.",
+        "Read out the winning idea and invite the winner up."
+      ],
+      attendee: [
+        "Find your page on the screen.",
+        "Cheer for the winner.",
+        "Winner: come up for a photo with your page."
+      ],
+      diff: {
+        battle: "Each matchup side by side, with both photos, the vote count and the winner of every pair.",
+        pitch: "A ranked gallery of every page, scored in sticker dots, revealed from last place to first."
+      }
+    },
+    {
+      key: "wrap", name: "Wrap-up", title: "Wrap-up",
+      lede: "Close with the winner, a group photo with everyone's pages, and one clear next step for the room.",
+      tv: "The winner, a thank-you, and the partner's logo.",
+      host: [
+        "Thank the partner and hand over the prize.",
+        "Group photo: everyone holds up their page.",
+        "Tell people where the photos of all pages will be posted."
+      ],
+      attendee: [
+        "Hold up your page for the group photo.",
+        "Take your page home, or leave it for the wall.",
+        "Stay and talk to the people whose ideas you liked."
+      ],
+      same: true
+    }
+  ];
+
+  // ---------- State ----------
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem("bpl:" + k)); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem("bpl:" + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+  };
+
+  const state = {
+    step: 0,
+    format: store.get("format") === "pitch" ? "pitch" : "battle",
+    prompt: [0, 1, 2].includes(store.get("prompt")) ? store.get("prompt") : 0,
+    reveal: 99,
+    m: Object.assign({}, DEFAULTS, store.get("model") || {}),
+    timer: { total: 0, left: 0, running: false, endAt: 0, id: null }
+  };
+
+  const $ = (s, el = document) => el.querySelector(s);
+
+  // ---------- Durations (seconds) ----------
+  const battles = () => Math.max(1, Math.floor(state.m.people / 2));
+  const DUR = {
+    arrival: m => m.arrival * 60,
+    prompt: m => m.prompt * 60,
+    idea: (m, f) => (f === "battle" ? m.ideaBattle : m.ideaPitch) * 60,
+    battle: m => battles() * (2 * m.speak + m.crossfire + m.vote + m.change),
+    pitch: m => m.people * (m.pitch + m.pitchChange) + m.dotvote * 60,
+    results: m => m.results * 60,
+    wrap: m => m.wrap * 60
+  };
+  const stepDur = (key, f = state.format) => DUR[key](state.m, f);
+  const timerSeconds = key => key === "battle" ? state.m.speak : key === "pitch" ? state.m.pitch : stepDur(key);
+
+  const fmtClock = s => {
+    s = Math.max(0, Math.ceil(s));
+    return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  };
+  const fmtMin = s => {
+    const m = Math.round(s / 30) / 2;
+    return (Number.isInteger(m) ? m : m.toFixed(1)) + " min";
+  };
+  const isActive = s => !s.only || s.only === state.format;
+  const activeSteps = () => STEPS.filter(isActive);
+
+  // ---------- Paper photo ----------
+  const ROT = [-3, 2.2, -1.6, 2.8];
+  function paper(i, style = "") {
+    const idea = PROMPTS[state.prompt].ideas[i];
+    return `<figure class="paper" style="--r:${ROT[i]}deg;${style}" aria-label="Photo of ${PEOPLE[i]}'s page: ${idea.t}">
+      <div class="paper-title">${idea.t}</div>
+      <svg viewBox="0 0 100 100" aria-hidden="true">${DOODLES[idea.d]}</svg>
+      <div class="paper-line">${idea.s}</div>
+    </figure>`;
+  }
+
+  // ---------- TV screens ----------
+  function screenHTML(key) {
+    const f = state.format, P = PROMPTS[state.prompt];
+    switch (key) {
+      case "arrival":
+        return `<div class="sc sc-welcome">
+          <div class="sc-kicker">Tonight · Format ${FORMATS[f].n}: ${FORMATS[f].name}</div>
+          <div class="sc-big">One prompt.<br><span>One blank page.</span></div>
+          <ol class="how">
+            <li><b>1</b>Grab a sheet and a marker</li>
+            <li><b>2</b>Write your name on the back</li>
+            <li><b>3</b>Wait for the prompt</li>
+          </ol>
+        </div>`;
+      case "prompt": {
+        const txt = P.text.replace(P.hl, `<span class="hl">${P.hl}</span>`);
+        return `<div class="sc sc-prompt">
+          <div class="sc-kicker">Tonight's prompt</div>
+          <div class="sc-big">${txt}</div>
+          <div class="sub">One idea. One page. ${fmtMin(stepDur("idea"))} on the clock.</div>
+        </div>`;
+      }
+      case "idea":
+        return `<div class="sc sc-idea">
+          <div class="ring" data-ring><div class="ring-inner"><div><div class="clock" data-clock>${fmtClock(state.timer.left)}</div><small>idea time left</small></div></div></div>
+          <div class="idea-copy">
+            <div class="sc-kicker">Idea time</div>
+            <div class="sc-big">${P.text}</div>
+            <div class="p"><b>Title</b> at the top. <b>Sketch</b> in the middle. <b>One line</b> at the bottom.</div>
+          </div>
+        </div>`;
+      case "battle":
+        return `<div class="sc sc-battle">
+          <div class="sc-kicker">Battle 1 of ${battles()} · head to head</div>
+          <div class="vs-row">
+            <div class="side side-a">${paper(0)}<div class="who">${PEOPLE[0]}</div><div class="tag live">Speaking</div></div>
+            <div class="vs-mid"><div class="vs">VS</div><div class="clock" data-clock>${fmtClock(state.timer.left)}</div><small>speaker clock</small></div>
+            <div class="side side-b">${paper(1)}<div class="who">${PEOPLE[1]}</div><div class="tag">Up next</div></div>
+          </div>
+        </div>`;
+      case "pitch":
+        return `<div class="sc sc-pitch">
+          ${paper(2)}
+          <div class="pitch-copy">
+            <div class="sc-kicker">Now pitching · 3 of ${state.m.people}</div>
+            <div class="sc-big">${PEOPLE[2]}</div>
+            <div class="idea-t">“${P.ideas[2].t}”</div>
+            <div class="clock" data-clock>${fmtClock(state.timer.left)}</div>
+            <div class="next-up">Up next <span>${PEOPLE[3]}</span><span>${PEOPLE[0]}</span></div>
+          </div>
+        </div>`;
+      case "results":
+        return resultsHTML();
+      case "wrap": {
+        const w = f === "battle" ? 0 : 2;
+        return `<div class="sc sc-wrap">
+          ${paper(w)}
+          <div class="wrap-copy">
+            <div class="sc-kicker">Winner of the night</div>
+            <div class="sc-big">${PEOPLE[w]}</div>
+            <div class="p"><b>“${P.ideas[w].t}”</b>. Thanks for coming. Photos of every page will be posted tomorrow.</div>
+            <div class="partner">Presented with <span>Partner logo</span></div>
+          </div>
+        </div>`;
+      }
+    }
+  }
+
+  function resultsHTML() {
+    const P = PROMPTS[state.prompt], r = state.reveal;
+    if (state.format === "battle") {
+      const rows = BATTLE_VOTES.map(([va, vb], k) => {
+        const a = k * 2, b = k * 2 + 1, shown = r > k, max = Math.max(va, vb);
+        const side = (i, v, cls, other) => `<div class="mu-side ${cls}">
+            <div class="mu-name">${PEOPLE[i]}${shown && v > other ? ' <span class="win">Winner</span>' : ""}</div>
+            <div class="mu-idea">${P.ideas[i].t}</div>
+            <div class="bar"><i style="width:${shown ? (v / (va + vb)) * 100 : 0}%"></i></div>
+            <div class="votes">${shown ? v + " votes" : "? votes"}</div>
+          </div>`;
+        return `<div class="matchup">
+          ${paper(a, "--ps:1cqw")}
+          ${side(a, va, "a", vb)}
+          <div class="mu-vs">VS</div>
+          ${side(b, vb, "b", va)}
+          ${paper(b, "--ps:1cqw")}
+        </div>`;
+      }).join("");
+      return `<div class="sc sc-results">
+        <div class="res-head"><div class="sc-big">Battle results</div><div class="sc-kicker">● Live from iPad</div></div>
+        <div class="matchups">${rows}</div>
+        ${r > 2
+          ? `<div class="res-banner">Crowd favourite: <b>${PEOPLE[0]}</b> with the most votes of the night (14)</div>`
+          : `<div class="res-banner pending">Crowd favourite revealed last</div>`}
+      </div>`;
+    }
+    const order = PITCH_DOTS.map((d, i) => ({ i, d })).sort((x, y) => y.d - x.d);
+    const cards = order.map((o, k) => {
+      const rank = k + 1, shown = r >= 5 - rank;
+      if (!shown) return `<div class="rank"><div class="rank-n">#${rank}</div><div class="mystery">?</div><div class="who">&nbsp;</div><div class="dots-n">&nbsp;</div></div>`;
+      return `<div class="rank${rank === 1 ? " first" : ""}">
+        <div class="rank-n">#${rank}</div>
+        ${paper(o.i, "--r:0deg")}
+        <div class="who">${PEOPLE[o.i]}</div>
+        <div class="dots">${"<i></i>".repeat(o.d)}</div>
+        <div class="dots-n">${o.d} dots</div>
+      </div>`;
+    }).join("");
+    return `<div class="sc sc-results">
+      <div class="res-head"><div class="sc-big">Instant pitch results</div><div class="sc-kicker">● Live from iPad</div></div>
+      <div class="ranks">${cards}</div>
+    </div>`;
+  }
+
+  const maxReveal = () => state.format === "battle" ? 3 : 4;
+
+  function ipadHTML(key) {
+    if (key === "results") {
+      return `<div class="ipad-unit"><div class="ipad"><div class="screen"><div class="mirror">${resultsHTML()}</div></div></div>
+        <p class="ipad-label"><b>Host iPad</b>, mirrored to the TV</p></div>`;
+    }
+    const n = Math.min(state.m.people, 5);
+    return `<div class="ipad-unit"><div class="ipad"><div class="screen"><div class="mirror"><div class="cam">
+        ${paper(0)}<div class="cam-frame"></div><div class="cam-shutter"></div><div class="cam-count">${n} / ${state.m.people} photographed</div>
+      </div></div></div></div>
+      <p class="ipad-label"><b>Host iPad</b> photographs each page</p></div>`;
+  }
+
+  // ---------- Stage ----------
+  function renderStage() {
+    const s = STEPS[state.step], f = state.format, other = f === "battle" ? "pitch" : "battle";
+    const active = isActive(s);
+    const pos = STEPS.indexOf(s) + 1;
+    const withIpad = s.key === "results" || s.key === "idea";
+    const tKey = s.key;
+    const perPerson = tKey === "battle" || tKey === "pitch";
+
+    const diff = s.same
+      ? `<p class="diff-same">Same in both formats.</p>`
+      : `<div class="diff">
+          <div class="diff-item ${f === "battle" ? "on" : ""}"><span class="k">F1 · Battle</span>${s.diff.battle}</div>
+          <div class="diff-item ${f === "pitch" ? "on" : ""}"><span class="k">F2 · Instant pitch</span>${s.diff.pitch}</div>
+        </div>`;
+
+    const controls = s.key === "results" ? `<div class="host-controls">
+        <span class="lbl"><b>Try the reveal</b> as the host would on the iPad · <span data-revealcount>${Math.min(state.reveal, maxReveal())} / ${maxReveal()}</span></span>
+        <button type="button" class="btn" data-act="reveal-reset">Start over</button>
+        <button type="button" class="btn primary" data-act="reveal-next">Reveal next</button>
+      </div>` : "";
+
+    const timerLabel = perPerson
+      ? `<b>${tKey === "battle" ? "Speaker clock" : "Pitch clock"}</b>, per person. Whole round ≈ ${fmtMin(stepDur(tKey))}`
+      : `<b>Step timer</b>. Sample length ${fmtMin(stepDur(tKey))}`;
+    const timerNote = tKey === "battle"
+      ? `${battles()} battles × (${state.m.speak} s + ${state.m.speak} s + ${state.m.crossfire} s crossfire + ${state.m.vote} s vote + ${state.m.change} s changeover).`
+      : tKey === "pitch"
+        ? `${state.m.people} pitches × (${state.m.pitch} s + ${state.m.pitchChange} s changeover) + ${state.m.dotvote} min dot vote.`
+        : `Placeholder number.`;
+
+    $("#stage").innerHTML = `
+      <div class="visual">
+        <div class="devices${withIpad ? " with-ipad" : ""}">
+          <div class="tv-unit">
+            <div class="tv"><div class="screen" role="img" aria-label="TV screen mockup: ${s.tv}">${screenHTML(s.key)}</div></div>
+            <div class="tv-stand"></div>
+          </div>
+          ${withIpad ? ipadHTML(s.key) : ""}
+        </div>
+        <p class="caption"><b>On the TV</b><span>${s.tv}</span></p>
+        ${controls}
+        ${diff}
+      </div>
+      <div class="info">
+        <div>
+          <div class="eyebrow">Step ${pos} of 7${s.fmtLabel ? " · " + s.fmtLabel + " only" : ""}</div>
+          <h2>${s.title}</h2>
+        </div>
+        ${!active ? `<div class="skip-note"><p>Skipped in the <b>${FORMATS[f].name}</b> flow. This is what happens in ${FORMATS[other].name} instead.</p>
+          <button type="button" class="btn primary" data-act="switch">Switch to ${FORMATS[other].name}</button></div>` : ""}
+        <p class="lede">${s.lede}</p>
+        <div class="timer">
+          <div class="timer-digits" data-clock data-timer>${fmtClock(state.timer.left)}</div>
+          <div class="timer-side">
+            <span class="timer-label">${timerLabel}</span>
+            <div class="timer-btns">
+              <button type="button" class="btn primary" data-act="timer-toggle">${state.timer.running ? "Pause" : "Start"}</button>
+              <button type="button" class="btn" data-act="timer-reset">Reset</button>
+            </div>
+          </div>
+          <p class="timer-note">${timerNote} <span class="adj">adjustable</span> <a href="#runofshow">Change in run of show</a></p>
+        </div>
+        <div class="roles">
+          <div class="role host"><h3><i></i>What the host does</h3><ul>${s.host.map(x => `<li>${x}</li>`).join("")}</ul></div>
+          <div class="role attendee"><h3><i></i>What the attendee does</h3><ul>${s.attendee.map(x => `<li>${x}</li>`).join("")}</ul></div>
+        </div>
+      </div>`;
+    paintClock();
+  }
+
+  function renderRail() {
+    const list = $("#steps");
+    list.innerHTML = STEPS.map((s, i) => {
+      const cls = [
+        i === state.step ? "current" : "",
+        i < state.step && isActive(s) ? "done" : "",
+        !isActive(s) ? "skipped" : ""
+      ].join(" ");
+      const dur = isActive(s) ? fmtMin(stepDur(s.key)) : (s.only === "battle" ? "F1 only" : "F2 only");
+      return `<li><button type="button" class="step-btn ${cls}" data-step="${i}" ${i === state.step ? 'aria-current="step"' : ""}>
+        <span class="step-num">${i + 1}</span><span class="step-name">${s.name}</span><span class="step-dur">${dur}</span>
+      </button></li>`;
+    }).join("");
+    $("#railFill").style.width = (state.step / (STEPS.length - 1)) * 100 + "%";
+    $("#prevBtn").disabled = prevIndex() < 0;
+    $("#nextBtn").disabled = nextIndex() < 0;
+    $("#prevBtn").style.opacity = prevIndex() < 0 ? .4 : 1;
+    $("#nextBtn").style.opacity = nextIndex() < 0 ? .4 : 1;
+  }
+
+  // ---------- Navigation ----------
+  function nextIndex() { for (let i = state.step + 1; i < STEPS.length; i++) if (isActive(STEPS[i])) return i; return -1; }
+  function prevIndex() { for (let i = state.step - 1; i >= 0; i--) if (isActive(STEPS[i])) return i; return -1; }
+
+  function go(i) {
+    if (i < 0 || i >= STEPS.length) return;
+    state.step = i;
+    state.reveal = 99;
+    resetTimer(false);
+    renderAll();
+  }
+
+  function setFormat(f) {
+    if (f === state.format) return;
+    state.format = f;
+    store.set("format", f);
+    // Land on the equivalent step when switching away from a format-only step
+    const s = STEPS[state.step];
+    if (s.only && s.only !== f) state.step = STEPS.findIndex(x => x.only === f);
+    state.reveal = 99;
+    resetTimer(false);
+    document.querySelectorAll("#formatToggle button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.format === f)));
+    renderAll();
+    renderRos(true);
+    renderCompare();
+  }
+
+  // ---------- Timer ----------
+  function resetTimer(render = true) {
+    clearInterval(state.timer.id);
+    const total = timerSeconds(STEPS[state.step].key);
+    Object.assign(state.timer, { total, left: total, running: false, id: null });
+    if (render) { paintClock(); paintTimerBtn(); }
+  }
+  function toggleTimer() {
+    const t = state.timer;
+    if (t.running) {
+      clearInterval(t.id); t.running = false;
+    } else {
+      if (t.left <= 0) t.left = t.total;
+      t.running = true;
+      t.endAt = Date.now() + t.left * 1000;
+      t.id = setInterval(tick, 200);
+    }
+    paintTimerBtn();
+  }
+  function tick() {
+    const t = state.timer;
+    t.left = Math.max(0, (t.endAt - Date.now()) / 1000);
+    if (t.left <= 0) { clearInterval(t.id); t.running = false; paintTimerBtn(); }
+    paintClock();
+  }
+  function paintClock() {
+    const t = state.timer, txt = fmtClock(t.left);
+    document.querySelectorAll("[data-clock]").forEach(el => { el.textContent = txt; });
+    const big = $("[data-timer]");
+    if (big) big.classList.toggle("zero", t.left <= 0);
+    const ring = $("[data-ring]");
+    if (ring) ring.style.setProperty("--p", t.total ? t.left / t.total : 0);
+  }
+  function paintTimerBtn() {
+    const b = $('[data-act="timer-toggle"]');
+    if (b) b.textContent = state.timer.running ? "Pause" : (state.timer.left <= 0 ? "Restart" : "Start");
+  }
+
+  // ---------- Run of show ----------
+  const numInput = (key, unit, cls = "") =>
+    `<input class="num ${cls}" type="number" min="0" step="${unit === "s" ? 5 : 1}" data-key="${key}" id="in-${key}" value="${state.m[key]}" aria-label="${key} in ${unit === "s" ? "seconds" : "minutes"}">`;
+
+  function rosRows() {
+    const f = state.format;
+    const ideaKey = f === "battle" ? "ideaBattle" : "ideaPitch";
+    const rows = [
+      { step: 0, detail: `${numInput("arrival", "m")} min. Check-in, hand out sheets and markers, rules in one minute.` },
+      { step: 1, detail: `${numInput("prompt", "m")} min. Reveal, read twice, take questions.` },
+      { step: 2, detail: `${numInput(ideaKey, "m")} min on the clock, then the iPad photographs each page.` }
+    ];
+    if (f === "battle") {
+      rows.push({ step: 3, fmt: true, detail: `<span data-battles>${battles()}</span> battles × (${numInput("speak", "s")} s per speaker × 2 + ${numInput("crossfire", "s")} s crossfire + ${numInput("vote", "s")} s vote + ${numInput("change", "s")} s changeover)` });
+    } else {
+      rows.push({ step: 4, fmt: true, detail: `<span data-people>${state.m.people}</span> pitches × (${numInput("pitch", "s")} s + ${numInput("pitchChange", "s")} s changeover) + ${numInput("dotvote", "m")} min dot vote` });
+    }
+    rows.push(
+      { step: 5, detail: `${numInput("results", "m")} min. iPad mirrored to the TV, reveal one by one.` },
+      { step: 6, detail: `${numInput("wrap", "m")} min. Prize, group photo, where to find the photos.` }
+    );
+    return rows;
+  }
+
+  function renderRos(rebuild) {
+    $("#rosFormat").textContent = FORMATS[state.format].name;
+    $("#in-people").value = state.m.people;
+    $("#in-start").value = state.m.start;
+    const rows = rosRows();
+    if (rebuild || !$("#rosBody").children.length) {
+      $("#rosBody").innerHTML = rows.map(r => `<tr class="${r.fmt ? "fmt-row" : ""}" data-row="${r.step}">
+          <td class="t" data-t></td>
+          <td><button type="button" class="row-link" data-step="${r.step}">${STEPS[r.step].name}</button></td>
+          <td class="d" data-d></td>
+          <td class="detail">${r.detail}</td>
+        </tr>`).join("") + `<tr class="total"><td class="t" data-end></td><td>Total</td><td class="d" data-total></td><td class="detail">Ends at <span data-endtxt></span>.</td></tr>`;
+    }
+    updateTimes();
+  }
+
+  function updateTimes() {
+    const [h, mi] = (state.m.start || "19:00").split(":").map(Number);
+    let t = (h * 60 + mi) * 60, total = 0;
+    const clock = sec => {
+      const m = Math.round(sec / 60) % (24 * 60);
+      return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+    };
+    const segs = [];
+    document.querySelectorAll("#rosBody tr[data-row]").forEach(tr => {
+      const s = STEPS[+tr.dataset.row], d = stepDur(s.key);
+      tr.querySelector("[data-t]").textContent = clock(t);
+      tr.querySelector("[data-d]").textContent = fmtMin(d);
+      segs.push({ s, d, i: +tr.dataset.row });
+      t += d; total += d;
+    });
+    $("[data-end]").textContent = clock(t);
+    $("[data-endtxt]").textContent = clock(t);
+    $("[data-total]").textContent = fmtMin(total);
+    const b = $("[data-battles]"); if (b) b.textContent = battles();
+    const p = $("[data-people]"); if (p) p.textContent = state.m.people;
+    $("#tlBar").innerHTML = segs.map(x =>
+      `<button type="button" class="tl-seg${x.s.only ? " fmt" : ""}" data-step="${x.i}" style="flex:${x.d} 1 0" title="${x.s.name}: ${fmtMin(x.d)}"><b>${x.s.name}</b><span>${fmtMin(x.d)}</span></button>`
+    ).join("");
+  }
+
+  function onModelInput(e) {
+    const el = e.target;
+    if (el.id === "in-start") { state.m.start = el.value || "19:00"; }
+    else if (el.id === "in-people") { const v = parseInt(el.value, 10); if (!(v >= 2)) return; state.m.people = Math.min(v, 60); }
+    else if (el.dataset.key) { const v = parseFloat(el.value); if (!(v >= 0)) return; state.m[el.dataset.key] = v; }
+    else return;
+    store.set("model", state.m);
+    updateTimes();
+    renderRail();
+    if (!state.timer.running) { resetTimer(false); renderStage(); }
+  }
+
+  // ---------- Compare + prompts ----------
+  function renderCompare() {
+    const rows = [
+      ["On stage", "Two people at a time", "One person at a time"],
+      ["Prep after idea time", "None, but the idea gets challenged", "None. Pitch straight from the page"],
+      ["Speaking time", `${state.m.speak} s each + ${state.m.crossfire} s crossfire`, `${state.m.pitch} s each`],
+      ["How the room votes", "Show of hands, per battle", "3 sticker dots per person, on the wall"],
+      ["Results on the TV", "Matchups with photos, votes, winners", "Ranked gallery of every page"],
+      ["Feels like", "A debate night", "An open mic"],
+      ["Works best for", "Smaller groups that like competition", "Bigger groups and mixed confidence levels"]
+    ];
+    const b = state.format === "battle" ? "on" : "", p = state.format === "pitch" ? "on" : "";
+    $("#compareTable").innerHTML = `<thead><tr><th></th><th class="${b}">Format 1 · Battle</th><th class="${p}">Format 2 · Instant pitch</th></tr></thead>
+      <tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="${b}">${r[1]}</td><td class="${p}">${r[2]}</td></tr>`).join("")}</tbody>`;
+  }
+
+  function renderPrompts() {
+    $("#promptCards").innerHTML = PROMPTS.map((p, i) => `
+      <article class="prompt-card ${i === state.prompt ? "on" : ""}">
+        <span class="n">Prompt ${i + 1}${i === state.prompt ? " · on the TV" : ""}</span>
+        <p class="q">${p.text}</p>
+        <p class="why">${p.why}</p>
+        <p class="ex">Sample answers: <span>${p.ideas[0].t}</span>, <span>${p.ideas[2].t}</span></p>
+        <button type="button" class="btn ${i === state.prompt ? "" : "primary"}" data-prompt="${i}">${i === state.prompt ? "Showing on the TV" : "Show on the TV"}</button>
+      </article>`).join("");
+  }
+
+  function renderAll() { renderRail(); renderStage(); }
+
+  // ---------- Events ----------
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button, a");
+    if (!t) return;
+    if (t.dataset.step !== undefined) {
+      go(+t.dataset.step);
+      if (t.closest("#runofshow")) document.getElementById("walkthrough").scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    if (t.dataset.format) return setFormat(t.dataset.format);
+    if (t.dataset.prompt !== undefined) {
+      state.prompt = +t.dataset.prompt; store.set("prompt", state.prompt);
+      renderPrompts(); renderStage();
+      return;
+    }
+    switch (t.dataset.act) {
+      case "timer-toggle": return toggleTimer();
+      case "timer-reset": return resetTimer();
+      case "switch": return setFormat(state.format === "battle" ? "pitch" : "battle");
+      case "reveal-next":
+        state.reveal = Math.min((state.reveal > maxReveal() ? maxReveal() : state.reveal) + 1, maxReveal());
+        return renderStage();
+      case "reveal-reset":
+        state.reveal = 0; return renderStage();
+    }
+  });
+
+  $("#prevBtn").addEventListener("click", () => go(prevIndex()));
+  $("#nextBtn").addEventListener("click", () => go(nextIndex()));
+  $("#fsBtn").addEventListener("click", () => {
+    const d = document;
+    try {
+      if (d.fullscreenElement) d.exitFullscreen().catch(() => {});
+      else d.documentElement.requestFullscreen().catch(() => {});
+    } catch (err) { /* fullscreen unavailable */ }
+  });
+  document.addEventListener("fullscreenchange", () => {
+    $("#fsBtn").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+  });
+
+  document.addEventListener("input", onModelInput);
+
+  $("#resetBtn").addEventListener("click", () => {
+    state.m = Object.assign({}, DEFAULTS);
+    store.set("model", state.m);
+    renderRos(true); renderCompare(); resetTimer(false); renderAll();
+  });
+
+  document.addEventListener("keydown", e => {
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(nextIndex()); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(prevIndex()); }
+    else if (/^[1-7]$/.test(e.key)) go(+e.key - 1);
+    else if (e.key === "f" || e.key === "F") setFormat(state.format === "battle" ? "pitch" : "battle");
+    else if (e.key === " " && tag !== "button" && tag !== "a") { e.preventDefault(); toggleTimer(); }
+  });
+
+  // ---------- Boot ----------
+  document.querySelectorAll("#formatToggle button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.format === state.format)));
+  resetTimer(false);
+  renderAll();
+  renderRos(true);
+  renderCompare();
+  renderPrompts();
+})();
+</script>
+</body>
+</html>

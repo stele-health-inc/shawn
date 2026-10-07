@@ -184,7 +184,7 @@ export default function RwHero(props: HeroProps) {
         secondary = "See our work",
         secondaryLink = "/work",
         chips = "❤|1.2k likes on one reel;+|86 new followers;★|New 5-star review;#1|“dentist near me”;●|12 leads today;↗|CTR up to 4.8%;✓|Call booked · Tue 10:30;◎|+318 profile visits;▶|48k video views;$|ROAS 6.2×",
-        services = "SEO, Social media, Paid ads, Content",
+        services = "Social media, Paid ads, Content, Web design",
         counterLabel = "People reached for clients this month",
         counterStart = 1284300,
         hint = "Move to reach · click to launch a campaign",
@@ -234,7 +234,7 @@ export default function RwHero(props: HeroProps) {
     const sub = pick(
         subCopy,
         site.tagline
-            ? `${site.name} is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.`
+            ? `${site.name} is a digital marketing agency. We run social media, paid ads and content that put your brand in front of the people who buy, and we report every result in plain numbers.`
             : ""
     )
     const ann = pick(eyebrow, site.announce)
@@ -948,7 +948,7 @@ addPropertyControls(RwHero, {
         type: ControlType.String,
         title: "Sub copy",
         defaultValue:
-            "Shilly is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.",
+            "Shilly is a digital marketing agency. We run social media, paid ads and content that put your brand in front of the people who buy, and we report every result in plain numbers.",
         displayTextArea: true,
     },
     primary: {
@@ -982,7 +982,7 @@ addPropertyControls(RwHero, {
     services: {
         type: ControlType.String,
         title: "Service tags",
-        defaultValue: "SEO, Social media, Paid ads, Content",
+        defaultValue: "Social media, Paid ads, Content, Web design",
     },
     counterLabel: {
         type: ControlType.String,

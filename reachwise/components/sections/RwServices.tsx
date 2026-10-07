@@ -68,7 +68,7 @@ interface ServicesProps extends Pal {
 // Tablet / phone: the same six as a vertical accordion; one row open at a time and the open slot has a FIXED height, so the page length never changes. ----
 const SV_PHOTO =
     "/images/xbfdpTvZzzafiJOwtXCs0luyp2I.webp"
-const SV_TONES = ["mist", "ink", "cloud", "lime", "pine", "sage"]
+const SV_TONES = ["mist", "ink", "sage", "lime", "pine", "cloud"]
 const SV_DARK = new Set(["ink", "pine"])
 // step counter: 0 → n over time while `run`, else the final step at once
 function useSvStep(n: number, ms: number, run: boolean, delay = 350) {
@@ -538,8 +538,8 @@ const SvBrd = ({ cfg, M, D }: SvP) => (
 export default function RwServices(props: ServicesProps) {
     const {
         eyebrow = "(02) Services",
-        heading = "Six channels.|*One* growth plan.",
-        intro = "SEO, social, ads, content, web and brand under one retainer, one team and one monthly report.",
+        heading = "Five channels.|*One* growth plan.",
+        intro = "Social, ads, content, web and brand under one retainer, one team and one monthly report.",
         button = "All services",
         buttonLink = "/services",
         fromLabel = "From",
@@ -1139,14 +1139,14 @@ addPropertyControls(RwServices, {
         type: ControlType.String,
         title: "Heading",
         description: "| = line break, *word* = lime marker",
-        defaultValue: "Six channels.|*One* growth plan.",
+        defaultValue: "Five channels.|*One* growth plan.",
     },
     intro: {
         type: ControlType.String,
         title: "Intro",
         displayTextArea: true,
         defaultValue:
-            "SEO, social, ads, content, web and brand under one retainer, one team and one monthly report.",
+            "Social, ads, content, web and brand under one retainer, one team and one monthly report.",
     },
     button: {
         type: ControlType.String,

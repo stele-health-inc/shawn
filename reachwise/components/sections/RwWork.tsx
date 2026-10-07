@@ -124,7 +124,7 @@ export default function RwWork(props: WorkProps) {
     const {
         eyebrow = "(03) Case studies",
         heading = "Results you can|*count*.",
-        intro = "Six clients, six channels, one habit: we report the number that pays the bills, before and after.",
+        intro = "Six clients, five channels, one habit: we report the number that pays the bills, before and after.",
         button = "All case studies",
         buttonLink = "/work",
         readLabel = "Read the case",
@@ -912,7 +912,7 @@ addPropertyControls(RwWork, {
         type: ControlType.String,
         title: "Intro",
         defaultValue:
-            "Six clients, six channels, one habit: we report the number that pays the bills, before and after.",
+            "Six clients, five channels, one habit: we report the number that pays the bills, before and after.",
         displayTextArea: true,
     },
     button: {

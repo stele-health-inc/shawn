@@ -5,7 +5,7 @@ import "./globals.css"
 export const metadata: Metadata = {
     title: "Shilly — Digital marketing agency",
     description:
-        "Shilly is a digital marketing agency: SEO, social, paid ads, content, web and brand.",
+        "Shilly is a digital marketing agency: social, paid ads, content, web and brand.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

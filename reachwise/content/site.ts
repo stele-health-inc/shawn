@@ -12,7 +12,7 @@ const site: CmsRow[] = [
         slug: "site",
         f1: "Shilly",
         f2: "Digital marketing agency",
-        f3: "SEO, social media and paid ads that bring the right people to your door.",
+        f3: "Social media, paid ads and content that bring the right people to your door.",
         f4: "hello@shilly.agency",
         f5: "+1 (212) 555-0186",
         f6: "/contact",
@@ -30,17 +30,6 @@ const site: CmsRow[] = [
 // services — f1 title · f2 one-liner · f3 body · f4 price · f5 includes (;) · f6 mini-UI kind (seo|social|ads|content|web|brand) · f7 stat
 const services: CmsRow[] = [
     {
-        slug: "seo",
-        f1: "SEO",
-        f2: "Rank for the searches that buy.",
-        f3: "Technical fixes, content and links that move you up the page for the words your customers type.",
-        f4: "$1,500/mo",
-        f5: "Technical audit;Keyword map;4 articles a month;Link building;Monthly ranking report",
-        f6: "seo",
-        f7: "#1 for 212 keywords",
-        n1: "1",
-    },
-    {
         slug: "social-media",
         f1: "Social media",
         f2: "Posts people stop for.",
@@ -49,7 +38,7 @@ const services: CmsRow[] = [
         f5: "12 posts + 8 reels a month;Content calendar;Community replies;Monthly report",
         f6: "social",
         f7: "48k average reel views",
-        n1: "2",
+        n1: "1",
     },
     {
         slug: "paid-ads",
@@ -60,7 +49,7 @@ const services: CmsRow[] = [
         f5: "Account setup;Creative testing;Weekly optimisation;Revenue dashboard",
         f6: "ads",
         f7: "6.2× return on ad spend",
-        n1: "3",
+        n1: "2",
     },
     {
         slug: "content",
@@ -71,7 +60,7 @@ const services: CmsRow[] = [
         f5: "Editorial plan;4 long-form articles;2 newsletters;Repurposed clips",
         f6: "content",
         f7: "3.4× more leads from blog",
-        n1: "4",
+        n1: "3",
     },
     {
         slug: "web-design",
@@ -82,7 +71,7 @@ const services: CmsRow[] = [
         f5: "Wireframes;Design + build;CMS setup;Speed + SEO basics",
         f6: "web",
         f7: "+64% conversion rate",
-        n1: "5",
+        n1: "4",
     },
     {
         slug: "branding",
@@ -93,7 +82,7 @@ const services: CmsRow[] = [
         f5: "Brand workshop;Logo + identity;Brand guidelines;Social templates",
         f6: "brand",
         f7: "2 weeks to launch",
-        n1: "6",
+        n1: "5",
     },
 ]
 
@@ -334,7 +323,7 @@ const plans: CmsRow[] = [
         f2: "1900",
         f3: "1700",
         f4: "One channel, done properly.",
-        f5: "One channel (SEO, social or ads);Monthly strategy call;Monthly report;Email support",
+        f5: "One channel (social, ads or content);Monthly strategy call;Monthly report;Email support",
         f6: "Start with Starter",
         f7: "",
         n1: "1",
@@ -356,7 +345,7 @@ const plans: CmsRow[] = [
         f2: "7500",
         f3: "6750",
         f4: "The full team on your brand.",
-        f5: "SEO + social + paid ads;Dedicated strategist;Creative team;Landing pages;Priority support",
+        f5: "Social + paid ads + content;Dedicated strategist;Creative team;Landing pages;Priority support",
         f6: "Talk to us",
         f7: "",
         n1: "3",

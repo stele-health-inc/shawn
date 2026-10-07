@@ -122,7 +122,7 @@ export default function RwNumbers(props: NumbersProps) {
         intro = "",
         reportLabel = "Client report · 2025",
         liveLabel = "Live",
-        tabs = "Overview, SEO, Social, Ads",
+        tabs = "Overview, Social, Ads, Content",
         range = "Last 12 months",
         kpis = "212%:average organic growth:up;6.2×:return on ad spend:up;38M:people reached in 2025:up;140+:brands grown since 2016:up",
         deltaLabel = "vs last year",
@@ -461,7 +461,7 @@ addPropertyControls(RwNumbers, {
         type: ControlType.String,
         title: "Report tabs",
         description: "Comma list, first one is shown active",
-        defaultValue: "Overview, SEO, Social, Ads",
+        defaultValue: "Overview, Social, Ads, Content",
     },
     range: {
         type: ControlType.String,

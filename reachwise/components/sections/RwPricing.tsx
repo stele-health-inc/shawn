@@ -346,7 +346,7 @@ const CSS_PRICING = `
 .rwpr-tg{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--rw-cloud) 7%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 14%,transparent);flex:none}
 .rwpr-tb{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border:0;border-radius:999px;background:none;color:color-mix(in srgb,var(--rw-cloud) 70%,transparent);font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .4s}
 .rwpr-tb.is-act{color:var(--rw-ink)}
-.rwpr-save{padding:3px 7px;border-radius:999px;background:#FF3E88;color:#0D0E10;font-size:10px;font-weight:600;letter-spacing:.04em}
+.rwpr-save{padding:3px 7px;border-radius:999px;background:#B46A72;color:#FFF7E6;font-size:10px;font-weight:600;letter-spacing:.04em}
 .rwpr-tk{position:absolute;z-index:0;left:5px;top:5px;bottom:5px;width:calc(50% - 5px);border-radius:999px;background:var(--rw-brass);transition:translate .6s cubic-bezier(.7,0,.2,1)}
 .rwpr-row{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:20px;align-items:stretch;perspective:1600px}
 .rwpr-card{--gx:calc(100% + 20px);position:relative;z-index:var(--z,1);border-radius:24px;background:var(--rw-pine);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 10%,transparent),0 40px 80px -40px rgba(0,0,0,.8);
@@ -363,7 +363,7 @@ const CSS_PRICING = `
 .rwpr-no{font-size:11px;letter-spacing:.14em;color:color-mix(in srgb,var(--rw-cloud) 55%,transparent)}
 .rwpr-chip{position:relative;display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--rw-cloud);color:var(--rw-ink);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 .rwpr-chip-i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--rw-brass);font-style:normal;font-size:10px}
-.rwpr-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#FF3E88;box-shadow:0 0 0 2px var(--rw-pine);animation:rw-blink 1.4s ease-in-out infinite}
+.rwpr-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#B46A72;box-shadow:0 0 0 2px var(--rw-pine);animation:rw-blink 1.4s ease-in-out infinite}
 .rwpr-name{margin:0;font-size:clamp(28px,2.4vw,36px);letter-spacing:-.04em;line-height:1}
 .rwpr-tag{margin:10px 0 0;font-size:16px;line-height:1.45;color:var(--rw-mut)}
 .rwpr-price{display:flex;align-items:baseline;gap:2px;margin:34px 0 0;font-size:clamp(56px,5.2vw,84px);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}

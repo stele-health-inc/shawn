@@ -855,7 +855,7 @@ const CSS_WK = `
 .rwwk-num-a{right:clamp(22px,3vw,44px);align-items:flex-end;text-align:right}
 .rwwk-num-b{left:clamp(22px,3vw,44px);bottom:clamp(76px,8vw,118px);align-items:flex-start}
 .rwwk-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 80%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 34%,transparent);background:color-mix(in srgb,var(--rw-night) 30%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.rwwk-pill.is-a{background:var(--rw-brass);color:var(--rw-ink);box-shadow:none} .rwwk-pill.is-a i{width:7px;height:7px;border-radius:50%;background:#FF3E88}
+.rwwk-pill.is-a{background:var(--rw-brass);color:var(--rw-ink);box-shadow:none} .rwwk-pill.is-a i{width:7px;height:7px;border-radius:50%;background:#B46A72}
 .rwwk-big{font-size:clamp(84px,10.4vw,176px);line-height:.84;letter-spacing:-.06em;font-weight:var(--rw-font-dw,700);color:var(--rw-brass);font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 6px 50px rgba(0,0,0,.35)}
 .rwwk-ghost{font-size:clamp(44px,4.8vw,80px);line-height:.9;letter-spacing:-.05em;font-weight:var(--rw-font-dw,700);color:transparent;-webkit-text-stroke:1.4px color-mix(in srgb,var(--rw-cloud) 70%,transparent);white-space:nowrap}
 .rwwk-top{position:absolute;z-index:4;left:clamp(16px,2vw,26px);right:clamp(16px,2vw,26px);top:clamp(16px,2vw,24px);display:flex;justify-content:space-between;gap:12px;pointer-events:none;font-size:11.5px;letter-spacing:.06em}

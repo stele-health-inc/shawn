@@ -94,12 +94,12 @@ const feedParse = (s: string): FeedPost[] =>
         })
         .filter((p) => p.src)
 const FEED_HUES = [
-    "#D4FF3A",
-    "#FF3E88",
-    "#8FB3FF",
-    "#FFB36B",
-    "#9BE3C4",
-    "#C9A7FF",
+    "#F7C8D3",
+    "#A8B58A",
+    "#A9B7C6",
+    "#FFF7E6",
+    "#D9A3AB",
+    "#C9D2B0",
 ]
 const feedHue = (h: string) => {
     let n = 0
@@ -442,7 +442,7 @@ const CSS_FEED = `
 @media (hover:hover) and (pointer:fine){
 .rwfd-card:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-brass) 55%,transparent)}
 .rwfd-card:hover .rwfd-media img{scale:1.05}
-.rwfd-card:hover .rwfd-heart svg{fill:#FF3E88;stroke:#FF3E88;animation:rwfd-pop .5s cubic-bezier(.34,1.56,.64,1)}
+.rwfd-card:hover .rwfd-heart svg{fill:#B46A72;stroke:#B46A72;animation:rwfd-pop .5s cubic-bezier(.34,1.56,.64,1)}
 .rwfd-card:hover .rwfd-ring{animation:rwfd-ping .9s cubic-bezier(.2,.6,.3,1) .05s}
 .rwfd-card:hover .rwfd-roll b{translate:0 -100%}
 .rwfd-card:hover .rwfd-like{color:var(--rw-cloud)}}

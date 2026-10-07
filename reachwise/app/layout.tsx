@@ -3,9 +3,9 @@ import { CSS_BASE, CSS_MOTION, FONTS } from "@/lib/rw-css"
 import "./globals.css"
 
 export const metadata: Metadata = {
-    title: "Reachwise — Digital marketing agency",
+    title: "Shilly — Digital marketing agency",
     description:
-        "Reachwise is a digital marketing agency: SEO, social, paid ads, content, web and brand.",
+        "Shilly is a digital marketing agency: SEO, social, paid ads, content, web and brand.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

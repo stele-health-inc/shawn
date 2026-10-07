@@ -119,7 +119,7 @@ export default function RwFooter(props: FooterProps) {
     useMagnet(root, live)
     const on = useOn(root, live, rm, 0.05)
     const services = useCMS("services", SEED.services || [])
-    const name = pick(wordmark, site.name || "Reachwise")
+    const name = pick(wordmark, site.name || "Shilly")
     const book = pick(buttonLink, site.book || "/contact")
     const [year, setYear] = useState("2026")
     const [now, setNow] = useState("--:--")

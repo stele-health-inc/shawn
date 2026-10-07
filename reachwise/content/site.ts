@@ -10,10 +10,10 @@ export type CmsRow = Record<string, string>
 const site: CmsRow[] = [
     {
         slug: "site",
-        f1: "Reachwise",
+        f1: "Shilly",
         f2: "Digital marketing agency",
         f3: "SEO, social media and paid ads that bring the right people to your door.",
-        f4: "hello@reachwise.agency",
+        f4: "hello@shilly.agency",
         f5: "+1 (212) 555-0186",
         f6: "/contact",
         f7: "New York",
@@ -198,7 +198,7 @@ const team: CmsRow[] = [
         slug: "maya-chen",
         f1: "Maya Chen",
         f2: "Founder & strategy lead",
-        f3: "Ten years running growth for consumer brands before starting Reachwise.",
+        f3: "Ten years running growth for consumer brands before starting Shilly.",
         f4: "Strategy",
         f5: "https://linkedin.com",
         img: "/images/HxGAwVNM9ZaaBu6N5yRyWcYxYQM.webp",

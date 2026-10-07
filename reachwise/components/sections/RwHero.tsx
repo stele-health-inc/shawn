@@ -160,16 +160,16 @@ const bigUrl = (u: string, w: number) => {
 }
 const VS = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}"
 const FS = `precision mediump float;
-uniform sampler2D uTex;uniform vec2 uView;uniform float uImg;uniform float uZoom;uniform vec2 uFoc;uniform float uTime;uniform vec3 uLime;uniform vec4 uP[8];uniform vec3 uPtr;uniform float uDiag;uniform float uDim;
+uniform sampler2D uTex;uniform vec2 uView;uniform float uImg;uniform float uZoom;uniform vec2 uFoc;uniform float uTime;uniform vec3 uLime;uniform vec4 uP[8];uniform vec3 uPtr;uniform float uDiag;uniform float uDim;uniform vec3 uNight;
 vec2 cover(vec2 s){float ra=uView.x/uView.y;vec2 uv=s;if(ra>uImg){uv.y=(s.y-.5)*uImg/ra+.5;}else{uv.x=(s.x-.5)*ra/uImg+.5;}return (uv-.5)/uZoom+.5+uFoc;}
 void main(){vec2 fc=vec2(gl_FragCoord.x,uView.y-gl_FragCoord.y);vec2 s=fc/uView;vec3 col=texture2D(uTex,clamp(cover(s),.001,.999)).rgb;
-float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(vec3(l)*vec3(.9,.94,1.),vec3(.03,.035,.045),uDim);
+float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(vec3(l)*vec3(.9,.94,1.),uNight*.78,uDim);
 float reach=0.;float rim=0.;
 for(int i=0;i<8;i++){vec4 P=uP[i];if(P.w<=0.)continue;float age=uTime-P.z;if(age<0.)continue;float R=age*uDiag*(.2+.07*P.w);float d=distance(fc,P.xy);float life=2.4+2.6*P.w;float fade=1.-smoothstep(life*.4,life,age);float band=uDiag*(.008+.006*P.w);
 rim+=exp(-pow((d-R)/band,2.))*(1.-smoothstep(0.,life*.75,age));reach=max(reach,(1.-smoothstep(R-band*5.,R+band,d))*fade);}
 float sp=(1.-smoothstep(uDiag*.035,uDiag*.12,distance(fc,uPtr.xy)))*uPtr.z;reach=max(reach,sp*.85);
 vec3 c=mix(grey,col*mix(1.,.86,uDim),reach);c=mix(c,uLime,clamp(rim,0.,1.)*.62);
-float vg=smoothstep(.45,1.,s.y)*.55+(1.-smoothstep(0.,.2,s.y))*.28;c*=1.-vg;
+float vg=smoothstep(.45,1.,s.y)*.55+(1.-smoothstep(0.,.2,s.y))*.28;c=mix(c,uNight*.7,vg);
 gl_FragColor=vec4(c,1.);}`
 export default function RwHero(props: HeroProps) {
     const {
@@ -304,11 +304,17 @@ export default function RwHero(props: HeroProps) {
             uP = U("uP"),
             uPtr = U("uPtr"),
             uDiag = U("uDiag"),
-            uDim = U("uDim")
-        const lime = cssRgb(r, c.brass, "212,255,58")
+            uDim = U("uDim"),
+            uNight = U("uNight")
+        const lime = cssRgb(r, c.brass, "247,200,211")
             .split(",")
             .map((v) => Number(v) / 255)
         g.uniform3f(uLime, lime[0], lime[1], lime[2])
+        // the crowd dims toward the night token, not black, so the hero sits in the palette
+        const night = cssRgb(r, c.night, "45,58,71")
+            .split(",")
+            .map((v) => Number(v) / 255)
+        g.uniform3f(uNight, night[0], night[1], night[2])
         const tex = g.createTexture()
         let imgAr = IMG_AR,
             texOk = false
@@ -870,7 +876,7 @@ const CSS_HERO = `
 .rwh-chip.is-up{scale:1;opacity:1} .rwh-chip:not(.is-up){translate:-50% calc(-100% - 40px)}
 .rwh-chip::after{content:"";position:absolute;left:50%;bottom:-16px;width:1.5px;height:14px;background:var(--rw-cloud);translate:-50% 0;opacity:.8}
 .rwh-chip-i{display:grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:999px;background:var(--rw-brass);color:var(--rw-ink);font-size:12px;font-weight:700}
-.rwh-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#FF3E88;box-shadow:0 0 0 2px var(--rw-cloud)}
+.rwh-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#B46A72;box-shadow:0 0 0 2px var(--rw-cloud)}
 .rwh-chip[data-s="1"]{left:22%;top:34%} .rwh-chip[data-s="2"]{left:77%;top:30%} .rwh-chip[data-s="3"]{left:70%;top:72%}
 /* bottom strip */
 .rwh-strip{position:absolute;z-index:4;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:24px;max-width:${MAXW};margin:0 auto;padding:0 clamp(20px,3.2vw,48px) 36px}
@@ -934,7 +940,7 @@ addPropertyControls(RwHero, {
     heading: {
         type: ControlType.String,
         title: "Heading",
-        description: "| = line break, *words* = lime highlight",
+        description: "| = line break, *words* = accent highlight",
         defaultValue: "Get seen by|the *right crowd.*",
         displayTextArea: true,
     },
@@ -942,7 +948,7 @@ addPropertyControls(RwHero, {
         type: ControlType.String,
         title: "Sub copy",
         defaultValue:
-            "Reachwise is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.",
+            "Shilly is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.",
         displayTextArea: true,
     },
     primary: {

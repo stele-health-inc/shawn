@@ -385,7 +385,7 @@ const CSS_CTA = `
 .rwct-bd{flex:1} .rwct-bd>svg{position:absolute;right:16px;pointer-events:none}
 .rwct-f input,.rwct-f select{width:100%;min-width:0;height:56px;border:0;outline:0;background:none;color:var(--rw-cloud);font:inherit;font-size:16px;-webkit-appearance:none;appearance:none}
 .rwct-f input::placeholder{color:color-mix(in srgb,var(--rw-cloud) 55%,transparent)}
-.rwct-f select{font-size:13px;letter-spacing:.04em;padding-right:26px;cursor:pointer;color:color-mix(in srgb,var(--rw-cloud) 85%,transparent)} .rwct-f select option{color:#0D0E10;background:#fff}
+.rwct-f select{font-size:13px;letter-spacing:.04em;padding-right:26px;cursor:pointer;color:color-mix(in srgb,var(--rw-cloud) 85%,transparent)} .rwct-f select option{color:#2D3A47;background:#FFF7E6}
 .rwct-launch{position:relative;flex:none}
 .rwct .rwct-go.rw-solid{--face:var(--rw-brass);--fg:var(--rw-ink);--fill:var(--rw-cloud);--fg2:var(--rw-ink);--chip:var(--rw-ink);--chipfg:var(--rw-brass);--chip2:var(--rw-ink);--chipfg2:var(--rw-brass)}
 .rwct-rings{position:absolute;left:var(--bx,62%);top:var(--by,72%);width:0;height:0;z-index:0;pointer-events:none}

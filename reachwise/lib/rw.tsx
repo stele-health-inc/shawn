@@ -269,16 +269,18 @@ export type Pal = {
     night: string
 }
 export const DEF: Pal = {
-    bone: "#EEEEE8",
-    ink: "#0D0E10",
-    brass: "#D4FF3A",
-    pine: "#16181B",
-    fog: "#DCDCD3",
-    stone: "#75766F",
-    cloud: "#FFFFFF",
-    night: "#08090A",
+    bone: "#FFF7E6", // Vanilla Cream: paper
+    ink: "#2D3A47", // Midnight Lagoon: type
+    brass: "#F7C8D3", // Blush Petal: accent
+    pine: "#3A4B5C", // Midnight Lagoon, lifted: cards on dark
+    fog: "#E1E1DB", // Misty Sky into Vanilla Cream: hairlines
+    stone: "#6E7D8C", // Misty Sky, deepened: muted type
+    cloud: "#FFFDF8", // warm white
+    night: "#2D3A47", // Midnight Lagoon: dark sections
 }
-export const PINK = "#FF3E88" // notification dots only (a constant, not a token)
+export const PINK = "#B46A72" // Rosewood: notification dots only (a constant, not a token)
+export const SAGE = "#A8B58A" // Sage Leaf: live / available signals
+export const MIST = "#A9B7C6" // Misty Sky: cool secondary surfaces
 export const colorsOf = (p: any): Pal => ({
     bone: p.bone || DEF.bone,
     ink: p.ink || DEF.ink,
@@ -1225,7 +1227,7 @@ export const imgOf = (r: CmsRow | undefined, k = "img") =>
 export const EMPTY_IMG =
     "data:image/svg+xml;utf8," +
     encodeURIComponent(
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500' preserveAspectRatio='xMidYMid slice'><rect width='400' height='500' fill='#D3D8E2'/><rect x='120' y='170' width='160' height='160' rx='8' fill='none' stroke='#AEB6C6' stroke-width='1.5'/><rect x='100' y='150' width='200' height='200' rx='10' fill='none' stroke='#C3CAD8' stroke-width='1' stroke-dasharray='2 6'/></svg>"
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500' preserveAspectRatio='xMidYMid slice'><rect width='400' height='500' fill='#A9B7C6'/><rect x='120' y='170' width='160' height='160' rx='8' fill='none' stroke='#AEB6C6' stroke-width='1.5'/><rect x='100' y='150' width='200' height='200' rx='10' fill='none' stroke='#C3CAD8' stroke-width='1' stroke-dasharray='2 6'/></svg>"
     )
 export const imgOr = (r: CmsRow | undefined, k = "img") =>
     imgOf(r, k) || EMPTY_IMG
@@ -1245,7 +1247,7 @@ export function useSite() {
     const s = r[0] || (SEED.site || [])[0] || {}
     const g = (k: string) => String(s[k] ?? "").trim()
     return {
-        name: g("f1") || "Reachwise",
+        name: g("f1") || "Shilly",
         role: g("f2"),
         tagline: g("f3"),
         email: g("f4"),

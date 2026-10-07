@@ -403,7 +403,7 @@ const CSS_TEAM = `
 @keyframes rwtm-flash{0%{opacity:1}100%{opacity:0}}
 .rwtm-focus{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;gap:7px;padding:5px 11px 5px 5px;border-radius:999px;background:var(--rw-cloud);color:var(--rw-ink);font-size:11px;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 10px 24px -12px rgba(0,0,0,.45);transform-origin:0 50%;scale:.86;opacity:.72;transition:scale .5s cubic-bezier(.34,1.56,.64,1),opacity .4s}
 .rwtm-focus-i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--rw-ink) 10%,transparent);color:transparent;transition:background .4s,color .4s} .rwtm-focus-i svg{width:11px;height:11px}
-.rwtm-dot{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#FF3E88;box-shadow:0 0 0 2px var(--rw-cloud);scale:0;transition:scale .45s cubic-bezier(.34,1.56,.64,1) .15s}
+.rwtm-dot{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#B46A72;box-shadow:0 0 0 2px var(--rw-cloud);scale:0;transition:scale .45s cubic-bezier(.34,1.56,.64,1) .15s}
 .rwtm-card.is-lit .rwtm-focus{scale:1;opacity:1} .rwtm-card.is-lit .rwtm-focus-i{background:var(--rw-brass);color:var(--rw-ink)} .rwtm-card.is-lit .rwtm-dot{scale:1}
 .rwtm-idx{position:absolute;right:12px;top:12px;font-size:11px;letter-spacing:.1em;color:var(--rw-cloud);text-shadow:0 1px 8px rgba(0,0,0,.5)}
 .rwtm-cap{grid-area:2/1;display:flex;flex-direction:column;gap:4px;padding:0 4px}
@@ -414,7 +414,7 @@ const CSS_TEAM = `
 .rwtm-in svg{width:13px;height:13px} .rwtm-in:hover{background:var(--rw-brass);color:var(--rw-ink)}
 .rwtm-card:focus-within .rwtm-in{translate:0 0;opacity:1}
 @media (hover:hover) and (pointer:fine){
-.rwtm-card:hover .rwtm-ph{translate:0 -8px;box-shadow:0 30px 50px -28px rgba(13,14,16,.55)}
+.rwtm-card:hover .rwtm-ph{translate:0 -8px;box-shadow:0 30px 50px -28px rgba(45,58,71,.55)}
 .rwtm-card:hover .rwtm-ph img{scale:1.05}
 .rwtm-card:hover .rwtm-in{translate:0 -8px;opacity:1}
 .rwtm-card:hover .rwtm-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--rw-brass)}}

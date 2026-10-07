@@ -112,7 +112,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2025",
         f10: "A local SEO rebuild: 60 location pages, 180 reviews and a content plan for every treatment.",
-        img: "https://framerusercontent.com/images/iQ0lX69C3YgeRjqffxWadnnAmnc.webp",
+        img: "/images/iQ0lX69C3YgeRjqffxWadnnAmnc.webp",
         n1: "1",
     },
     {
@@ -127,7 +127,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2025",
         f10: "Three reels a week shot in the roasteries turned a local brand into a national one.",
-        img: "https://framerusercontent.com/images/myjp4zr3op66cJhewFtasNpY5I.webp",
+        img: "/images/myjp4zr3op66cJhewFtasNpY5I.webp",
         n1: "2",
     },
     {
@@ -142,7 +142,7 @@ const work: CmsRow[] = [
         f8: "×",
         f9: "2025",
         f10: "We rebuilt the Meta account around creative testing and cut the cost per trial by 58%.",
-        img: "https://framerusercontent.com/images/hd4rblq8DW7sPIt8FWcRq1HdmQ0.webp",
+        img: "/images/hd4rblq8DW7sPIt8FWcRq1HdmQ0.webp",
         n1: "3",
     },
     {
@@ -157,7 +157,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2024",
         f10: "A new site with valuation landing pages and Google campaigns for every neighbourhood.",
-        img: "https://framerusercontent.com/images/zEqvjQAlVPs2PE6oz2TsexQ8TA.webp",
+        img: "/images/zEqvjQAlVPs2PE6oz2TsexQ8TA.webp",
         n1: "4",
     },
     {
@@ -172,7 +172,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2024",
         f10: "Brand, creators and a TikTok launch plan built in six weeks.",
-        img: "https://framerusercontent.com/images/QSuLrUGcfrrneXqjDG4ZKyC91Gk.webp",
+        img: "/images/QSuLrUGcfrrneXqjDG4ZKyC91Gk.webp",
         n1: "5",
     },
     {
@@ -187,7 +187,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2024",
         f10: "Weekly LinkedIn posts and long-form guides that rank and get shared by clients.",
-        img: "https://framerusercontent.com/images/csWXqRpXZMLSqxx74oKZj5QkJw.webp",
+        img: "/images/csWXqRpXZMLSqxx74oKZj5QkJw.webp",
         n1: "6",
     },
 ]
@@ -201,7 +201,7 @@ const team: CmsRow[] = [
         f3: "Ten years running growth for consumer brands before starting Reachwise.",
         f4: "Strategy",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/HxGAwVNM9ZaaBu6N5yRyWcYxYQM.webp",
+        img: "/images/HxGAwVNM9ZaaBu6N5yRyWcYxYQM.webp",
         n1: "1",
     },
     {
@@ -211,7 +211,7 @@ const team: CmsRow[] = [
         f3: "Has taken 40+ local businesses to the top three on Google.",
         f4: "SEO",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/JXNHKwjRlDqIdZuxCrbzCaz9Td8.webp",
+        img: "/images/JXNHKwjRlDqIdZuxCrbzCaz9Td8.webp",
         n1: "2",
     },
     {
@@ -221,7 +221,7 @@ const team: CmsRow[] = [
         f3: "Runs the content team and every client's reel calendar.",
         f4: "Social",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/371lVaDSMdqEsHSlTLGeKl7650.webp",
+        img: "/images/371lVaDSMdqEsHSlTLGeKl7650.webp",
         n1: "3",
     },
     {
@@ -231,7 +231,7 @@ const team: CmsRow[] = [
         f3: "Manages $4M a year in Meta and Google spend.",
         f4: "Paid ads",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/NmkpUVq1OjshWo3MRYHXbDUFJGU.webp",
+        img: "/images/NmkpUVq1OjshWo3MRYHXbDUFJGU.webp",
         n1: "4",
     },
     {
@@ -241,7 +241,7 @@ const team: CmsRow[] = [
         f3: "Former magazine editor who writes for search and for people.",
         f4: "Content",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/wTEJQWR3N9EVhTU88mXAPHBq5g4.webp",
+        img: "/images/wTEJQWR3N9EVhTU88mXAPHBq5g4.webp",
         n1: "5",
     },
     {
@@ -251,7 +251,7 @@ const team: CmsRow[] = [
         f3: "Designs the sites, brands and ads our clients launch with.",
         f4: "Design",
         f5: "https://linkedin.com",
-        img: "https://framerusercontent.com/images/LBJSHBzWF5iwJGgfJgtazdyk8.webp",
+        img: "/images/LBJSHBzWF5iwJGgfJgtazdyk8.webp",
         n1: "6",
     },
 ]
@@ -266,7 +266,7 @@ const reviews: CmsRow[] = [
         f4: "We went from four new patients a week to four a day. They report every number and explain what they changed.",
         f5: "+826% organic visits",
         f6: "5",
-        img: "https://framerusercontent.com/images/YqwmM7lRs3vsXpr2grgwzyJ62LE.webp",
+        img: "/images/YqwmM7lRs3vsXpr2grgwzyJ62LE.webp",
         n1: "1",
     },
     {
@@ -277,7 +277,7 @@ const reviews: CmsRow[] = [
         f4: "Our reels finally look like us. The team shoots, edits and posts, and we just approve.",
         f5: "96k followers",
         f6: "5",
-        img: "https://framerusercontent.com/images/YYdQD4OSWKjNOGVWs9tCxMobw8I.webp",
+        img: "/images/YYdQD4OSWKjNOGVWs9tCxMobw8I.webp",
         n1: "2",
     },
     {
@@ -288,7 +288,7 @@ const reviews: CmsRow[] = [
         f4: "The first agency that talks about our margins, not clicks. Ads paid back in eleven days.",
         f5: "6.2× ROAS",
         f6: "5",
-        img: "https://framerusercontent.com/images/RqmMNLZRFBKyGJxcMWBx21DI85Q.webp",
+        img: "/images/RqmMNLZRFBKyGJxcMWBx21DI85Q.webp",
         n1: "3",
     },
     {
@@ -299,7 +299,7 @@ const reviews: CmsRow[] = [
         f4: "Seller leads every week from our own site. We stopped buying leads from portals.",
         f5: "122 leads/mo",
         f6: "5",
-        img: "https://framerusercontent.com/images/gv5mT4bQ8T1n4dyt3U0G2Gfwldw.webp",
+        img: "/images/gv5mT4bQ8T1n4dyt3U0G2Gfwldw.webp",
         n1: "4",
     },
     {
@@ -310,7 +310,7 @@ const reviews: CmsRow[] = [
         f4: "They built the brand and the launch. We sold out twice in the first month.",
         f5: "$142k launch week",
         f6: "5",
-        img: "https://framerusercontent.com/images/FkGV79fUruxxZYYaCa5EOB8RME.webp",
+        img: "/images/FkGV79fUruxxZYYaCa5EOB8RME.webp",
         n1: "5",
     },
     {
@@ -321,7 +321,7 @@ const reviews: CmsRow[] = [
         f4: "Clients now mention our LinkedIn posts in the first call. That never happened before.",
         f5: "57 consults/mo",
         f6: "5",
-        img: "https://framerusercontent.com/images/x1XkAfPNF95aDnEhP091G8c03KY.webp",
+        img: "/images/x1XkAfPNF95aDnEhP091G8c03KY.webp",
         n1: "6",
     },
 ]
@@ -433,7 +433,7 @@ const posts: CmsRow[] = [
         f4: "7 min",
         f5: "Reviews, pages and links: the three things that still decide who shows up first near you.",
         f6: "Local search still comes down to three things...",
-        img: "https://framerusercontent.com/images/pHOBF7LHy4BbDr36flWPxPYRixo.webp",
+        img: "/images/pHOBF7LHy4BbDr36flWPxPYRixo.webp",
         n1: "1",
     },
     {
@@ -444,7 +444,7 @@ const posts: CmsRow[] = [
         f4: "5 min",
         f5: "Why the first three seconds decide whether anyone sees the other twenty-seven.",
         f6: "Every reel we make starts with one question...",
-        img: "https://framerusercontent.com/images/87wKn5rFSjsCMUA9My0OUYJ4dM.webp",
+        img: "/images/87wKn5rFSjsCMUA9My0OUYJ4dM.webp",
         n1: "2",
     },
     {
@@ -455,7 +455,7 @@ const posts: CmsRow[] = [
         f4: "6 min",
         f5: "A 6× return can still lose money. Here is the number we report instead.",
         f6: "Return on ad spend is the number everyone quotes...",
-        img: "https://framerusercontent.com/images/NtmyAnUBIcfQXkgdgwQGB2dIVY.webp",
+        img: "/images/NtmyAnUBIcfQXkgdgwQGB2dIVY.webp",
         n1: "3",
     },
     {
@@ -466,7 +466,7 @@ const posts: CmsRow[] = [
         f4: "4 min",
         f5: "A plan your team will actually follow, with a template you can copy.",
         f6: "Most content calendars die in week two...",
-        img: "https://framerusercontent.com/images/5NYoUMxcMZ7W73IVonEHOzeu5ls.webp",
+        img: "/images/5NYoUMxcMZ7W73IVonEHOzeu5ls.webp",
         n1: "4",
     },
     {
@@ -477,7 +477,7 @@ const posts: CmsRow[] = [
         f4: "6 min",
         f5: "Small changes to headlines, forms and proof that paid for themselves in a week.",
         f6: "Before you spend more on ads...",
-        img: "https://framerusercontent.com/images/2JG0A1F7J2tdiUI5Y6YXMfSc.webp",
+        img: "/images/2JG0A1F7J2tdiUI5Y6YXMfSc.webp",
         n1: "5",
     },
     {
@@ -488,7 +488,7 @@ const posts: CmsRow[] = [
         f4: "8 min",
         f5: "What it really costs to hire a marketing team, and when an agency makes more sense.",
         f6: "It depends on three numbers...",
-        img: "https://framerusercontent.com/images/P2vtvmpcIxWwVrN78FW1tzLdNs.webp",
+        img: "/images/P2vtvmpcIxWwVrN78FW1tzLdNs.webp",
         n1: "6",
     },
 ]

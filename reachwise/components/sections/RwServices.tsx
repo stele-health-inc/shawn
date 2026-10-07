@@ -67,7 +67,7 @@ interface ServicesProps extends Pal {
 // a landing page scrolling, a brand system flipping) + the offer. The OPEN panel follows scroll across the section; hover / click / keys take over for 4 s.
 // Tablet / phone: the same six as a vertical accordion; one row open at a time and the open slot has a FIXED height, so the page length never changes. ----
 const SV_PHOTO =
-    "https://framerusercontent.com/images/xbfdpTvZzzafiJOwtXCs0luyp2I.webp"
+    "/images/xbfdpTvZzzafiJOwtXCs0luyp2I.webp"
 const SV_TONES = ["fog", "ink", "cloud", "lime", "pine", "bone"]
 const SV_DARK = new Set(["ink", "pine"])
 // step counter: 0 → n over time while `run`, else the final step at once

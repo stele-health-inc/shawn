@@ -63,7 +63,7 @@ interface HeroProps extends Pal {
 // passes, the grey crowd blooms into colour (WebGL). People the ring crosses light up with a notification (likes, followers, a review, a #1 ranking),
 // and the REACH counter climbs. A click launches a campaign: one big ring, longer colour, a bigger jump. No pointer (phones, idle) → a signal wanders the plaza. ----
 const PHOTO =
-    "https://framerusercontent.com/images/0OweuTthx3Dz38pzze75lZw78M.webp"
+    "/images/0OweuTthx3Dz38pzze75lZw78M.webp"
 const IMG_AR = 2400 / 1340
 // people in the photo (0..1 image coords) — the spots a ring can "reach"
 const SPOTS: [number, number][] = [

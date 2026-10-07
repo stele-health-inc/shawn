@@ -2,7 +2,7 @@
 // Client component on purpose: defaultsOf() reads the addPropertyControls registry,
 // which is only populated where the section modules actually execute (the client bundle).
 import type { ComponentType } from "react"
-import { defaultsOf } from "@/lib/framer"
+import { defaultsOf } from "@/lib/controls"
 import RwHero from "./sections/RwHero"
 import RwClients from "./sections/RwClients"
 import RwIntro from "./sections/RwIntro"

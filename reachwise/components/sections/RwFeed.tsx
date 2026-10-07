@@ -4,7 +4,7 @@ import {
     useRef,
     type CSSProperties,
 } from "react"
-import { addPropertyControls, ControlType } from "@/lib/framer"
+import { addPropertyControls, ControlType } from "@/lib/controls"
 import {
     T,
     RS,
@@ -69,7 +69,7 @@ const feedParse = (s: string): FeedPost[] =>
         .map((x) => {
             const p = x.split("|").map((y) => y.trim())
             const id = p[0] || ""
-            const src = /^https?:\/\//.test(id)
+            const src = /^(https?:\/\/|\/)/.test(id)
                 ? id.split("?")[0]
                 : id
                   ? `https://images.unsplash.com/${id}`

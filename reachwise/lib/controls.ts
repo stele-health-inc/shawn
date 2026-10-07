@@ -1,6 +1,6 @@
-// Stand-in for the `framer` package so the sections exported from Framer run in plain Next.js.
-// Property controls are kept as the documentation of each section's props: `defaultsOf(Section)`
-// returns their default values, which is what a Framer canvas instance would have received.
+// The small property-controls API the sections were originally written against (they began as Framer
+// components). Nothing here talks to Framer: each section's addPropertyControls(...) block simply lists
+// its props and their defaults, and `defaultsOf(Section)` returns those defaults.
 
 export const ControlType = {
     Boolean: "boolean",

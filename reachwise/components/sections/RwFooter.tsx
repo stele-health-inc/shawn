@@ -5,7 +5,7 @@ import {
     useState,
     type CSSProperties,
 } from "react"
-import { addPropertyControls, ControlType } from "@/lib/framer"
+import { addPropertyControls, ControlType } from "@/lib/controls"
 import {
     cleanTel,
     useFonts,
@@ -92,8 +92,8 @@ export default function RwFooter(props: FooterProps) {
         wordmark = "",
         hint = "Move over the name",
         legal = "Privacy:/privacy, Terms:/terms, Cookies:/cookies",
-        madeWith = "Made with Framer",
-        madeWithLink = "https://www.framer.com",
+        madeWith = "",
+        madeWithLink = "",
         clockLabel = "Local time",
         bpHint = "auto",
     } = props
@@ -534,12 +534,12 @@ addPropertyControls(RwFooter, {
     madeWith: {
         type: ControlType.String,
         title: "Made with",
-        defaultValue: "Made with Framer",
+        defaultValue: "",
     },
     madeWithLink: {
         type: ControlType.Link,
         title: "Made with link",
-        defaultValue: "https://www.framer.com",
+        defaultValue: "",
     },
     clockLabel: {
         type: ControlType.String,

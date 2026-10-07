@@ -8,7 +8,7 @@ import {
     useState,
     type CSSProperties,
 } from "react"
-import { ControlType, RenderTarget, useIsStaticRenderer } from "./framer"
+import { ControlType, RenderTarget, useIsStaticRenderer } from "./controls"
 import { CONTENT, type CmsRow } from "../content/site"
 import { FONTS, MAXW } from "./rw-css"
 
@@ -65,6 +65,17 @@ export const RS = (
 ): { src: string; srcSet?: string; sizes?: string } => {
     const s = String(u || "")
     const b = s.split("?")[0]
+    // Images in /public: Next's built-in optimizer (Vercel Image Optimization in production) resizes them on demand.
+    if (/^\/[^/].*\.(webp|jpe?g|png|avif|gif)$/i.test(b)) {
+        const w = rsTarget(sizes)
+        const opt = (n: number) => `/_next/image?url=${encodeURIComponent(b)}&w=${n}&q=75`
+        const ws = [384, 640, 828, 1200, 2048]
+        return {
+            src: opt(ws.find((n) => n >= w) || 2048),
+            srcSet: ws.map((n) => `${opt(n)} ${n}w`).join(", "),
+            sizes,
+        }
+    }
     if (/framerusercontent\.com\/images\//.test(s)) {
         const w = rsTarget(sizes)
         const d = w <= 512 ? 512 : w <= 1024 ? 1024 : 2048

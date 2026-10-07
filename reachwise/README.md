@@ -1,6 +1,6 @@
 # Reachwise — site template
 
-The 15 Reachwise Framer code components (THE REACH design) ported to a plain **Next.js (App Router)** site you can deploy on Vercel and edit like any React project.
+The Reachwise agency site (THE REACH design), rebuilt as a standalone **Next.js (App Router)** app from the 15 original Framer code components. It doesn't use the Framer package, editor or hosting: it builds and runs on its own and deploys to Vercel like any React project.
 
 ```bash
 cd reachwise
@@ -20,7 +20,8 @@ npm run typecheck
 | `content/site.ts` | **All the copy and data:** site settings, services, case studies, team, reviews, plans, FAQ and journal posts. |
 | `lib/rw.tsx` | The shared scaffold every Framer file used to inline: palette, fonts, the PING `Btn`, the motion layer, `Reveal`, `Head`, `Eyebrow` and the CMS bridge (`useCMS`). |
 | `lib/rw-css.ts` | Global CSS strings and the Google Fonts URL. |
-| `lib/framer.ts` | A tiny stand-in for the `framer` package, so the components run outside Framer. |
+| `lib/controls.ts` | The small property-controls API the sections use to declare their props and defaults. |
+| `scripts/localize-images.mjs` | One-off: copies the images still hosted on Framer's CDN into `public/images/` and rewrites the URLs. |
 
 ## Editing
 
@@ -39,21 +40,25 @@ npm run typecheck
 
 ## Deploying to Vercel
 
-The app lives in the `reachwise/` subfolder of this repo, so:
+The app lives in the `reachwise/` subfolder, and the repo's default branch holds a different app (the Instagram saves library) at its root. So give Reachwise **its own Vercel project**. Don't change the Root Directory of an existing project for the other app.
 
-1. Go to vercel.com → **Add New… → Project** and import this GitHub repo.
-2. Set **Root Directory** to `reachwise`. The framework is auto-detected as Next.js, and the default build settings are fine.
-3. Deploy. Every push then redeploys, and other branches get preview URLs.
+1. Go to vercel.com → **Add New… → Project** and import this GitHub repo. You can import the same repo more than once.
+2. Under **Root Directory**, click **Edit** and pick `reachwise`. The framework is detected as Next.js, and the default build settings are fine.
+3. Deploy:
+   - The first, production deploy builds the repo's **default branch**. That branch has no `reachwise/` folder yet, so this deploy fails.
+   - Pushes to other branches get **preview** deployments, and this branch has one.
+   - To get a working production deploy, either merge this branch into the default branch, or change the production branch to this one (Project → Settings → Environments → Production → Branch Tracking).
 
 If you prefer the CLI, run `npx vercel` from inside `reachwise/`.
 
 ## Before going live
 
 - **Images:**
-  - Photos, logos and avatars are still hotlinked from `framerusercontent.com`. Most are in `content/site.ts`, plus a few defaults in `RwHero`, `RwServices` and `RwFeed`.
-  - Move them into `public/` (or a CDN you own) and update the URLs.
+  - About 25 photos, logos and avatars still load from Framer's CDN (`framerusercontent.com`).
+  - Run `npm run images:localize` once on a machine with internet access, then commit `public/images/` and the rewritten files. After that every image is served from this site, resized by Vercel's image optimizer.
+  - To use your own photos, drop them in `public/images/` and reference them as `/images/name.webp` in `content/site.ts`.
 - **Links:**
-  - The nav and buttons point at `#section` anchors and placeholder URLs: the booking link, the socials, and the footer's "Made with Framer".
+  - The nav and buttons point at `#section` anchors and placeholder URLs, such as the booking link and the socials.
   - Swap in the real ones in `content/site.ts` and the section defaults.
 - **Forms:** the CTA email form has no backend. Wire it to your form or CRM provider.
 - **Pages:** only `/` exists. For more pages, add `app/<route>/page.tsx` and compose sections there, the same way `HomePage.tsx` does.

@@ -4,7 +4,7 @@ import {
     useState,
     type CSSProperties,
 } from "react"
-import { addPropertyControls, ControlType } from "@/lib/framer"
+import { addPropertyControls, ControlType } from "@/lib/controls"
 import {
     useFonts,
     useStill,

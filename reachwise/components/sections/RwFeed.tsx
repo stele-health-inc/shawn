@@ -58,8 +58,9 @@ type FeedPost = {
     src: string
     handle: string
     likes: number
-    kind: "post" | "reel" | "carousel"
+    kind: "post" | "reel" | "carousel" | "photo"
     extra: string
+    video: string
 }
 const feedParse = (s: string): FeedPost[] =>
     String(s || "")
@@ -88,8 +89,11 @@ const feedParse = (s: string): FeedPost[] =>
                     ? "reel"
                     : k.startsWith("c")
                       ? "carousel"
-                      : "post") as any,
+                      : k.startsWith("ph")
+                        ? "photo"
+                        : "post") as any,
                 extra: p[4] || "",
+                video: p[5] || "",
             }
         })
         .filter((p) => p.src)
@@ -278,7 +282,8 @@ export default function RwFeed(props: FeedProps) {
                                                 aspectRatio:
                                                     p.kind === "reel"
                                                         ? "9/16"
-                                                        : p.kind === "carousel"
+                                                        : p.kind === "carousel" ||
+                                                            p.kind === "photo"
                                                           ? "4/5"
                                                           : "1/1",
                                             }}
@@ -293,6 +298,19 @@ export default function RwFeed(props: FeedProps) {
                                                 decoding="async"
                                                 draggable={false}
                                             />
+                                            {p.video && (
+                                                <video
+                                                    className="rwfd-vid"
+                                                    src={p.video}
+                                                    poster={p.src}
+                                                    muted
+                                                    loop
+                                                    playsInline
+                                                    autoPlay
+                                                    preload="metadata"
+                                                    aria-hidden
+                                                />
+                                            )}
                                             {p.kind === "reel" && (
                                                 <span
                                                     className="rwfd-reel"
@@ -307,8 +325,9 @@ export default function RwFeed(props: FeedProps) {
                                                             d="M8 5.5v13l10.5-6.5z"
                                                         />
                                                     </svg>
-                                                    {p.extra || "10k"}{" "}
-                                                    {reelLabel}
+                                                    {p.extra
+                                                        ? `${p.extra} ${reelLabel}`
+                                                        : "Reel"}
                                                 </span>
                                             )}
                                             {p.kind === "carousel" && (
@@ -385,17 +404,19 @@ export default function RwFeed(props: FeedProps) {
                                                         aria-hidden
                                                     />
                                                 </span>
-                                                <span
-                                                    className="rwfd-roll"
-                                                    aria-label={`${fmt(p.likes)} likes`}
-                                                >
-                                                    <b aria-hidden>
-                                                        {fmt(p.likes)}
-                                                    </b>
-                                                    <b aria-hidden>
-                                                        {fmt(p.likes + 1)}
-                                                    </b>
-                                                </span>
+                                                {p.likes > 0 && (
+                                                    <span
+                                                        className="rwfd-roll"
+                                                        aria-label={`${fmt(p.likes)} likes`}
+                                                    >
+                                                        <b aria-hidden>
+                                                            {fmt(p.likes)}
+                                                        </b>
+                                                        <b aria-hidden>
+                                                            {fmt(p.likes + 1)}
+                                                        </b>
+                                                    </span>
+                                                )}
                                             </span>
                                         </div>
                                     </article>
@@ -423,6 +444,7 @@ const CSS_FEED = `
 .rwfd-wall{--T:190px;--gap:14px;position:relative;height:clamp(640px,92vh,900px);margin-top:clamp(56px,6vw,88px);padding:0 clamp(12px,1.4vw,24px);display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-template-rows:minmax(0,1fr);gap:var(--gap);overflow:hidden;overflow:clip;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 13%,#000 85%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 13%,#000 85%,transparent 100%)}
 .rwfd-col{position:relative;top:50%;align-self:start;display:flex;flex-direction:column;gap:var(--gap);height:max-content;transform:translate3d(0,calc(-50% + (var(--sp,.5) - .5) * 2 * var(--dir) * var(--spd) * var(--T)),0) skewY(var(--sk,0deg));will-change:transform}
 .rwfd.is-rm .rwfd-col{transform:translate3d(0,-50%,0)}
+.rwfd-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .rwfd-card{position:relative;display:flex;flex-direction:column;border-radius:20px;padding:6px;background:var(--rw-pine);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 8%,transparent);opacity:0;translate:0 40px;transition:opacity .9s ease,translate 1.1s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
 .rwfd.is-on .rwfd-card{opacity:1;translate:0 0}
 .rwfd-media{position:relative;overflow:hidden;border-radius:15px;background:color-mix(in srgb,var(--rw-cloud) 6%,transparent)}
@@ -500,7 +522,7 @@ addPropertyControls(RwFeed, {
         type: ControlType.String,
         title: "Posts",
         description:
-            "image|@handle|likes|post, reel or carousel|views or slides; … (image = Unsplash photo id or a full image URL)",
+            "image|@handle|likes (0 hides)|post, photo, reel or carousel|views or slides|video URL (optional); … (image = Unsplash photo id or a full image URL)",
         displayTextArea: true,
         defaultValue: FEED_POSTS,
     },

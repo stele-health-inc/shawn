@@ -27,13 +27,13 @@ const S = (C: ComponentType<any>, p: Record<string, any> = {}) => (
 // Real portfolio copy. Case-study rows live in content/site.ts (work); these sections take theirs as props.
 const CLIENTS = {
     heading: "Real clients.|*Real numbers*.",
-    line: "From boxing's most iconic brand to a health-tech startup: content, ads and websites, measured by what they actually did.",
-    clients: "Ring Magazine, Body Suite Spa, Stele Health, Solin, Crash Politics",
-    badges: "25M+ views;8× ROAS;Brand + site;Intersolar launch;501(c)(3) site",
+    line: "From boxing's most iconic brand to consumer brands and a health-tech startup: content, ads and websites, measured by what they actually did.",
+    clients: "Ring Magazine, Body Suite Spa, Friss Labs, Mood, HOP WTR, The Dreams Vault, Stele Health, Solin, Crash Politics",
+    badges: "25M+ views;8× ROAS;Full social;UGC ads;UGC ads;UGC ads;Brand + site;Intersolar launch;501(c)(3) site",
     ratingLine: "25M+ organic views · 8× ROAS",
 }
 const WORK = {
-    intro: "Two clients, two channels, one habit: we report the number that matters, before and after.",
+    intro: "Four clients, one habit: we show the work, and the number whenever there is one.",
 }
 const NUMBERS = {
     heading: "What our clients|*actually* got.",
@@ -47,6 +47,13 @@ const NUMBERS = {
     events: "25M+ organic views · Ring Magazine;770+ clips posted · Ring Magazine;Biggest clip: 2.5M views · Ring Magazine;2× engagement rate · Ring Magazine;8× ROAS on Google Ads · Body Suite Spa;7× ROAS on Facebook Ads · Body Suite Spa",
 }
 
+// Gallery: real posts and reels from client feeds (videos are muted, trimmed loops in /public/feed).
+const FEED = {
+    subCopy: "Reels and posts from the brands we create for, including HOP WTR and Friss Labs.",
+    stats: "25M+ organic views;770+ clips posted;2.5M-view top clip",
+    posts: "/feed/hop1.jpg|@hopwtr|0|reel||/feed/hop1.mp4;/feed/friss-p1.jpg|@frisslabs|0|photo;/feed/friss-p2.jpg|@frisslabs|0|photo;/feed/hop2.jpg|@hopwtr|0|reel||/feed/hop2.mp4;/feed/friss-p3.jpg|@frisslabs|0|photo;/feed/friss1.jpg|@frisslabs|0|reel||/feed/friss1.mp4;/feed/hop3.jpg|@hopwtr|0|reel||/feed/hop3.mp4;/feed/friss-p4.jpg|@frisslabs|0|photo;/feed/friss-p5.jpg|@frisslabs|0|photo;/feed/hop4.jpg|@hopwtr|0|reel||/feed/hop4.mp4;/feed/friss-p6.jpg|@frisslabs|0|photo;/feed/friss2.jpg|@frisslabs|0|reel||/feed/friss2.mp4;/feed/hop5.jpg|@hopwtr|0|reel||/feed/hop5.mp4;/feed/friss-p7.jpg|@frisslabs|0|photo;/feed/friss-p8.jpg|@frisslabs|0|photo;/feed/hop6.jpg|@hopwtr|0|reel||/feed/hop6.mp4;/feed/friss-p9.jpg|@frisslabs|0|photo;/feed/friss-p10.jpg|@frisslabs|0|photo",
+}
+
 export default function HomePage() {
     return (
         <main>
@@ -57,7 +64,7 @@ export default function HomePage() {
             {S(RwWork, WORK)}
             {S(RwFunnel)}
             {S(RwNumbers, NUMBERS)}
-            {S(RwFeed)}
+            {S(RwFeed, FEED)}
             {S(RwTeam)}
             {S(RwReviews)}
             {S(RwFaq)}

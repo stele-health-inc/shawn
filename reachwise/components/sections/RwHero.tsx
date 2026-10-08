@@ -30,6 +30,7 @@ import {
     FONT_CONTROLS,
     BP_CONTROL,
 } from "@/lib/rw"
+import BosLogo from "../../lib/logo"
 
 // ===== RwHero =====
 const IMG: Record<string, string> = {}
@@ -698,8 +699,7 @@ export default function RwHero(props: HeroProps) {
                         href="/"
                         aria-label={`${site.name} home`}
                     >
-                        <Mark />
-                        <span style={D}>{site.name}</span>
+                        <BosLogo h={26} title={site.name} />
                     </a>
                     <ul className="rwh-links">
                         {links.map((l, i) => (

@@ -34,6 +34,7 @@ import {
     useSite,
     linkList,
 } from "@/lib/rw"
+import BosLogo from "../../lib/logo"
 
 // ===== RwFooter =====
 interface FooterProps extends Pal {
@@ -276,8 +277,7 @@ export default function RwFooter(props: FooterProps) {
                             href="/"
                             aria-label={`${name} home`}
                         >
-                            <RwftMark />
-                            <span style={Dh}>{site.name}</span>
+                            <BosLogo h={34} title={site.name} />
                         </a>
                         {blurbT && <p className="rwft-blurb">{blurbT}</p>}
                         {site.announce && (

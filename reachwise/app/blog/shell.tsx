@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { CONTENT, type CmsRow } from "@/content/site"
+import BosLogo from "@/lib/logo"
 
 // Blog pages are plain server pages that share the homepage palette and fonts.
 // Colours mirror DEF in lib/rw.tsx (that module is client-only, so the values are repeated here).
@@ -57,8 +58,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <style dangerouslySetInnerHTML={{ __html: CSS }} />
             <header className="bl-top">
                 <div className="bl-wrap">
-                    <Link href="/" className="bl-mark">
-                        {name}
+                    <Link href="/" className="bl-mark" aria-label={`${name} home`}>
+                        <BosLogo h={24} title={name} />
                     </Link>
                     <nav className="bl-nav" aria-label="Main">
                         <Link href="/#services">Services</Link>

@@ -118,8 +118,8 @@ const wkFlat = (slug: string) => {
     }
     return d
 }
-const DV0 = 0.85,
-    DV1 = 0.15
+const DV0 = 0.15,
+    DV1 = 0.85
 export default function RwWork(props: WorkProps) {
     const {
         eyebrow = "(03) Case studies",
@@ -288,7 +288,7 @@ export default function RwWork(props: WorkProps) {
                     handle.current.setAttribute("aria-valuenow", String(a))
                     handle.current.setAttribute(
                         "aria-valuetext",
-                        `${100 - a}% after`
+                        `${a}% after`
                     )
                 }
             }
@@ -409,7 +409,7 @@ export default function RwWork(props: WorkProps) {
         V.style.setProperty("--dv", v.toFixed(3))
         const a = Math.round(v * 100)
         handle.current?.setAttribute("aria-valuenow", String(a))
-        handle.current?.setAttribute("aria-valuetext", `${100 - a}% after`)
+        handle.current?.setAttribute("aria-valuetext", `${a}% after`)
     }
     const onHandleKey = (ev: any) => {
         const e = E.current
@@ -679,9 +679,11 @@ export default function RwWork(props: WorkProps) {
                                             <span className="rwwk-tab-t">
                                                 <b>{r.f1}</b>
                                                 <small style={M}>
-                                                    {r.f6}
-                                                    {r.f8} → {r.f7}
-                                                    {r.f8}
+                                                    {r.f13 === "compare"
+                                                        ? `${r.f6}${r.f8 || ""} → ${r.f7}${r.f8 || ""}`
+                                                        : r.f4
+                                                          ? listOf(r.f4).join(" · ")
+                                                          : r.f3}
                                                 </small>
                                             </span>
                                             {sel && (
@@ -701,7 +703,7 @@ export default function RwWork(props: WorkProps) {
                         )}
                         <div
                             ref={view}
-                            className="rwwk-view"
+                            className={`rwwk-view${row.f13 === "compare" ? "" : " is-plain"}`}
                             style={{
                                 ...rise(on, 420, 30),
                                 ["--dv" as any]: final ? 0.5 : DV0,
@@ -843,7 +845,8 @@ const CSS_WK = `
 .rwwk-lay{position:absolute;inset:0;overflow:hidden}
 .rwwk-lay img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .rwwk-after img{scale:calc(1.08 - var(--dt)*.08);transition:scale .2s linear}
-.rwwk-before{clip-path:inset(0 calc((1 - var(--dv))*100%) 0 0)}
+.rwwk-view.is-plain .rwwk-before,.rwwk-view.is-plain .rwwk-div,.rwwk-view.is-plain .rwwk-handle,.rwwk-view.is-plain .rwwk-cur,.rwwk-view.is-plain .rwwk-num,.rwwk-view.is-plain .rwwk-ch{display:none} .rwwk-view.is-plain{cursor:auto}
+.rwwk-before{clip-path:inset(0 0 0 calc(var(--dv)*100%))}
 .rwwk-before img{filter:grayscale(1) brightness(.46) contrast(1.08)}
 .rwwk-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.42),transparent 26%,transparent 46%,rgba(0,0,0,.72))}
 .rwwk-before .rwwk-scrim{background:linear-gradient(180deg,rgba(0,0,0,.4),transparent 30%,rgba(0,0,0,.55))}
@@ -852,8 +855,8 @@ const CSS_WK = `
 .rwwk-ln{fill:none;stroke:var(--rw-brass);stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 0 10px color-mix(in srgb,var(--rw-brass) 70%,transparent))}
 .rwwk-fl{fill:none;stroke:color-mix(in srgb,var(--rw-cloud) 55%,transparent);stroke-width:2;stroke-dasharray:6 7}
 .rwwk-num{position:absolute;bottom:clamp(22px,3vw,40px);display:flex;flex-direction:column;gap:12px}
-.rwwk-num-a{right:clamp(22px,3vw,44px);align-items:flex-end;text-align:right}
-.rwwk-num-b{left:clamp(22px,3vw,44px);bottom:clamp(76px,8vw,118px);align-items:flex-start}
+.rwwk-num-a{left:clamp(22px,3vw,44px);align-items:flex-start;text-align:left}
+.rwwk-num-b{right:clamp(22px,3vw,44px);bottom:clamp(76px,8vw,118px);align-items:flex-end;text-align:right}
 .rwwk-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 80%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 34%,transparent);background:color-mix(in srgb,var(--rw-night) 30%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .rwwk-pill.is-a{background:var(--rw-brass);color:var(--rw-ink);box-shadow:none} .rwwk-pill.is-a i{width:7px;height:7px;border-radius:50%;background:#A2C2BE}
 .rwwk-big{font-size:clamp(84px,10.4vw,176px);line-height:.84;letter-spacing:-.06em;font-weight:var(--rw-font-dw,700);color:var(--rw-brass);font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 6px 50px rgba(0,0,0,.35)}
@@ -887,7 +890,7 @@ const CSS_WK = `
 .rwwk.is-ph .rwwk-tab{flex:none;width:auto;max-width:240px;scroll-snap-align:start}
 .rwwk.is-ph .rwwk-view{aspect-ratio:4/5;max-height:none;border-radius:20px}
 .rwwk.is-ph .rwwk-ch{height:46%} .rwwk.is-ph .rwwk-big{font-size:clamp(56px,17vw,76px)} .rwwk.is-ph .rwwk-ghost{font-size:32px;-webkit-text-stroke-width:1.1px}
-.rwwk.is-ph .rwwk-num{bottom:18px;gap:8px} .rwwk.is-ph .rwwk-num-a{right:16px} .rwwk.is-ph .rwwk-num-b{left:16px;bottom:auto;top:66px}
+.rwwk.is-ph .rwwk-num{bottom:18px;gap:8px} .rwwk.is-ph .rwwk-num-a{left:16px} .rwwk.is-ph .rwwk-num-b{right:16px;bottom:auto;top:66px}
 .rwwk.is-ph .rwwk-ml{display:none} .rwwk.is-ph .rwwk-handle{width:54px;height:54px}
 .rwwk.is-ph .rwwk-info-in{grid-template-columns:1fr;gap:16px} .rwwk.is-ph .rwwk-title{font-size:28px} .rwwk.is-ph .rwwk-sum{font-size:16px}
 @media (prefers-reduced-motion:reduce){.rwwk-case.is-in,.rwwk-case.is-out,.rwwk-info-in{animation:none!important}}

@@ -87,7 +87,7 @@ const services: CmsRow[] = [
 ]
 
 // work (case studies) — f1 client · f2 headline · f3 industry · f4 services (;) · f5 metric label · f6 before · f7 after
-// f8 unit suffix · f9 year · f10 summary · img cover
+// f8 unit suffix · f9 year · f10 summary · f13 "compare" = before/after slider (else a plain cover) · img cover
 const work: CmsRow[] = [
     {
         slug: "ring-magazine",
@@ -101,6 +101,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "Since Dec 2025",
         f10: "Boxing's most iconic brand had a huge content library but no short-form presence. We built a 5-page fan network: 770+ clips posted, a 2.5M-view top clip and a 2× engagement rate.",
+        f13: "compare",
         img: "/images/ring-magazine.png",
         n1: "1",
     },

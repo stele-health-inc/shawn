@@ -86,7 +86,7 @@ export default function RwFooter(props: FooterProps) {
         buttonLink = "",
         servicesTitle = "Services",
         companyTitle = "Company",
-        company = "Services:/#services, Work:/#work, Team:/#team, Contact:/#contact",
+        company = "Services:/#services, Work:/#work, Blog:/blog, Contact:/#contact",
         resourcesTitle = "Resources",
         resources = "Blog:/blog, FAQ:/#faq",
         contactTitle = "Contact",
@@ -495,7 +495,7 @@ addPropertyControls(RwFooter, {
         title: "Company links",
         description: "Label:/path, …",
         defaultValue:
-            "Services:/#services, Work:/#work, Team:/#team, Contact:/#contact",
+            "Services:/#services, Work:/#work, Blog:/blog, Contact:/#contact",
         displayTextArea: true,
     },
     resourcesTitle: {

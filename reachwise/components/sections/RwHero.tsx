@@ -163,12 +163,12 @@ const FS = `precision mediump float;
 uniform sampler2D uTex;uniform vec2 uView;uniform float uImg;uniform float uZoom;uniform vec2 uFoc;uniform float uTime;uniform vec3 uLime;uniform vec4 uP[8];uniform vec3 uPtr;uniform float uDiag;uniform float uDim;uniform vec3 uNight;
 vec2 cover(vec2 s){float ra=uView.x/uView.y;vec2 uv=s;if(ra>uImg){uv.y=(s.y-.5)*uImg/ra+.5;}else{uv.x=(s.x-.5)*ra/uImg+.5;}return (uv-.5)/uZoom+.5+uFoc;}
 void main(){vec2 fc=vec2(gl_FragCoord.x,uView.y-gl_FragCoord.y);vec2 s=fc/uView;vec3 col=texture2D(uTex,clamp(cover(s),.001,.999)).rgb;
-float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(vec3(l)*vec3(.9,.94,1.),uNight*.78,uDim);
+float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(col,uNight*.78,uDim*.62);
 float reach=0.;float rim=0.;
 for(int i=0;i<8;i++){vec4 P=uP[i];if(P.w<=0.)continue;float age=uTime-P.z;if(age<0.)continue;float R=age*uDiag*(.2+.07*P.w);float d=distance(fc,P.xy);float life=2.4+2.6*P.w;float fade=1.-smoothstep(life*.4,life,age);float band=uDiag*(.008+.006*P.w);
 rim+=exp(-pow((d-R)/band,2.))*(1.-smoothstep(0.,life*.75,age));reach=max(reach,(1.-smoothstep(R-band*5.,R+band,d))*fade);}
 float sp=(1.-smoothstep(uDiag*.035,uDiag*.12,distance(fc,uPtr.xy)))*uPtr.z;reach=max(reach,sp*.85);
-vec3 c=mix(grey,col*mix(1.,.86,uDim),reach);c=mix(c,uLime,clamp(rim,0.,1.)*.62);
+vec3 c=mix(grey,min(col*1.12,vec3(1.)),reach);c=mix(c,uLime,clamp(rim,0.,1.)*.62);
 float vg=smoothstep(.45,1.,s.y)*.55+(1.-smoothstep(0.,.2,s.y))*.28;c=mix(c,uNight*.7,vg);
 gl_FragColor=vec4(c,1.);}`
 export default function RwHero(props: HeroProps) {
@@ -825,7 +825,7 @@ const CSS_HERO = `
 .rwh{position:relative;width:100%;height:var(--hh,100svh);min-height:640px;overflow:hidden;background:var(--rw-night);color:var(--rw-cloud);isolation:isolate}
 .rwh.has-cur,.rwh.has-cur *{cursor:none!important}
 .rwh-bg{position:absolute;inset:0;z-index:0;overflow:hidden;translate:0 calc(var(--sy,0)*14%)}
-.rwh-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.62) contrast(1.05);transform:scale(1.12);transition:transform 2.2s cubic-bezier(.2,.8,.2,1),opacity .6s}
+.rwh-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.78) saturate(1.05);transform:scale(1.12);transition:transform 2.2s cubic-bezier(.2,.8,.2,1),opacity .6s}
 .rwh.is-in .rwh-img{transform:scale(1)} .rwh.is-gl .rwh-img{opacity:0}
 .rwh-cv{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .8s} .rwh.is-gl .rwh-cv{opacity:1}
 .rwh-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 46% at 50% 50%,color-mix(in srgb,var(--rw-night) 52%,transparent),transparent 72%),linear-gradient(180deg,color-mix(in srgb,var(--rw-night) 55%,transparent) 0,transparent 18%)}

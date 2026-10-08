@@ -58,8 +58,8 @@ export default function RwTeam(props: TeamProps) {
         eyebrow = "(07) Team",
         heading = "Specialists,|not *generalists*.",
         subCopy = "",
-        button = "Meet the team",
-        buttonLink = "/about",
+        button = "Work with us",
+        buttonLink = "/#contact",
         signalLabel = "Specialists reached",
         linkedinLabel = "LinkedIn",
         bpHint = "auto",
@@ -229,7 +229,7 @@ export default function RwTeam(props: TeamProps) {
                         <div className="rwtm-act">
                             {button && (
                                 <Btn
-                                    href={buttonLink || "/about"}
+                                    href={buttonLink || "/#contact"}
                                     label={button}
                                     kind="ghost"
                                 />
@@ -261,7 +261,6 @@ export default function RwTeam(props: TeamProps) {
                         <ul ref={rowEl} className="rwtm-row" role="list">
                             {rows.map((r, i) => {
                                 const reached = isLit(i)
-                                const href = `/team/${r.slug}`
                                 return (
                                     <li
                                         key={r.slug || i}
@@ -328,12 +327,18 @@ export default function RwTeam(props: TeamProps) {
                                         </figure>
                                         <div className="rwtm-cap">
                                             <h3 className="rwtm-name" style={D}>
-                                                <a
-                                                    className="rwtm-link"
-                                                    href={href}
-                                                >
-                                                    {r.f1}
-                                                </a>
+                                                {r.f5 ? (
+                                                    <a
+                                                        className="rwtm-link"
+                                                        href={r.f5}
+                                                        target="_blank"
+                                                        rel="noopener"
+                                                    >
+                                                        {r.f1}
+                                                    </a>
+                                                ) : (
+                                                    r.f1
+                                                )}
                                             </h3>
                                             <p className="rwtm-role">{r.f2}</p>
                                         </div>
@@ -459,12 +464,12 @@ addPropertyControls(RwTeam, {
     button: {
         type: ControlType.String,
         title: "Button",
-        defaultValue: "Meet the team",
+        defaultValue: "Work with us",
     },
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/about",
+        defaultValue: "/#contact",
     },
     signalLabel: {
         type: ControlType.String,

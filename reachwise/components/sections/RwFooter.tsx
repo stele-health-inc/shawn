@@ -85,13 +85,13 @@ export default function RwFooter(props: FooterProps) {
         buttonLink = "",
         servicesTitle = "Services",
         companyTitle = "Company",
-        company = "About:/about, Work:/work, Team:/about#team, Careers:/careers, Contact:/contact",
+        company = "Services:/#services, Work:/#work, Team:/#team, Contact:/#contact",
         resourcesTitle = "Resources",
         resources = "Blog:/blog, FAQ:/#faq",
         contactTitle = "Contact",
         wordmark = "",
         hint = "Move over the name",
-        legal = "Privacy:/privacy, Terms:/terms, Cookies:/cookies",
+        legal = "",
         madeWith = "",
         madeWithLink = "",
         clockLabel = "Local time",
@@ -120,7 +120,7 @@ export default function RwFooter(props: FooterProps) {
     const on = useOn(root, live, rm, 0.05)
     const services = useCMS("services", SEED.services || [])
     const name = pick(wordmark, site.name || "BOS Media Labs")
-    const book = pick(buttonLink, site.book || "/contact")
+    const book = pick(buttonLink, site.book || "/#contact")
     const [year, setYear] = useState("2026")
     const [now, setNow] = useState("--:--")
     useEffect(() => {
@@ -248,7 +248,7 @@ export default function RwFooter(props: FooterProps) {
     const cols = [
         {
             t: servicesTitle,
-            l: services.map((s) => ({ l: s.f1, h: `/services/${s.slug}` })),
+            l: services.map((s) => ({ l: s.f1, h: s.f8 || "/#services" })),
         },
         { t: companyTitle, l: linkList(company) },
         { t: resourcesTitle, l: linkList(resources) },
@@ -494,7 +494,7 @@ addPropertyControls(RwFooter, {
         title: "Company links",
         description: "Label:/path, …",
         defaultValue:
-            "About:/about, Work:/work, Team:/about#team, Careers:/careers, Contact:/contact",
+            "Services:/#services, Work:/#work, Team:/#team, Contact:/#contact",
         displayTextArea: true,
     },
     resourcesTitle: {
@@ -529,7 +529,7 @@ addPropertyControls(RwFooter, {
         type: ControlType.String,
         title: "Legal links",
         description: "Label:/path, …",
-        defaultValue: "Privacy:/privacy, Terms:/terms, Cookies:/cookies",
+        defaultValue: "",
     },
     madeWith: {
         type: ControlType.String,

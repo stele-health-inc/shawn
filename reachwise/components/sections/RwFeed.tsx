@@ -122,7 +122,7 @@ export default function RwFeed(props: FeedProps) {
         subCopy = "",
         stats = "",
         button = "Social media service",
-        buttonLink = "/services/social-media",
+        buttonLink = "/blog/running-your-whole-social",
         posts = FEED_POSTS,
         reelLabel = "views",
         bpHint = "auto",
@@ -245,7 +245,7 @@ export default function RwFeed(props: FeedProps) {
                     )}
                     {button && (
                         <Btn
-                            href={buttonLink || "/services/social-media"}
+                            href={buttonLink || "/blog/running-your-whole-social"}
                             label={button}
                             kind="ghost"
                         />
@@ -516,7 +516,7 @@ addPropertyControls(RwFeed, {
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/services/social-media",
+        defaultValue: "/blog/running-your-whole-social",
     },
     posts: {
         type: ControlType.String,

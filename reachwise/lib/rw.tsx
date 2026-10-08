@@ -1252,7 +1252,7 @@ export function useSite() {
         tagline: g("f3"),
         email: g("f4"),
         phone: g("f5"),
-        book: g("f6") || "/contact",
+        book: g("f6") || "/#contact",
         city: g("f7"),
         tz: g("f8") || "America/New_York",
         rating: g("f9") || "4.9",

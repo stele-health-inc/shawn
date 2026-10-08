@@ -141,7 +141,7 @@ export default function RwCta(props: CtaProps) {
         }
     }, [phone, tab])
     const team = useCMS("team", SEED.team || [])
-    const book = pick(buttonLink, site.book || "/contact")
+    const book = pick(buttonLink, site.book || "/#contact")
     const opts = String(budgets)
         .split(",")
         .map((x) => x.trim())
@@ -181,11 +181,16 @@ export default function RwCta(props: CtaProps) {
     })
     const go = (e?: any) => {
         if (e && e.preventDefault) e.preventDefault()
-        const q = new URLSearchParams()
-        if (email.trim()) q.set("email", email.trim())
-        if (budget) q.set("budget", budget)
-        const s = q.toString()
-        const url = s ? `${book}${book.includes("?") ? "&" : "?"}${s}` : book
+        if (site.email) {
+            const lines: string[] = []
+            if (email.trim()) lines.push(`My email: ${email.trim()}`)
+            if (budget) lines.push(`Monthly budget: ${budget}`)
+            lines.push("", "I'd like a free audit of my site, socials and ads.")
+            const body = lines.join("\n")
+            window.location.href = `mailto:${site.email}?subject=${encodeURIComponent("Free audit request")}&body=${encodeURIComponent(body)}`
+            return
+        }
+        const url = book
         try {
             if (/^https?:\/\//.test(book))
                 window.open(url, "_blank", "noopener")

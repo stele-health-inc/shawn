@@ -67,8 +67,8 @@ export default function RwIntro(props: IntroProps) {
         eyebrow = "(01) Why BOS",
         heading = "Everyone is a crowd.|We find *your buyers*.",
         subCopy = "Most brands aren't invisible. They're talking to the wrong people. We find the searches, feeds and audiences where your buyers already are — and put you there.",
-        button = "About us",
-        buttonLink = "/about",
+        button = "See what we do",
+        buttonLink = "/#services",
         facts = "Founded 2016;38 people;New York + remote",
         clusters = "Search|312|searching “dentist near me”;Feeds|1,204|following #coffee;Audiences|88|lookalikes",
         ratioLabel = "1 in",
@@ -503,7 +503,7 @@ export default function RwIntro(props: IntroProps) {
                         )}
                         <div className="rwin-act" style={rise(on, 520, 14)}>
                             <Btn
-                                href={buttonLink || "/about"}
+                                href={buttonLink || "/#services"}
                                 label={button}
                                 kind="ghost"
                             />
@@ -642,12 +642,12 @@ addPropertyControls(RwIntro, {
     button: {
         type: ControlType.String,
         title: "Button",
-        defaultValue: "About us",
+        defaultValue: "See what we do",
     },
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/about",
+        defaultValue: "/#services",
     },
     facts: {
         type: ControlType.String,

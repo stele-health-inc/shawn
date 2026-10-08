@@ -92,7 +92,7 @@ export default function RwFaq(props: FaqProps) {
     const on = useOn(root, live, rm)
     const rows = useCMS("faq", SEED.faq || [])
     const [open, setOpen] = useState<number>(firstOpen ? 0 : -1)
-    const book = pick(buttonLink, site.book || "/contact")
+    const book = pick(buttonLink, site.book || "/#contact")
     const settled = still || rm || !live
     // the signal line: 0 at the list top → 1 at its bottom, measured against a reading line at 62% of the viewport. Rows at or above the line are "reached".
     useEffect(() => {

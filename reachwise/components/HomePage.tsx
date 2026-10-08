@@ -59,17 +59,17 @@ export default function HomePage() {
         <main>
             {S(RwHero)}
             {S(RwClients, CLIENTS)}
-            {S(RwIntro)}
-            {S(RwServices)}
-            {S(RwWork, WORK)}
+            <div id="about">{S(RwIntro)}</div>
+            <div id="services">{S(RwServices)}</div>
+            <div id="work">{S(RwWork, WORK)}</div>
             {S(RwFunnel)}
             {S(RwNumbers, NUMBERS)}
             {S(RwFeed, FEED)}
-            {S(RwTeam)}
+            <div id="team">{S(RwTeam)}</div>
             {S(RwReviews)}
             {S(RwFaq)}
-            {S(RwJournal)}
-            {S(RwCta)}
+            <div id="blog">{S(RwJournal)}</div>
+            <div id="contact">{S(RwCta)}</div>
             {S(RwFooter)}
         </main>
     )

@@ -125,9 +125,9 @@ export default function RwWork(props: WorkProps) {
         eyebrow = "(03) Case studies",
         heading = "Results you can|*count*.",
         intro = "Six clients, five channels, one habit: we report the number that pays the bills, before and after.",
-        button = "All case studies",
-        buttonLink = "/work",
-        readLabel = "Read the case",
+        button = "Start a project",
+        buttonLink = "/#contact",
+        readLabel = "See it live",
         dragLabel = "Drag",
         beforeLabel = "Before",
         afterLabel = "After",
@@ -623,7 +623,7 @@ export default function RwWork(props: WorkProps) {
                         {intro && <p>{intro}</p>}
                         {button && (
                             <Btn
-                                href={buttonLink || "/work"}
+                                href={buttonLink || "/#contact"}
                                 label={button}
                                 kind="ghost"
                             />
@@ -788,9 +788,13 @@ export default function RwWork(props: WorkProps) {
                                         {row.f9 && <span>{row.f9}</span>}
                                     </p>
                                     <h3 className="rwwk-title" style={D}>
-                                        <a href={`/work/${row.slug || ""}`}>
-                                            {row.f2}
-                                        </a>
+                                        {row.f14 ? (
+                                            <a href={row.f14} target="_blank" rel="noopener">
+                                                {row.f2}
+                                            </a>
+                                        ) : (
+                                            row.f2
+                                        )}
                                     </h3>
                                 </div>
                                 <div className="rwwk-ir">
@@ -803,14 +807,18 @@ export default function RwWork(props: WorkProps) {
                                                 <span key={k}>{s}</span>
                                             ))}
                                         </span>
-                                        <a
-                                            className="rwwk-read"
-                                            href={`/work/${row.slug || ""}`}
-                                            style={M}
-                                        >
-                                            {readLabel}
-                                            <IcoArrow s={14} />
-                                        </a>
+                                        {row.f14 && (
+                                            <a
+                                                className="rwwk-read"
+                                                href={row.f14}
+                                                target="_blank"
+                                                rel="noopener"
+                                                style={M}
+                                            >
+                                                {readLabel}
+                                                <IcoArrow s={14} />
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -921,17 +929,17 @@ addPropertyControls(RwWork, {
     button: {
         type: ControlType.String,
         title: "Button",
-        defaultValue: "All case studies",
+        defaultValue: "Start a project",
     },
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/work",
+        defaultValue: "/#contact",
     },
     readLabel: {
         type: ControlType.String,
         title: "Case link",
-        defaultValue: "Read the case",
+        defaultValue: "See it live",
     },
     dragLabel: {
         type: ControlType.String,

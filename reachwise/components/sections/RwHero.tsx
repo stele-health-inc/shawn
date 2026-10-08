@@ -182,14 +182,14 @@ export default function RwHero(props: HeroProps) {
         primary = "Book a strategy call",
         primaryLink = "",
         secondary = "See our work",
-        secondaryLink = "/work",
+        secondaryLink = "/#work",
         chips = "❤|1.2k likes on one reel;+|86 new followers;★|New 5-star review;#1|“dentist near me”;●|12 leads today;↗|CTR up to 4.8%;✓|Call booked · Tue 10:30;◎|+318 profile visits;▶|48k video views;$|ROAS 6.2×",
         services = "Social media, Paid ads, Content, Web design",
         counterLabel = "People reached for clients this month",
         counterStart = 1284300,
         hint = "Move to reach · click to launch a campaign",
         showNav = true,
-        navLinks = "Services:/services, Work:/work, About:/about, Blog:/blog",
+        navLinks = "Services:/#services, Work:/#work, About:/#about, Blog:/blog",
         navCta = "Book a call",
         bpHint = "auto",
     } = props
@@ -238,7 +238,7 @@ export default function RwHero(props: HeroProps) {
             : ""
     )
     const ann = pick(eyebrow, site.announce)
-    const book = pick(primaryLink, site.book || "/contact")
+    const book = pick(primaryLink, site.book || "/#contact")
     const [reach, setReach] = useState(Math.max(0, Math.round(counterStart)))
     useEffect(() => {
         setReach(Math.max(0, Math.round(counterStart)))
@@ -787,7 +787,7 @@ export default function RwHero(props: HeroProps) {
                             icon="cal"
                         />
                         <Btn
-                            href={secondaryLink || "/work"}
+                            href={secondaryLink || "/#work"}
                             label={secondary}
                             kind="ghost"
                         />
@@ -969,7 +969,7 @@ addPropertyControls(RwHero, {
     secondaryLink: {
         type: ControlType.Link,
         title: "Second link",
-        defaultValue: "/work",
+        defaultValue: "/#work",
     },
     chips: {
         type: ControlType.String,
@@ -1012,7 +1012,7 @@ addPropertyControls(RwHero, {
         title: "Nav links",
         description: "Label:/path, …",
         defaultValue:
-            "Services:/services, Work:/work, About:/about, Blog:/blog",
+            "Services:/#services, Work:/#work, About:/#about, Blog:/blog",
     },
     navCta: {
         type: ControlType.String,

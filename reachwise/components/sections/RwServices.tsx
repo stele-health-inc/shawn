@@ -540,10 +540,10 @@ export default function RwServices(props: ServicesProps) {
         eyebrow = "(02) Services",
         heading = "Five channels.|*One* growth plan.",
         intro = "Social, ads, content, web and brand under one retainer, one team and one monthly report.",
-        button = "All services",
-        buttonLink = "/services",
+        button = "Talk to us",
+        buttonLink = "/#contact",
         fromLabel = "From",
-        exploreLabel = "Explore",
+        exploreLabel = "Read more",
         includesLabel = "What's included",
         hint = "Scroll to switch channels, or pick one",
         seoQuery = "dentist near me",
@@ -763,7 +763,7 @@ export default function RwServices(props: ServicesProps) {
                         {intro && <p>{intro}</p>}
                         {button && (
                             <Btn
-                                href={buttonLink || "/services"}
+                                href={buttonLink || "/#contact"}
                                 label={button}
                                 kind="ghost"
                             />
@@ -903,7 +903,7 @@ export default function RwServices(props: ServicesProps) {
                                                         </span>
                                                     )}
                                                     <Btn
-                                                        href={`/services/${r.slug || ""}`}
+                                                        href={r.f8 || "/#contact"}
                                                         label={exploreLabel}
                                                         kind="solid"
                                                         sub={r.f1}
@@ -1151,12 +1151,12 @@ addPropertyControls(RwServices, {
     button: {
         type: ControlType.String,
         title: "Button",
-        defaultValue: "All services",
+        defaultValue: "Talk to us",
     },
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/services",
+        defaultValue: "/#contact",
     },
     fromLabel: {
         type: ControlType.String,
@@ -1166,7 +1166,7 @@ addPropertyControls(RwServices, {
     exploreLabel: {
         type: ControlType.String,
         title: "Panel button",
-        defaultValue: "Explore",
+        defaultValue: "Read more",
     },
     includesLabel: {
         type: ControlType.String,

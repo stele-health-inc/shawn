@@ -84,7 +84,7 @@ export default function RwReviews(props: ReviewsProps) {
         reviewsLabel = "client reviews",
         badges = "Google 4.9;Clutch 5.0;G2 4.8",
         button = "Read case studies",
-        buttonLink = "/work",
+        buttonLink = "/#work",
         clock = "09:41",
         date = "Tuesday, 29 September",
         appName = "BOS Media Labs",
@@ -234,7 +234,7 @@ export default function RwReviews(props: ReviewsProps) {
                         {button && (
                             <div style={rise(on, 560)}>
                                 <Btn
-                                    href={buttonLink || "/work"}
+                                    href={buttonLink || "/#work"}
                                     label={button}
                                     kind="ghost"
                                 />
@@ -519,7 +519,7 @@ addPropertyControls(RwReviews, {
     buttonLink: {
         type: ControlType.Link,
         title: "Button link",
-        defaultValue: "/work",
+        defaultValue: "/#work",
     },
     clock: { type: ControlType.String, title: "Clock", defaultValue: "09:41" },
     date: {

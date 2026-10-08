@@ -363,11 +363,11 @@ export default function RwFooter(props: FooterProps) {
             </div>
             <div className="rw-wrap rwft-wmw">
                 <div ref={wmBox} className="rwft-wm" aria-hidden>
-                    <span ref={wmTxt} className="rwft-wm-t" style={Dh}>
-                        {name}
+                    <span ref={wmTxt} className="rwft-wm-t rwft-wm-svg">
+                        <BosLogo h={100} title={name} />
                     </span>
-                    <span className="rwft-wm-l" style={Dh}>
-                        {name}
+                    <span className="rwft-wm-l rwft-wm-svg">
+                        <BosLogo h={100} title={name} />
                     </span>
                     <i className="rwft-ring" />
                     {!phone && hint && (
@@ -437,6 +437,7 @@ const CSS_FOOTER = `
 .rwft-col .rwft-soc{flex-direction:row;flex-wrap:wrap;gap:6px;margin-top:20px}
 .rwft-soc a{padding:7px 11px;border-radius:999px;font-size:11px;letter-spacing:.06em;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 18%,transparent);transition:background .3s,color .3s,box-shadow .3s} .rwft-soc a::before{display:none}
 .rwft-soc a:hover{background:var(--rw-brass);color:var(--rw-ink);box-shadow:none}
+.rwft-wm-svg{width:100%!important;font-size:0!important;line-height:0!important;padding:0 0 clamp(6px,1vw,14px)!important;-webkit-text-stroke:0!important} .rwft-wm-svg svg{width:100%!important;height:auto!important} .rwft-wm-l.rwft-wm-svg{position:relative;z-index:1} .rwft-wm-t.rwft-wm-svg path{stroke:color-mix(in srgb,var(--rw-cloud) 16%,transparent);stroke-width:1px;vector-effect:non-scaling-stroke}
 .rwft-wmw{border-top:1px solid color-mix(in srgb,var(--rw-cloud) 12%,transparent)}
 .rwft-wm{--fx:-999px;--fy:-999px;--fr:0px;position:relative;display:grid;padding:clamp(18px,2vw,30px) 0 0;overflow:hidden;translate:0 calc((1 - var(--rv,1))*42%);opacity:calc(.3 + var(--rv,1)*.7);user-select:none}
 .rwft-wm-t,.rwft-wm-l{grid-area:1/1;display:block;font-size:var(--wf,17vw);line-height:.8;letter-spacing:-.065em;white-space:nowrap;padding:0 .075em .08em 0;justify-self:center;width:max-content}

@@ -188,7 +188,7 @@ export default function RwHero(props: HeroProps) {
         services = "Social media, Paid ads, Content, Web design",
         counterLabel = "People reached for clients this month",
         counterStart = 1284300,
-        hint = "Move to reach · click to launch a campaign",
+        hint = "Click anywhere to launch a campaign",
         showNav = true,
         navLinks = "Services:/#services, Work:/#work, About:/#about, Blog:/blog",
         navCta = "Book a call",
@@ -498,16 +498,7 @@ export default function RwHero(props: HeroProps) {
             px += (tx - px) * (idle ? 0.03 : 0.16)
             py += (ty - py) * (idle ? 0.03 : 0.16)
             on += ((fine && !idle ? 1 : 0) - on) * 0.08
-            if (!rm && tn > intro) {
-                if (tn - lastEmit > (idle ? 1.9 : 1.35)) {
-                    emit(px, py, idle ? 0.7 : 0.9)
-                    lastEmit = tn
-                }
-            }
-            if (tn > intro - 0.2 && P.length === 0 && !rm) {
-                emit(W / 2, H * 0.55, 1.4)
-                lastEmit = tn
-            }
+            // rings only fire on click (pointerdown → dn); no automatic or idle pulses
             for (let i = 0; i < 8; i++) {
                 const p = P[i]
                 PU[i * 4] = p ? p[0] * dpr : 0
@@ -795,15 +786,6 @@ export default function RwHero(props: HeroProps) {
                 </div>
             </div>
             <div className="rwh-strip" style={rise(inn, 900, 14)}>
-                <div className="rwh-count">
-                    <p className="rwh-count-l" style={M}>
-                        <i className="rwh-live" aria-hidden />
-                        {counterLabel}
-                    </p>
-                    <p className="rwh-count-n" style={D}>
-                        <Roll text={reach.toLocaleString("en-US")} />
-                    </p>
-                </div>
                 <ul className="rwh-tags" style={M}>
                     {SV.map((s, i) => (
                         <li key={i}>
@@ -1000,7 +982,7 @@ addPropertyControls(RwHero, {
     hint: {
         type: ControlType.String,
         title: "Hint",
-        defaultValue: "Move to reach · click to launch a campaign",
+        defaultValue: "Click anywhere to launch a campaign",
     },
     showNav: {
         type: ControlType.Boolean,

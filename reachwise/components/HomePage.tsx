@@ -11,7 +11,6 @@ import RwWork from "./sections/RwWork"
 import RwFunnel from "./sections/RwFunnel"
 import RwNumbers from "./sections/RwNumbers"
 import RwFeed from "./sections/RwFeed"
-import RwReviews from "./sections/RwReviews"
 import RwFaq from "./sections/RwFaq"
 import RwJournal from "./sections/RwJournal"
 import RwCta from "./sections/RwCta"
@@ -64,7 +63,6 @@ export default function HomePage() {
             {S(RwFunnel)}
             {S(RwNumbers, NUMBERS)}
             {S(RwFeed, FEED)}
-            {S(RwReviews)}
             {S(RwFaq)}
             <div id="blog">{S(RwJournal)}</div>
             <div id="contact">{S(RwCta)}</div>

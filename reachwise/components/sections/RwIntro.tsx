@@ -132,7 +132,7 @@ export default function RwIntro(props: IntroProps) {
             ctx = canvas.getContext("2d")
         if (!ctx) return
         const ink = cssRgb(pn, c.cloud, "255,255,255"),
-            lime = cssRgb(pn, c.brass, "235,70,0")
+            lime = cssRgb(pn, c.brass, "255,138,61")
         const R = rwinRand(1207 + N)
         // ---- the crowd: people walk alone or in small groups; home positions in 0..1 ----
         const hx = new Float32Array(N),

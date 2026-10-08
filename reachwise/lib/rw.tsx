@@ -271,7 +271,7 @@ export type Pal = {
 export const DEF: Pal = {
     bone: "#FFFFEB", // Powder: paper
     ink: "#0D0E10", // type
-    brass: "#EB4600", // Tangelo: accent
+    brass: "#FF8A3D", // light Tangelo: accent
     pine: "#16181B", // cards on dark
     fog: "#DAE7D9", // Ash Gray over Powder: hairlines
     stone: "#75766F", // muted type

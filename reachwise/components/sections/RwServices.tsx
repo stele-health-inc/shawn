@@ -499,7 +499,7 @@ const SvBrd = ({ cfg, M, D }: SvP) => (
             <b style={D}>{cfg.brandName}</b>
         </div>
         <div className="rwsv-sw">
-            {["#0D0E10", "#EB4600", "#A2C2BE", "#FFFFEB"].map((hx, i) => (
+            {["#0D0E10", "#FF8A3D", "#A2C2BE", "#FFFFEB"].map((hx, i) => (
                 <span
                     key={i}
                     className={`rwsv-s rwsv-s${i}`}
@@ -1116,7 +1116,7 @@ const CSS_SV = `
 .rwsv-sw{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;perspective:500px}
 .rwsv-s{position:relative;height:86px;transform-style:preserve-3d;animation:rwsv-flip 4.4s cubic-bezier(.7,0,.2,1) infinite}
 .rwsv-s i{position:absolute;inset:0;display:flex;align-items:flex-end;padding:8px;border-radius:12px;backface-visibility:hidden;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 14%,transparent)} .rwsv-s i+i{transform:rotateY(180deg)} .rwsv-s small{font-size:9px;letter-spacing:.06em;mix-blend-mode:difference;color:#fff}
-.rwsv-s0 i:first-child{background:#0D0E10} .rwsv-s0 i+i{background:#A2C2BE} .rwsv-s1 i:first-child{background:#EB4600} .rwsv-s1 i+i{background:#C9DCD7} .rwsv-s2 i:first-child{background:#A2C2BE} .rwsv-s2 i+i{background:#FFFFEB} .rwsv-s3 i:first-child{background:#FFFFEB} .rwsv-s3 i+i{background:#0D0E10}
+.rwsv-s0 i:first-child{background:#0D0E10} .rwsv-s0 i+i{background:#A2C2BE} .rwsv-s1 i:first-child{background:#FF8A3D} .rwsv-s1 i+i{background:#C9DCD7} .rwsv-s2 i:first-child{background:#A2C2BE} .rwsv-s2 i+i{background:#FFFFEB} .rwsv-s3 i:first-child{background:#FFFFEB} .rwsv-s3 i+i{background:#0D0E10}
 @keyframes rwsv-flip{0%,35%{transform:rotateY(0)}50%,85%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
 .rwsv-spec{display:flex;align-items:center;gap:16px;font-size:10.5px;line-height:1.5;letter-spacing:.1em;text-transform:uppercase;color:var(--rw-ink)} .rwsv-spec span:first-child{font-size:64px;line-height:1;letter-spacing:-.05em;text-transform:none;font-weight:700}
 .rwsv-apps{display:flex;gap:10px;align-items:center} .rwsv-apps i{display:grid;place-items:center;height:44px;border-radius:12px;font-style:normal}

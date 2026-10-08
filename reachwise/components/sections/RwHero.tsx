@@ -306,7 +306,7 @@ export default function RwHero(props: HeroProps) {
             uDiag = U("uDiag"),
             uDim = U("uDim"),
             uNight = U("uNight")
-        const lime = cssRgb(r, c.brass, "235,70,0")
+        const lime = cssRgb(r, c.brass, "255,138,61")
             .split(",")
             .map((v) => Number(v) / 255)
         g.uniform3f(uLime, lime[0], lime[1], lime[2])

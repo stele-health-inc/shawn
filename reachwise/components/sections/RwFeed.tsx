@@ -98,7 +98,7 @@ const feedParse = (s: string): FeedPost[] =>
         })
         .filter((p) => p.src)
 const FEED_HUES = [
-    "#EB4600",
+    "#FF8A3D",
     "#A2C2BE",
     "#C9DCD7",
     "#FFFFEB",

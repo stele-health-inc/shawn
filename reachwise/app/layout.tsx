@@ -3,9 +3,9 @@ import { CSS_BASE, CSS_MOTION, FONTS } from "@/lib/rw-css"
 import "./globals.css"
 
 export const metadata: Metadata = {
-    title: "Reachwise — Digital marketing agency",
+    title: "BOS Media Labs — Digital marketing studio",
     description:
-        "Reachwise is a digital marketing agency: SEO, social, paid ads, content, web and brand.",
+        "BOS Media Labs is a digital marketing studio: short-form content, paid ads, AI systems and websites.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

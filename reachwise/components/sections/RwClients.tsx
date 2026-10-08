@@ -422,7 +422,7 @@ const CSS_CL = `
 .rwcl-round .rwcl-nm{font-weight:500;letter-spacing:-.02em;text-transform:lowercase;font-size:calc(var(--nm) * 1.12)}
 .rwcl-cond .rwcl-nm{font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-size:calc(var(--nm) * .92);transform:scaleX(.84);transform-origin:left center} .rwcl-cond.is-l .rwcl-nm{transform-origin:right center}
 .rwcl-mono .rwcl-nm{text-transform:uppercase;letter-spacing:.14em;font-size:calc(var(--nm) * .8)}
-.rwcl-bdg{position:absolute;left:0;top:-14px;translate:-50% -100%;padding:4px 8px;border-radius:999px;background:#FF3E88;color:#0D0E10;font-size:11px;font-weight:600;letter-spacing:.02em;white-space:nowrap;box-shadow:0 0 0 2.5px var(--rw-bone),0 10px 20px -10px rgba(0,0,0,.5);scale:.3;opacity:0;transform-origin:50% 100%;transition:scale .5s cubic-bezier(.34,1.56,.64,1),opacity .4s,translate .5s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.rwcl-bdg{position:absolute;left:0;top:-14px;translate:-50% -100%;padding:4px 8px;border-radius:999px;background:#A2C2BE;color:#0D0E10;font-size:11px;font-weight:600;letter-spacing:.02em;white-space:nowrap;box-shadow:0 0 0 2.5px var(--rw-bone),0 10px 20px -10px rgba(0,0,0,.5);scale:.3;opacity:0;transform-origin:50% 100%;transition:scale .5s cubic-bezier(.34,1.56,.64,1),opacity .4s,translate .5s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 .rwcl-blip:hover,.rwcl-blip.is-hit{z-index:4}
 .rwcl-blip:hover .rwcl-nm,.rwcl-blip.is-hit .rwcl-nm{color:var(--rw-ink);transition-duration:.25s}
 .rwcl-blip:hover .rwcl-dot,.rwcl-blip.is-hit .rwcl-dot{background:var(--rw-ink);scale:1.25;transition-duration:.2s}

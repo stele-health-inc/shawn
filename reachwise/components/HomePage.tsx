@@ -13,7 +13,6 @@ import RwNumbers from "./sections/RwNumbers"
 import RwFeed from "./sections/RwFeed"
 import RwTeam from "./sections/RwTeam"
 import RwReviews from "./sections/RwReviews"
-import RwPricing from "./sections/RwPricing"
 import RwFaq from "./sections/RwFaq"
 import RwJournal from "./sections/RwJournal"
 import RwCta from "./sections/RwCta"
@@ -25,20 +24,42 @@ const S = (C: ComponentType<any>, p: Record<string, any> = {}) => (
     <C {...defaultsOf(C)} {...p} />
 )
 
+// Real portfolio copy. Case-study rows live in content/site.ts (work); these sections take theirs as props.
+const CLIENTS = {
+    heading: "Real clients.|*Real numbers*.",
+    line: "From boxing's most iconic brand to a Los Angeles home-security company: content, ads, AI systems and websites, measured by what they actually did.",
+    clients: "Ring Magazine, APS Home Security, Body Suite Spa, Stele Health, Solin, Crash Politics",
+    badges: "25M+ views;AI assistant;8× ROAS;Brand + site;Intersolar launch;501(c)(3) site",
+    ratingLine: "25M+ organic views · 8× ROAS",
+}
+const WORK = {
+    intro: "Three clients, three channels, one habit: we report the number that matters, before and after.",
+}
+const NUMBERS = {
+    heading: "What our clients|*actually* got.",
+    intro: "Headline results from client work: views from short-form content, return on ad spend from paid campaigns.",
+    reportLabel: "Client results",
+    liveLabel: "Results",
+    tabs: "Overview, Content, Ads, AI",
+    range: "Since 2024",
+    kpis: "25M+:organic views for Ring Magazine:up;8×:Google Ads ROAS for Body Suite Spa:up;7×:Facebook Ads ROAS for Body Suite Spa:up;770+:clips posted across 5 fan pages:up",
+    deltaLabel: "client result",
+    events: "25M+ organic views · Ring Magazine;770+ clips posted · Ring Magazine;Biggest clip: 2.5M views · Ring Magazine;2× engagement rate · Ring Magazine;8× ROAS on Google Ads · Body Suite Spa;7× ROAS on Facebook Ads · Body Suite Spa;AI assistant books technicians · APS Home Security;Vacation and burglary watch, automated · APS Home Security",
+}
+
 export default function HomePage() {
     return (
         <main>
             {S(RwHero)}
-            {S(RwClients)}
+            {S(RwClients, CLIENTS)}
             {S(RwIntro)}
             {S(RwServices)}
-            {S(RwWork)}
+            {S(RwWork, WORK)}
             {S(RwFunnel)}
-            {S(RwNumbers)}
+            {S(RwNumbers, NUMBERS)}
             {S(RwFeed)}
             {S(RwTeam)}
             {S(RwReviews)}
-            {S(RwPricing)}
             {S(RwFaq)}
             {S(RwJournal)}
             {S(RwCta)}

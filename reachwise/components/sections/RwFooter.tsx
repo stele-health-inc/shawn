@@ -87,7 +87,7 @@ export default function RwFooter(props: FooterProps) {
         companyTitle = "Company",
         company = "About:/about, Work:/work, Team:/about#team, Careers:/careers, Contact:/contact",
         resourcesTitle = "Resources",
-        resources = "Blog:/blog, Pricing:/pricing, FAQ:/#faq",
+        resources = "Blog:/blog, FAQ:/#faq",
         contactTitle = "Contact",
         wordmark = "",
         hint = "Move over the name",
@@ -119,7 +119,7 @@ export default function RwFooter(props: FooterProps) {
     useMagnet(root, live)
     const on = useOn(root, live, rm, 0.05)
     const services = useCMS("services", SEED.services || [])
-    const name = pick(wordmark, site.name || "Reachwise")
+    const name = pick(wordmark, site.name || "BOS Media Labs")
     const book = pick(buttonLink, site.book || "/contact")
     const [year, setYear] = useState("2026")
     const [now, setNow] = useState("--:--")
@@ -506,7 +506,7 @@ addPropertyControls(RwFooter, {
         type: ControlType.String,
         title: "Resources links",
         description: "Label:/path, …",
-        defaultValue: "Blog:/blog, Pricing:/pricing, FAQ:/#faq",
+        defaultValue: "Blog:/blog, FAQ:/#faq",
         displayTextArea: true,
     },
     contactTitle: {

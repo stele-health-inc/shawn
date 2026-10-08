@@ -79,7 +79,7 @@ export default function RwCta(props: CtaProps) {
         sub = "",
         emailPlaceholder = "Work email",
         budgetLabel = "Monthly budget",
-        budgets = "Under $2k/mo, $2k–$5k/mo, $5k–$10k/mo, $10k+/mo",
+        budgets = "",
         button = "Get my free audit",
         buttonLink = "",
         cardLabel = "Availability",
@@ -252,6 +252,7 @@ export default function RwCta(props: CtaProps) {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </label>
+                        {opts.length > 0 && (
                         <label className="rwct-f rwct-bd">
                             <span className="rw-sr">{budgetLabel}</span>
                             <select
@@ -277,6 +278,7 @@ export default function RwCta(props: CtaProps) {
                                 />
                             </svg>
                         </label>
+                        )}
                         <div ref={launch} className="rwct-launch">
                             <Btn
                                 href={book}
@@ -455,8 +457,8 @@ addPropertyControls(RwCta, {
     budgets: {
         type: ControlType.String,
         title: "Budget options",
-        description: "Comma list",
-        defaultValue: "Under $2k/mo, $2k–$5k/mo, $5k–$10k/mo, $10k+/mo",
+        description: "Comma list; empty hides the budget picker",
+        defaultValue: "",
     },
     button: {
         type: ControlType.String,

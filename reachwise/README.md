@@ -1,4 +1,4 @@
-# Reachwise — site template
+# BOS Media Labs — site
 
 The Reachwise agency site (THE REACH design), rebuilt as a standalone **Next.js (App Router)** app from the 15 original Framer code components. It doesn't use the Framer package, editor or hosting: it builds and runs on its own and deploys to Vercel like any React project.
 

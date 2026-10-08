@@ -87,7 +87,7 @@ export default function RwReviews(props: ReviewsProps) {
         buttonLink = "/work",
         clock = "09:41",
         date = "Tuesday, 29 September",
-        appName = "Reachwise",
+        appName = "BOS Media Labs",
         times = "now;2m ago;9m ago;26m ago;1h ago;3h ago",
         bpHint = "auto",
     } = props
@@ -443,7 +443,7 @@ const CSS_REVIEWS = `
 .rwrv-lk{width:16px;height:16px;opacity:.85}
 .rwrv-date{margin:8px 0 0;font-size:13px;letter-spacing:.04em;color:color-mix(in srgb,var(--rw-cloud) 80%,transparent)}
 .rwrv-clock{margin:2px 0 0;font-size:clamp(76px,7vw,96px);line-height:1;letter-spacing:-.04em;font-weight:600;font-variant-numeric:tabular-nums}
-.rwrv-new{display:flex;align-items:center;gap:6px;margin:16px 4px 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 70%,transparent)} .rwrv-new b{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#FF3E88;color:#0D0E10;font-weight:600;letter-spacing:0}
+.rwrv-new{display:flex;align-items:center;gap:6px;margin:16px 4px 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 70%,transparent)} .rwrv-new b{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#A2C2BE;color:#0D0E10;font-weight:600;letter-spacing:0}
 .rwrv-stack{position:relative;list-style:none;margin:0;padding:0}
 .rwrv-note{position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;gap:10px;min-height:150px;padding:14px 16px 15px;border-radius:24px;background:color-mix(in srgb,var(--rw-cloud) 90%,transparent);color:var(--rw-ink);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 18px 40px -22px rgba(0,0,0,.7);transform-origin:50% 0;transition:transform .95s cubic-bezier(.34,1.42,.5,1),opacity .55s ease,box-shadow .4s,background .3s;outline:none}
 .rwrv-app{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-ink) 62%,transparent)}
@@ -530,7 +530,7 @@ addPropertyControls(RwReviews, {
     appName: {
         type: ControlType.String,
         title: "App name",
-        defaultValue: "Reachwise",
+        defaultValue: "BOS Media Labs",
     },
     times: {
         type: ControlType.String,

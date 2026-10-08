@@ -223,7 +223,7 @@ const CSS_JOURNAL = `
 .rwjr-card:hover .rwjr-cov img{scale:1.06}
 .rwjr-note{position:absolute;left:22px;bottom:22px;display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 6px;border-radius:999px;background:var(--rw-cloud);color:var(--rw-ink);font-size:12px;box-shadow:0 14px 34px -12px rgba(0,0,0,.5);opacity:clamp(0,calc((var(--u) - .7)*4),1);translate:0 calc((1 - clamp(0,calc((var(--u) - .7)*4),1))*14px)}
 .rwjr-note b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--rw-brass);font-size:11px}
-.rwjr-note i{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#FF3E88;box-shadow:0 0 0 2px var(--rw-cloud)}
+.rwjr-note i{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#A2C2BE;box-shadow:0 0 0 2px var(--rw-cloud)}
 .rwjr-txt{position:relative;display:flex;flex-direction:column;gap:12px;padding-right:44px}
 .rwjr-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rw-mut)}
 .rwjr-kick{padding:5px 10px;border-radius:999px;background:var(--rw-ink);color:var(--rw-bone)}

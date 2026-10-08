@@ -364,7 +364,7 @@ export default function RwFunnel(props: FunnelProps) {
                 ctx.arc(x, p.y, p.s + (p.k >= 3 ? 1.4 : p.k * 0.3), 0, 6.283)
                 ctx.fillStyle =
                     p.k >= 3
-                        ? `rgba(255,62,136,${Math.min(1, a + 0.4)})`
+                        ? `rgba(162,194,190,${Math.min(1, a + 0.4)})`
                         : `rgba(${ink},${a})`
                 ctx.fill()
             }
@@ -594,7 +594,7 @@ const CSS_FUNNEL = `
 .rwfn-band-l em{font-style:normal;display:grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:var(--rw-ink);color:var(--rw-brass);font-size:10px}
 .rwfn-band-v{font-size:clamp(34px,3.4vw,56px);line-height:.9;letter-spacing:-.05em;font-weight:var(--rw-font-dw,700);font-variant-numeric:tabular-nums}
 .rwfn-tip{position:absolute;z-index:4;top:50%;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--rw-ink);color:var(--rw-cloud);font-size:11.5px;letter-spacing:.04em;white-space:nowrap;translate:0 -30%;opacity:0;transition:opacity .3s,translate .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
-.rwfn-tip i{width:7px;height:7px;border-radius:50%;background:#FF3E88}
+.rwfn-tip i{width:7px;height:7px;border-radius:50%;background:#A2C2BE}
 .rwfn-band:hover .rwfn-tip,.rwfn-band:focus-visible .rwfn-tip{opacity:1;translate:0 -50%}
 .rwfn-foot{display:flex;align-items:center;justify-content:center;gap:10px;margin:0;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rw-mut)}
 @media (max-height:760px){.rwfn.is-pin .rwfn-step p{display:none} .rwfn.is-pin .rwfn-intro{display:none}}
@@ -609,7 +609,7 @@ const CSS_FUNNEL = `
 .rwfn-row-bar{position:relative;height:14px;border-radius:999px;background:color-mix(in srgb,var(--rw-ink) 8%,transparent);overflow:hidden;width:calc(100% - var(--i) * 12%)}
 .rwfn-row-bar i{position:absolute;inset:0;border-radius:inherit;background:var(--rw-brass);transform:scaleX(0);transform-origin:left;transition:transform 1.3s cubic-bezier(.7,0,.2,1) .15s}
 .rwfn-row.is-on .rwfn-row-bar i{transform:none}
-.rwfn-row-tip{margin:0;display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.06em;color:var(--rw-mut)} .rwfn-row-tip::before{content:"";width:6px;height:6px;border-radius:50%;background:#FF3E88}
+.rwfn-row-tip{margin:0;display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.06em;color:var(--rw-mut)} .rwfn-row-tip::before{content:"";width:6px;height:6px;border-radius:50%;background:#A2C2BE}
 .rwfn-row-step{padding-top:14px;border-top:1px solid var(--rw-fog)}
 `
 addPropertyControls(RwFunnel, {

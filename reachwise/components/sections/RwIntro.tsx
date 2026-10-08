@@ -64,7 +64,7 @@ const rwinRand = (seed: number) => {
 const rwinFmt = (n: number) => Math.round(n).toLocaleString("en-US")
 export default function RwIntro(props: IntroProps) {
     const {
-        eyebrow = "(01) Why Reachwise",
+        eyebrow = "(01) Why BOS",
         heading = "Everyone is a crowd.|We find *your buyers*.",
         subCopy = "Most brands aren't invisible. They're talking to the wrong people. We find the searches, feeds and audiences where your buyers already are — and put you there.",
         button = "About us",
@@ -132,7 +132,7 @@ export default function RwIntro(props: IntroProps) {
             ctx = canvas.getContext("2d")
         if (!ctx) return
         const ink = cssRgb(pn, c.cloud, "255,255,255"),
-            lime = cssRgb(pn, c.brass, "212,255,58")
+            lime = cssRgb(pn, c.brass, "235,70,0")
         const R = rwinRand(1207 + N)
         // ---- the crowd: people walk alone or in small groups; home positions in 0..1 ----
         const hx = new Float32Array(N),
@@ -624,7 +624,7 @@ addPropertyControls(RwIntro, {
     eyebrow: {
         type: ControlType.String,
         title: "Eyebrow",
-        defaultValue: "(01) Why Reachwise",
+        defaultValue: "(01) Why BOS",
     },
     heading: {
         type: ControlType.String,

@@ -189,7 +189,7 @@ export default function RwHero(props: HeroProps) {
         counterStart = 1284300,
         hint = "Move to reach · click to launch a campaign",
         showNav = true,
-        navLinks = "Services:/services, Work:/work, Pricing:/pricing, About:/about, Blog:/blog",
+        navLinks = "Services:/services, Work:/work, About:/about, Blog:/blog",
         navCta = "Book a call",
         bpHint = "auto",
     } = props
@@ -305,7 +305,7 @@ export default function RwHero(props: HeroProps) {
             uPtr = U("uPtr"),
             uDiag = U("uDiag"),
             uDim = U("uDim")
-        const lime = cssRgb(r, c.brass, "212,255,58")
+        const lime = cssRgb(r, c.brass, "235,70,0")
             .split(",")
             .map((v) => Number(v) / 255)
         g.uniform3f(uLime, lime[0], lime[1], lime[2])
@@ -870,7 +870,7 @@ const CSS_HERO = `
 .rwh-chip.is-up{scale:1;opacity:1} .rwh-chip:not(.is-up){translate:-50% calc(-100% - 40px)}
 .rwh-chip::after{content:"";position:absolute;left:50%;bottom:-16px;width:1.5px;height:14px;background:var(--rw-cloud);translate:-50% 0;opacity:.8}
 .rwh-chip-i{display:grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:999px;background:var(--rw-brass);color:var(--rw-ink);font-size:12px;font-weight:700}
-.rwh-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#FF3E88;box-shadow:0 0 0 2px var(--rw-cloud)}
+.rwh-chip-p{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:#A2C2BE;box-shadow:0 0 0 2px var(--rw-cloud)}
 .rwh-chip[data-s="1"]{left:22%;top:34%} .rwh-chip[data-s="2"]{left:77%;top:30%} .rwh-chip[data-s="3"]{left:70%;top:72%}
 /* bottom strip */
 .rwh-strip{position:absolute;z-index:4;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:24px;max-width:${MAXW};margin:0 auto;padding:0 clamp(20px,3.2vw,48px) 36px}
@@ -942,7 +942,7 @@ addPropertyControls(RwHero, {
         type: ControlType.String,
         title: "Sub copy",
         defaultValue:
-            "Reachwise is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.",
+            "BOS Media Labs is a digital marketing studio. We run short-form content, paid ads, AI systems and websites that put your brand in front of the people who buy, and we report every result in plain numbers.",
         displayTextArea: true,
     },
     primary: {
@@ -1006,7 +1006,7 @@ addPropertyControls(RwHero, {
         title: "Nav links",
         description: "Label:/path, …",
         defaultValue:
-            "Services:/services, Work:/work, Pricing:/pricing, About:/about, Blog:/blog",
+            "Services:/services, Work:/work, About:/about, Blog:/blog",
     },
     navCta: {
         type: ControlType.String,

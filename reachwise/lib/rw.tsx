@@ -269,16 +269,16 @@ export type Pal = {
     night: string
 }
 export const DEF: Pal = {
-    bone: "#EEEEE8",
+    bone: "#FFFFEB", // Powder
     ink: "#0D0E10",
-    brass: "#D4FF3A",
+    brass: "#EB4600", // Tangelo
     pine: "#16181B",
-    fog: "#DCDCD3",
+    fog: "#DAE7D9", // Ash Gray over Powder
     stone: "#75766F",
     cloud: "#FFFFFF",
     night: "#08090A",
 }
-export const PINK = "#FF3E88" // notification dots only (a constant, not a token)
+export const PINK = "#A2C2BE" // Ash Gray: notification dots only (a constant, not a token)
 export const colorsOf = (p: any): Pal => ({
     bone: p.bone || DEF.bone,
     ink: p.ink || DEF.ink,
@@ -1245,7 +1245,7 @@ export function useSite() {
     const s = r[0] || (SEED.site || [])[0] || {}
     const g = (k: string) => String(s[k] ?? "").trim()
     return {
-        name: g("f1") || "Reachwise",
+        name: g("f1") || "BOS Media Labs",
         role: g("f2"),
         tagline: g("f3"),
         email: g("f4"),

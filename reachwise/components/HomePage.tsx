@@ -33,7 +33,7 @@ const CLIENTS = {
     ratingLine: "25M+ organic views · 8× ROAS",
 }
 const WORK = {
-    intro: "Four clients, one habit: we show the work, and the number whenever there is one.",
+    intro: "Five clients, one habit: we show the work, and the number whenever there is one.",
 }
 const NUMBERS = {
     heading: "What our clients|*actually* got.",

@@ -136,6 +136,21 @@ const work: CmsRow[] = [
         n1: "3",
     },
     {
+        slug: "hop-wtr",
+        f1: "HOP WTR",
+        f2: "Creator-style reels for a sparkling hop water",
+        f3: "Consumer products",
+        f4: "UGC ads;Content",
+        f5: "UGC video",
+        f6: "",
+        f7: "",
+        f8: "",
+        f9: "2025–26",
+        f10: "Short, native-feeling videos for HOP WTR's social and ads: real moments with the can, shot and edited to stop the scroll.",
+        img: "/images/hop-wtr.jpg",
+        n1: "4",
+    },
+    {
         slug: "mood",
         f1: "Mood",
         f2: "UGC video ads for a fast-growing wellness brand",
@@ -148,7 +163,7 @@ const work: CmsRow[] = [
         f9: "2025",
         f10: "Creator-style video ads for Mood's paid and organic social, scripted, filmed and edited to feel native to the feed.",
         img: "/images/mood.jpg",
-        n1: "4",
+        n1: "5",
     },
 ]
 

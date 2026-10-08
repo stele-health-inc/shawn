@@ -101,7 +101,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "Since Dec 2025",
         f10: "Boxing's most iconic brand had a huge content library but no short-form presence. We built a 5-page fan network: 770+ clips posted, a 2.5M-view top clip and a 2× engagement rate.",
-        img: "/images/cover-ring-magazine.webp",
+        img: "/images/ring-magazine.png",
         n1: "1",
     },
     {
@@ -116,7 +116,7 @@ const work: CmsRow[] = [
         f8: "",
         f9: "2025",
         f10: "A custom voice and chat assistant for APS homeowners: it books technicians, schedules vacation watch and takes burglary-watch requests, with automatic follow-ups and an admin dashboard. We also built their website.",
-        img: "/images/cover-aps-home-security.webp",
+        img: "/images/aps-home-security.jpg",
         n1: "2",
     },
     {

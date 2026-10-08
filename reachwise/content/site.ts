@@ -165,6 +165,21 @@ const work: CmsRow[] = [
         img: "/images/mood.jpg",
         n1: "5",
     },
+    {
+        slug: "rain-ucsd",
+        f1: "RAIN · UC San Diego",
+        f2: "A website for UC San Diego's Real World AI Network",
+        f3: "Education · AI",
+        f4: "Web design",
+        f5: "Website",
+        f6: "",
+        f7: "",
+        f8: "",
+        f9: "",
+        f10: "The site for RAIN, the hub for AI talent at UC San Diego: research, industry and entrepreneurship in one ecosystem, hosted at the San Diego Supercomputer Center. Live at rainucsd.org.",
+        img: "/images/rain-ucsd.png",
+        n1: "6",
+    },
 ]
 
 // team — f1 name · f2 role · f3 bio · f4 focus · f5 LinkedIn · img portrait

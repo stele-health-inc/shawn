@@ -105,21 +105,6 @@ const work: CmsRow[] = [
         n1: "1",
     },
     {
-        slug: "aps-home-security",
-        f1: "APS Home Security",
-        f2: "An AI assistant that handles homeowner requests, plus a new website",
-        f3: "Home security · Los Angeles",
-        f4: "AI systems;Web design",
-        f5: "Request types automated",
-        f6: "0",
-        f7: "3",
-        f8: "",
-        f9: "2025",
-        f10: "A custom voice and chat assistant for APS homeowners: it books technicians, schedules vacation watch and takes burglary-watch requests, with automatic follow-ups and an admin dashboard. We also built their website.",
-        img: "/images/aps-home-security.jpg",
-        n1: "2",
-    },
-    {
         slug: "body-suite-spa",
         f1: "Body Suite Spa",
         f2: "Paid ads that returned 8× on Google and 7× on Facebook",
@@ -132,7 +117,7 @@ const work: CmsRow[] = [
         f9: "2024–25",
         f10: "We ran marketing operations for the spa: Google and Facebook campaigns plus the CRM and automations behind them, reaching 8× ROAS on Google Ads and 7× on Facebook Ads.",
         img: "/images/cover-body-suite-spa.webp",
-        n1: "3",
+        n1: "2",
     },
 ]
 

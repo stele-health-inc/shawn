@@ -29,7 +29,7 @@ const CLIENTS = {
     heading: "Real clients.|*Real numbers*.",
     line: "From boxing's most iconic brand to consumer brands and a health-tech startup: content, ads and websites, measured by what they actually did.",
     clients: "Ring Magazine, Body Suite Spa, Friss Labs, Mood, HOP WTR, The Dreams Vault, RAIN UC San Diego, Stele Health, Solin, Crash Politics",
-    badges: "25M+ views;8× ROAS;Full social;UGC ads;UGC ads;UGC ads;Website;Brand + site;Intersolar launch;501(c)(3) site",
+    badges: "25M+ views;8× ROAS;Full social;UGC ads;UGC ads;UGC ads;Web dev;Brand + site;Intersolar launch;501(c)(3) site",
     ratingLine: "25M+ organic views · 8× ROAS",
 }
 const WORK = {

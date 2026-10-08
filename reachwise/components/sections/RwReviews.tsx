@@ -419,7 +419,7 @@ const CSS_REVIEWS = `
 .rwrv .rw-it{color:var(--rw-ink);font-weight:inherit;padding:0 .08em;margin:0 -.04em;isolation:isolate;display:inline-block}
 .rwrv .rw-it::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:.12em;bottom:.04em;border-radius:.16em;background:var(--rw-brass);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.7,0,.2,1) .8s}
 .rwrv .rw-hd.is-on .rw-it::before{transform:none}
-.rwrv-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:48px clamp(40px,6vw,120px);align-items:center;padding:clamp(40px,5vw,80px);border-radius:32px;background:color-mix(in srgb,var(--rw-fog) 62%,var(--rw-bone));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 6%,transparent)}
+.rwrv-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:48px clamp(40px,6vw,120px);align-items:center;padding:clamp(40px,5vw,80px);border-radius:32px;background:color-mix(in srgb,#C9DCD7 62%,var(--rw-bone));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 6%,transparent)}
 .rwrv-left{display:flex;flex-direction:column;align-items:flex-start;gap:26px}
 .rwrv-score{display:flex;align-items:flex-end;gap:22px}
 .rwrv-big{margin:0;font-size:clamp(96px,9vw,132px);line-height:.8;letter-spacing:-.06em;font-weight:700}
@@ -432,7 +432,7 @@ const CSS_REVIEWS = `
 .rwrv-h2{margin-top:10px!important}
 .rwrv-sub{margin:0;max-width:440px;font-size:17px;line-height:1.55;color:var(--rw-mut)}
 /* the lock screen */
-.rwrv-lock{position:relative;display:flex;flex-direction:column;width:100%;max-width:480px;justify-self:end;padding:14px 18px 16px;border-radius:52px;background:var(--rw-night);color:var(--rw-cloud);box-shadow:0 0 0 6px color-mix(in srgb,var(--rw-ink) 88%,var(--rw-stone)),0 50px 90px -40px rgba(13,14,16,.6);overflow:hidden;isolation:isolate}
+.rwrv-lock{position:relative;display:flex;flex-direction:column;width:100%;max-width:480px;justify-self:end;padding:14px 18px 16px;border-radius:52px;background:var(--rw-night);color:var(--rw-cloud);box-shadow:0 0 0 6px color-mix(in srgb,var(--rw-ink) 88%,var(--rw-stone)),0 50px 90px -40px rgba(45,58,71,.6);overflow:hidden;isolation:isolate}
 .rwrv-glow{position:absolute;z-index:-1;left:50%;top:150px;width:0;height:0}
 .rwrv-glow i{position:absolute;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-cloud) 7%,transparent)} .rwrv-glow i:nth-child(2){scale:.66} .rwrv-glow i:nth-child(3){scale:1.4}
 .rwrv-lock::before{content:"";position:absolute;z-index:-1;left:-20%;right:-20%;bottom:-30%;height:70%;background:radial-gradient(50% 50% at 50% 50%,color-mix(in srgb,var(--rw-brass) 30%,transparent),transparent 70%);filter:blur(10px)}
@@ -443,7 +443,7 @@ const CSS_REVIEWS = `
 .rwrv-lk{width:16px;height:16px;opacity:.85}
 .rwrv-date{margin:8px 0 0;font-size:13px;letter-spacing:.04em;color:color-mix(in srgb,var(--rw-cloud) 80%,transparent)}
 .rwrv-clock{margin:2px 0 0;font-size:clamp(76px,7vw,96px);line-height:1;letter-spacing:-.04em;font-weight:600;font-variant-numeric:tabular-nums}
-.rwrv-new{display:flex;align-items:center;gap:6px;margin:16px 4px 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 70%,transparent)} .rwrv-new b{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#A2C2BE;color:#0D0E10;font-weight:600;letter-spacing:0}
+.rwrv-new{display:flex;align-items:center;gap:6px;margin:16px 4px 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-cloud) 70%,transparent)} .rwrv-new b{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#A2C2BE;color:#FFFFEB;font-weight:600;letter-spacing:0}
 .rwrv-stack{position:relative;list-style:none;margin:0;padding:0}
 .rwrv-note{position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;gap:10px;min-height:150px;padding:14px 16px 15px;border-radius:24px;background:color-mix(in srgb,var(--rw-cloud) 90%,transparent);color:var(--rw-ink);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 18px 40px -22px rgba(0,0,0,.7);transform-origin:50% 0;transition:transform .95s cubic-bezier(.34,1.42,.5,1),opacity .55s ease,box-shadow .4s,background .3s;outline:none}
 .rwrv-app{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--rw-ink) 62%,transparent)}
@@ -466,7 +466,7 @@ const CSS_REVIEWS = `
 .rwrv.is-ph{padding:24px 0 80px} .rwrv.is-ph .rw-wrap{--pad:12px}
 .rwrv.is-ph .rwrv-panel{grid-template-columns:1fr;padding:40px 16px 16px;border-radius:26px;gap:40px} .rwrv.is-ph .rwrv-left{padding:0 6px}
 .rwrv.is-ph .rwrv-big{font-size:96px} .rwrv.is-ph .rwrv-sub{font-size:16px}
-.rwrv.is-ph .rwrv-lock{padding:12px 12px 14px;border-radius:40px;box-shadow:0 0 0 5px color-mix(in srgb,var(--rw-ink) 88%,var(--rw-stone)),0 40px 70px -40px rgba(13,14,16,.6)}
+.rwrv.is-ph .rwrv-lock{padding:12px 12px 14px;border-radius:40px;box-shadow:0 0 0 5px color-mix(in srgb,var(--rw-ink) 88%,var(--rw-stone)),0 40px 70px -40px rgba(45,58,71,.6)}
 .rwrv.is-ph .rwrv-clock{font-size:78px} .rwrv.is-ph .rwrv-note{padding:13px 13px 14px;border-radius:22px} .rwrv.is-ph .rwrv-res{font-size:10.5px;padding:4px 8px} .rwrv.is-ph .rwrv-q{font-size:14px}
 @media (prefers-reduced-motion:reduce){.rwrv-note{transition:none}}
 `

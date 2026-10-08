@@ -269,16 +269,18 @@ export type Pal = {
     night: string
 }
 export const DEF: Pal = {
-    bone: "#FFFFEB", // Powder
-    ink: "#0D0E10",
-    brass: "#EB4600", // Tangelo
-    pine: "#16181B",
-    fog: "#DAE7D9", // Ash Gray over Powder
-    stone: "#75766F",
+    bone: "#FFFFEB", // Powder: paper
+    ink: "#0D0E10", // type
+    brass: "#EB4600", // Tangelo: accent
+    pine: "#16181B", // cards on dark
+    fog: "#DAE7D9", // Ash Gray over Powder: hairlines
+    stone: "#75766F", // muted type
     cloud: "#FFFFFF",
-    night: "#08090A",
+    night: "#08090A", // dark sections
 }
 export const PINK = "#A2C2BE" // Ash Gray: notification dots only (a constant, not a token)
+export const SAGE = "#A2C2BE" // Ash Gray: live / available signals
+export const MIST = "#C9DCD7" // Ash Gray, lightened: cool secondary surfaces
 export const colorsOf = (p: any): Pal => ({
     bone: p.bone || DEF.bone,
     ink: p.ink || DEF.ink,
@@ -1225,7 +1227,7 @@ export const imgOf = (r: CmsRow | undefined, k = "img") =>
 export const EMPTY_IMG =
     "data:image/svg+xml;utf8," +
     encodeURIComponent(
-        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500' preserveAspectRatio='xMidYMid slice'><rect width='400' height='500' fill='#D3D8E2'/><rect x='120' y='170' width='160' height='160' rx='8' fill='none' stroke='#AEB6C6' stroke-width='1.5'/><rect x='100' y='150' width='200' height='200' rx='10' fill='none' stroke='#C3CAD8' stroke-width='1' stroke-dasharray='2 6'/></svg>"
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500' preserveAspectRatio='xMidYMid slice'><rect width='400' height='500' fill='#C9DCD7'/><rect x='120' y='170' width='160' height='160' rx='8' fill='none' stroke='#AEB6C6' stroke-width='1.5'/><rect x='100' y='150' width='200' height='200' rx='10' fill='none' stroke='#C3CAD8' stroke-width='1' stroke-dasharray='2 6'/></svg>"
     )
 export const imgOr = (r: CmsRow | undefined, k = "img") =>
     imgOf(r, k) || EMPTY_IMG

@@ -67,8 +67,8 @@ interface ServicesProps extends Pal {
 // a landing page scrolling, a brand system flipping) + the offer. The OPEN panel follows scroll across the section; hover / click / keys take over for 4 s.
 // Tablet / phone: the same six as a vertical accordion; one row open at a time and the open slot has a FIXED height, so the page length never changes. ----
 const SV_PHOTO =
-    "https://framerusercontent.com/images/xbfdpTvZzzafiJOwtXCs0luyp2I.webp"
-const SV_TONES = ["fog", "ink", "cloud", "lime", "pine", "bone"]
+    "/images/xbfdpTvZzzafiJOwtXCs0luyp2I.webp"
+const SV_TONES = ["mist", "ink", "sage", "lime", "pine", "cloud"]
 const SV_DARK = new Set(["ink", "pine"])
 // step counter: 0 → n over time while `run`, else the final step at once
 function useSvStep(n: number, ms: number, run: boolean, delay = 350) {
@@ -510,7 +510,7 @@ const SvBrd = ({ cfg, M, D }: SvP) => (
                     </i>
                     <i>
                         <small style={M}>
-                            {["#1F3A2E", "#FF8A3D", "#F2E6D3", "#2F5BFF"][i]}
+                            {["#A2C2BE", "#C9DCD7", "#FFFFEB", "#0D0E10"][i]}
                         </small>
                     </i>
                 </span>
@@ -538,8 +538,8 @@ const SvBrd = ({ cfg, M, D }: SvP) => (
 export default function RwServices(props: ServicesProps) {
     const {
         eyebrow = "(02) Services",
-        heading = "Six channels.|*One* growth plan.",
-        intro = "SEO, social, ads, content, web and brand under one retainer, one team and one monthly report.",
+        heading = "Five channels.|*One* growth plan.",
+        intro = "Social, ads, content, web and brand under one retainer, one team and one monthly report.",
         button = "All services",
         buttonLink = "/services",
         fromLabel = "From",
@@ -972,7 +972,7 @@ const CSS_SV = `
 .rwsv-p{position:relative;overflow:hidden;border-radius:22px;background:var(--pbg);color:var(--pfg);--pbg:var(--rw-fog);--pfg:var(--rw-ink);--line:color-mix(in srgb,var(--rw-ink) 14%,transparent);--mut:color-mix(in srgb,var(--rw-ink) 62%,transparent);--stg:color-mix(in srgb,var(--rw-ink) 6%,transparent);isolation:isolate}
 .rwsv-p.t-cloud{--pbg:var(--rw-cloud);--stg:var(--rw-bone)}
 .rwsv-p.t-lime{--pbg:color-mix(in srgb,var(--rw-brass) 58%,var(--rw-bone));--stg:color-mix(in srgb,var(--rw-cloud) 55%,transparent)}
-.rwsv-p.t-bone{--pbg:var(--rw-bone);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 16%,transparent)}
+.rwsv-p.t-bone{--pbg:var(--rw-bone);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 16%,transparent)} .t-mist{--pbg:#C9DCD7;--stg:color-mix(in srgb,var(--rw-cloud) 45%,transparent)} .t-sage{--pbg:#A2C2BE;--stg:color-mix(in srgb,var(--rw-cloud) 45%,transparent)}
 .rwsv-p.t-ink{--pbg:var(--rw-ink)} .rwsv-p.t-pine{--pbg:var(--rw-pine)}
 .rwsv-p.is-dk{--pfg:var(--rw-cloud);--line:color-mix(in srgb,var(--rw-cloud) 16%,transparent);--mut:color-mix(in srgb,var(--rw-cloud) 66%,transparent);--stg:color-mix(in srgb,var(--rw-cloud) 7%,transparent)}
 .rwsv-sp{all:unset;box-sizing:border-box;position:absolute;z-index:3;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
@@ -991,7 +991,7 @@ const CSS_SV = `
 .rwsv-il{margin:0 0 10px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
 .rwsv-inc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px} .rwsv-inc li{position:relative;padding-left:27px;font-size:15px;line-height:1.35}
 .rwsv-inc li::before{content:"";position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:var(--rw-brass) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 12.5l4 4 8-9' fill='none' stroke='%230D0E10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/11px no-repeat}
-.rwsv-p.t-lime .rwsv-inc li::before{background:var(--rw-ink) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 12.5l4 4 8-9' fill='none' stroke='%23EB4600' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/11px no-repeat}
+.rwsv-p.t-lime .rwsv-inc li::before{background:var(--rw-ink) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 12.5l4 4 8-9' fill='none' stroke='%23D4FF3A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/11px no-repeat}
 .rwsv-foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-top:auto;padding-top:6px}
 .rwsv-stat{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:var(--rw-brass);color:var(--rw-ink);font-size:12px;letter-spacing:.02em;font-weight:500} .rwsv-stat i{width:7px;height:7px;border-radius:50%;background:#A2C2BE}
 .rwsv-p.t-lime .rwsv-stat{background:var(--rw-ink);color:var(--rw-brass)}
@@ -1116,7 +1116,7 @@ const CSS_SV = `
 .rwsv-sw{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;perspective:500px}
 .rwsv-s{position:relative;height:86px;transform-style:preserve-3d;animation:rwsv-flip 4.4s cubic-bezier(.7,0,.2,1) infinite}
 .rwsv-s i{position:absolute;inset:0;display:flex;align-items:flex-end;padding:8px;border-radius:12px;backface-visibility:hidden;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rw-ink) 14%,transparent)} .rwsv-s i+i{transform:rotateY(180deg)} .rwsv-s small{font-size:9px;letter-spacing:.06em;mix-blend-mode:difference;color:#fff}
-.rwsv-s0 i:first-child{background:var(--rw-ink)} .rwsv-s0 i+i{background:#1F3A2E} .rwsv-s1 i:first-child{background:var(--rw-brass)} .rwsv-s1 i+i{background:#FF8A3D} .rwsv-s2 i:first-child{background:#A2C2BE} .rwsv-s2 i+i{background:#F2E6D3} .rwsv-s3 i:first-child{background:var(--rw-cloud)} .rwsv-s3 i+i{background:#2F5BFF}
+.rwsv-s0 i:first-child{background:#0D0E10} .rwsv-s0 i+i{background:#A2C2BE} .rwsv-s1 i:first-child{background:#EB4600} .rwsv-s1 i+i{background:#C9DCD7} .rwsv-s2 i:first-child{background:#A2C2BE} .rwsv-s2 i+i{background:#FFFFEB} .rwsv-s3 i:first-child{background:#FFFFEB} .rwsv-s3 i+i{background:#0D0E10}
 @keyframes rwsv-flip{0%,35%{transform:rotateY(0)}50%,85%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
 .rwsv-spec{display:flex;align-items:center;gap:16px;font-size:10.5px;line-height:1.5;letter-spacing:.1em;text-transform:uppercase;color:var(--rw-ink)} .rwsv-spec span:first-child{font-size:64px;line-height:1;letter-spacing:-.05em;text-transform:none;font-weight:700}
 .rwsv-apps{display:flex;gap:10px;align-items:center} .rwsv-apps i{display:grid;place-items:center;height:44px;border-radius:12px;font-style:normal}
@@ -1139,14 +1139,14 @@ addPropertyControls(RwServices, {
         type: ControlType.String,
         title: "Heading",
         description: "| = line break, *word* = lime marker",
-        defaultValue: "Six channels.|*One* growth plan.",
+        defaultValue: "Five channels.|*One* growth plan.",
     },
     intro: {
         type: ControlType.String,
         title: "Intro",
         displayTextArea: true,
         defaultValue:
-            "SEO, social, ads, content, web and brand under one retainer, one team and one monthly report.",
+            "Social, ads, content, web and brand under one retainer, one team and one monthly report.",
     },
     button: {
         type: ControlType.String,

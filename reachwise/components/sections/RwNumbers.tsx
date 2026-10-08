@@ -122,7 +122,7 @@ export default function RwNumbers(props: NumbersProps) {
         intro = "",
         reportLabel = "Client report · 2025",
         liveLabel = "Live",
-        tabs = "Overview, SEO, Social, Ads",
+        tabs = "Overview, Social, Ads, Content",
         range = "Last 12 months",
         kpis = "212%:average organic growth:up;6.2×:return on ad spend:up;38M:people reached in 2025:up;140+:brands grown since 2016:up",
         deltaLabel = "vs last year",
@@ -387,7 +387,7 @@ const CSS_NUMBERS = `
 .rwnm-dash{border-radius:24px;background:var(--rw-ink);color:var(--rw-cloud);box-shadow:0 40px 80px -40px color-mix(in srgb,var(--rw-ink) 60%,transparent);overflow:hidden}
 .rwnm-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid color-mix(in srgb,var(--rw-cloud) 12%,transparent);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
 .rwnm-rep{display:inline-flex;align-items:center;gap:10px} .rwnm-rep b{font-weight:500;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,#A2C2BE 18%,transparent);color:#FF8AB5}
-.rwnm-live{width:8px;height:8px;border-radius:50%;background:#A2C2BE;animation:rw-blink 1.4s ease-in-out infinite}
+.rwnm-live{width:8px;height:8px;border-radius:50%;background:#5E8C86;animation:rw-blink 1.4s ease-in-out infinite}
 .rwnm-tabs{display:flex;gap:4px;padding:4px;border-radius:999px;background:color-mix(in srgb,var(--rw-cloud) 7%,transparent)} .rwnm-tabs span{padding:6px 12px;border-radius:999px;color:color-mix(in srgb,var(--rw-cloud) 60%,transparent)} .rwnm-tabs .is-act{background:var(--rw-brass);color:var(--rw-ink)}
 .rwnm-range{color:color-mix(in srgb,var(--rw-cloud) 70%,transparent)}
 .rwnm-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -461,7 +461,7 @@ addPropertyControls(RwNumbers, {
         type: ControlType.String,
         title: "Report tabs",
         description: "Comma list, first one is shown active",
-        defaultValue: "Overview, SEO, Social, Ads",
+        defaultValue: "Overview, Social, Ads, Content",
     },
     range: {
         type: ControlType.String,

@@ -414,7 +414,7 @@ const CSS_TEAM = `
 .rwtm-in svg{width:13px;height:13px} .rwtm-in:hover{background:var(--rw-brass);color:var(--rw-ink)}
 .rwtm-card:focus-within .rwtm-in{translate:0 0;opacity:1}
 @media (hover:hover) and (pointer:fine){
-.rwtm-card:hover .rwtm-ph{translate:0 -8px;box-shadow:0 30px 50px -28px rgba(13,14,16,.55)}
+.rwtm-card:hover .rwtm-ph{translate:0 -8px;box-shadow:0 30px 50px -28px rgba(45,58,71,.55)}
 .rwtm-card:hover .rwtm-ph img{scale:1.05}
 .rwtm-card:hover .rwtm-in{translate:0 -8px;opacity:1}
 .rwtm-card:hover .rwtm-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--rw-brass)}}

@@ -253,7 +253,7 @@ export default function RwFunnel(props: FunnelProps) {
             canvas = cv.current
         const ctx = canvas.getContext("2d")
         if (!ctx) return
-        const ink = cssRgb(box, c.ink, "13,14,16")
+        const ink = cssRgb(box, c.ink, "45,58,71")
         let W = 1,
             H = 1,
             dpr = 1,
@@ -364,7 +364,7 @@ export default function RwFunnel(props: FunnelProps) {
                 ctx.arc(x, p.y, p.s + (p.k >= 3 ? 1.4 : p.k * 0.3), 0, 6.283)
                 ctx.fillStyle =
                     p.k >= 3
-                        ? `rgba(162,194,190,${Math.min(1, a + 0.4)})`
+                        ? `rgba(180,106,114,${Math.min(1, a + 0.4)})`
                         : `rgba(${ink},${a})`
                 ctx.fill()
             }

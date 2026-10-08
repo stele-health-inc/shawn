@@ -63,7 +63,7 @@ interface HeroProps extends Pal {
 // passes, the grey crowd blooms into colour (WebGL). People the ring crosses light up with a notification (likes, followers, a review, a #1 ranking),
 // and the REACH counter climbs. A click launches a campaign: one big ring, longer colour, a bigger jump. No pointer (phones, idle) → a signal wanders the plaza. ----
 const PHOTO =
-    "https://framerusercontent.com/images/0OweuTthx3Dz38pzze75lZw78M.webp"
+    "/images/0OweuTthx3Dz38pzze75lZw78M.webp"
 const IMG_AR = 2400 / 1340
 // people in the photo (0..1 image coords) — the spots a ring can "reach"
 const SPOTS: [number, number][] = [
@@ -160,16 +160,16 @@ const bigUrl = (u: string, w: number) => {
 }
 const VS = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}"
 const FS = `precision mediump float;
-uniform sampler2D uTex;uniform vec2 uView;uniform float uImg;uniform float uZoom;uniform vec2 uFoc;uniform float uTime;uniform vec3 uLime;uniform vec4 uP[8];uniform vec3 uPtr;uniform float uDiag;uniform float uDim;
+uniform sampler2D uTex;uniform vec2 uView;uniform float uImg;uniform float uZoom;uniform vec2 uFoc;uniform float uTime;uniform vec3 uLime;uniform vec4 uP[8];uniform vec3 uPtr;uniform float uDiag;uniform float uDim;uniform vec3 uNight;
 vec2 cover(vec2 s){float ra=uView.x/uView.y;vec2 uv=s;if(ra>uImg){uv.y=(s.y-.5)*uImg/ra+.5;}else{uv.x=(s.x-.5)*ra/uImg+.5;}return (uv-.5)/uZoom+.5+uFoc;}
 void main(){vec2 fc=vec2(gl_FragCoord.x,uView.y-gl_FragCoord.y);vec2 s=fc/uView;vec3 col=texture2D(uTex,clamp(cover(s),.001,.999)).rgb;
-float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(vec3(l)*vec3(.9,.94,1.),vec3(.03,.035,.045),uDim);
+float l=dot(col,vec3(.299,.587,.114));vec3 grey=mix(vec3(l)*vec3(.9,.94,1.),uNight*.78,uDim);
 float reach=0.;float rim=0.;
 for(int i=0;i<8;i++){vec4 P=uP[i];if(P.w<=0.)continue;float age=uTime-P.z;if(age<0.)continue;float R=age*uDiag*(.2+.07*P.w);float d=distance(fc,P.xy);float life=2.4+2.6*P.w;float fade=1.-smoothstep(life*.4,life,age);float band=uDiag*(.008+.006*P.w);
 rim+=exp(-pow((d-R)/band,2.))*(1.-smoothstep(0.,life*.75,age));reach=max(reach,(1.-smoothstep(R-band*5.,R+band,d))*fade);}
 float sp=(1.-smoothstep(uDiag*.035,uDiag*.12,distance(fc,uPtr.xy)))*uPtr.z;reach=max(reach,sp*.85);
 vec3 c=mix(grey,col*mix(1.,.86,uDim),reach);c=mix(c,uLime,clamp(rim,0.,1.)*.62);
-float vg=smoothstep(.45,1.,s.y)*.55+(1.-smoothstep(0.,.2,s.y))*.28;c*=1.-vg;
+float vg=smoothstep(.45,1.,s.y)*.55+(1.-smoothstep(0.,.2,s.y))*.28;c=mix(c,uNight*.7,vg);
 gl_FragColor=vec4(c,1.);}`
 export default function RwHero(props: HeroProps) {
     const {
@@ -184,7 +184,7 @@ export default function RwHero(props: HeroProps) {
         secondary = "See our work",
         secondaryLink = "/work",
         chips = "❤|1.2k likes on one reel;+|86 new followers;★|New 5-star review;#1|“dentist near me”;●|12 leads today;↗|CTR up to 4.8%;✓|Call booked · Tue 10:30;◎|+318 profile visits;▶|48k video views;$|ROAS 6.2×",
-        services = "SEO, Social media, Paid ads, Content",
+        services = "Social media, Paid ads, Content, Web design",
         counterLabel = "People reached for clients this month",
         counterStart = 1284300,
         hint = "Move to reach · click to launch a campaign",
@@ -234,7 +234,7 @@ export default function RwHero(props: HeroProps) {
     const sub = pick(
         subCopy,
         site.tagline
-            ? `${site.name} is a digital marketing agency. We run SEO, social media and paid ads that put your brand in front of the people who buy, and we report every result in plain numbers.`
+            ? `${site.name} is a digital marketing studio. We run short-form content, paid ads, AI systems and websites that put your brand in front of the people who buy, and we report every result in plain numbers.`
             : ""
     )
     const ann = pick(eyebrow, site.announce)
@@ -304,11 +304,17 @@ export default function RwHero(props: HeroProps) {
             uP = U("uP"),
             uPtr = U("uPtr"),
             uDiag = U("uDiag"),
-            uDim = U("uDim")
+            uDim = U("uDim"),
+            uNight = U("uNight")
         const lime = cssRgb(r, c.brass, "235,70,0")
             .split(",")
             .map((v) => Number(v) / 255)
         g.uniform3f(uLime, lime[0], lime[1], lime[2])
+        // the crowd dims toward the night token, not black, so the hero sits in the palette
+        const night = cssRgb(r, c.night, "45,58,71")
+            .split(",")
+            .map((v) => Number(v) / 255)
+        g.uniform3f(uNight, night[0], night[1], night[2])
         const tex = g.createTexture()
         let imgAr = IMG_AR,
             texOk = false
@@ -934,7 +940,7 @@ addPropertyControls(RwHero, {
     heading: {
         type: ControlType.String,
         title: "Heading",
-        description: "| = line break, *words* = lime highlight",
+        description: "| = line break, *words* = accent highlight",
         defaultValue: "Get seen by|the *right crowd.*",
         displayTextArea: true,
     },
@@ -976,7 +982,7 @@ addPropertyControls(RwHero, {
     services: {
         type: ControlType.String,
         title: "Service tags",
-        defaultValue: "SEO, Social media, Paid ads, Content",
+        defaultValue: "Social media, Paid ads, Content, Web design",
     },
     counterLabel: {
         type: ControlType.String,

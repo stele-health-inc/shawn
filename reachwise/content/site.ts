@@ -13,7 +13,7 @@ const site: CmsRow[] = [
         f1: "BOS Media Labs",
         f2: "Digital marketing agency",
         f3: "Short-form content, paid ads, AI systems and websites that bring the right people to your door.",
-        f4: "hello@bosmedialabs.com",
+        f4: "bosmedialabs@gmail.com",
         f5: "",
         f6: "/#contact",
         f7: "New York",

@@ -4,7 +4,7 @@ Five ChatGPT apps (Apps SDK / MCP Apps — what the directory now calls *plugins
 
 | App | Endpoint | Tools | The gap it fills |
 | --- | --- | --- | --- |
-| **Verified Citations** | `/citations/mcp` | `format_citation`, `lookup_reference`, `verify_references`, `export_bibliography` | Scribbr / Citation Machine get 10M+ visits a month; studies find ChatGPT fabricates 18–38 % of references. Every lookup resolves to a real DOI via Crossref/OpenAlex. No citation app in the directory. |
+| **Verified Citations** | `/citations/mcp` | `verify_references`, `lookup_reference`, `format_citation`, `export_bibliography` | Leads with "are these references real?": studies find ChatGPT fabricates 18–38 % of references, and every check resolves to a real DOI via Crossref/OpenAlex. Formatting alone now overlaps native ChatGPT and OpenAI's Zotero plugin (Oct 2026); verification is still uncontested. |
 | **Calendar Invite & Date Math** | `/calendar/mcp` | `create_calendar_invite`, `calculate_date`, `convert_time_zones`, `find_meeting_times` | Turns a plan into a real .ics + Google/Outlook links with no OAuth; exact business-day and time-zone math where LLMs are documented to slip. |
 | **Timesheet & Overtime Calculator** | `/timesheet/mcp` | `calculate_timesheet`, `add_hours` | Hourly workers and small businesses total hours weekly; breaks, overnight shifts, rounding, 40 h / 8-12 h overtime rules, printable PDF. No competitor found. |
 | **Mortgage & Loan Calculator** | `/loan/mcp` | `calculate_mortgage_payment`, `calculate_loan_payment`, `calculate_home_affordability`, `compare_refinance` | "mortgage calculator" alone is ~3.4 M searches/month; 360-row amortization is error-prone in prose. Interactive breakdown + chart + CSV schedule. |
